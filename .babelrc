@@ -1,0 +1,18 @@
+{
+  "presets": [
+    "@babel/preset-typescript",
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "targets" : "> 1%, not dead"
+          // sourceMap을 통해 컴파일 이전 상태에서 디버깅 하고 싶을 때 사용.
+          // "browsers": ["last 2 versions"], 
+        },
+        "useBuiltIns": "usage",
+        "corejs": { "version": 3, "proposals": true }
+      }
+    ]
+  ],
+  "plugins": []
+}
