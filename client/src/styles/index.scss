@@ -1,67 +1,10 @@
-.text,
-.link {
-  font-family: Noto Sans KR;
-  letter-spacing: 0em;
-  font-style: normal;
-  font-weight: 400;
-  &-large {
-    font-size: 18px;
-    line-height: 24px;
-  }
-  &-medium {
-    font-size: 16px;
-    line-height: 22px;
-  }
-  &-small {
-    font-size: 14px;
-    line-height: 20px;
-  }
-  &-x-small {
-    font-size: 12px;
-    line-height: 16px;
-  }
-}
+@use "sass:map";
+
+@import './reset';
+@import './variables';
+@import './mixins';
 
 .icon {
   background-image: url('../public/images/icon.png');
   background-repeat: no-repeat;
-}
-
-.link {
-  font-weight: 500;
-}
-
-.color {
-  &-primary {
-    &-1 {
-      color: #2ac1bc;
-    }
-    &-2 {
-      color: #a0e1e0;
-    }
-    &-3 {
-      color: #219a95;
-    }
-  }
-  &-title-active {
-    color: #222;
-  }
-  &-grey-1 {
-    color: #888;
-  }
-  &-grey-2 {
-    color: #bbb;
-  }
-  &-grey-3 {
-    color: #d7d7d7;
-  }
-  &-off-white {
-    color: #f6f6f6;
-  }
-  &-white {
-    color: #fff;
-  }
-  &-error {
-    color: #f45452;
-  }
 }

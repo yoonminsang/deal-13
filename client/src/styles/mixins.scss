@@ -22,3 +22,11 @@
   @include text('large');
   font-weight: 500;
 }
+
+/*
+  사용 예시
+  .btn-primary-1 {
+    @include text('large');
+  }
+
+*/

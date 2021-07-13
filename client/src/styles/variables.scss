@@ -10,3 +10,11 @@ $colors: (
   'white': #fff,
   'error': #f45452,
 );
+
+/*
+  사용 예시
+  .btn-primary-1 {
+    color: map.get($colors, 'primary-1');
+  }
+
+*/
