@@ -21,6 +21,16 @@ export default () => {
     module: {
       rules: [
         {
+          test: /\.(png|jpg|jpeg|gif)$/i,
+          use: {
+            loader: 'file-loader',
+            options: {
+              publicPath: './dist/',
+              name: '[name].[ext]?[hash]',
+            },
+          },
+        },
+        {
           test: /\.(js|ts)$/,
           exclude: /(node_modules)/, // .js, .ts 확장자로 끝나는 모든 파일
           use: {
