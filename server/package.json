@@ -1,0 +1,47 @@
+{
+  "name": "deal-13",
+  "version": "1.0.0",
+  "description": "우아한테크캠프 4기 2~3주차 팀 13 - 윤민상, 고우혁",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --experimental-json-modules src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kowoohyuk/deal-13.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kowoohyuk/deal-13/issues"
+  },
+  "homepage": "https://github.com/kowoohyuk/deal-13#readme",
+  "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.3.1",
+    "@types/uuid": "^8.3.1",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.2.5",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "nodemon": "^2.0.12"
+  }
+}
