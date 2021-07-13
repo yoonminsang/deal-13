@@ -6,7 +6,6 @@ import dotenv from 'dotenv';
 import path from 'path';
 import cors from 'cors';
 import passport from 'passport';
-import { sequelize } from './models/index.js';
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -18,15 +17,6 @@ const __dirname = dirname(__filename);
 // import authRouter from './routes/auth';
 
 dotenv.config();
-
-sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log('데이터베이스 연결 성공');
-  })
-  .catch((err) => {
-    console.error(err);
-  });
 
 const corsOption = {
   origin: 'http://localhost:9000/',
