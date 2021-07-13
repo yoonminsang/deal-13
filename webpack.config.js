@@ -14,6 +14,7 @@ export default () => {
   return {
     mode: 'development',
     entry: './src/app.ts',
+    devtool: 'inline-source-map',
     resolve: {
       extensions: ['.ts', '.js'],
     },
