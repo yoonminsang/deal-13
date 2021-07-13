@@ -1,0 +1,23 @@
+.text,
+.link {
+  font-family: Noto Sans KR;
+  letter-spacing: 0em;
+  font-style: normal;
+  font-weight: 400;
+  &-large {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  &-medium {
+    font-size: 16px;
+    line-height: 22px;
+  }
+  &-small {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  &-x-small {
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
