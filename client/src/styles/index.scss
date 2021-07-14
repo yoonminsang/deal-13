@@ -242,3 +242,102 @@
     }
   }
 }
+
+.top-bar {
+  background-color: map.get($colors, 'white');
+  height: 56px;
+  display: grid;
+  grid-template-columns: 1fr 6fr 1fr;
+  align-items: center;
+  justify-content: space-around;
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &.off-white {
+    background-color: map.get($colors, 'off-white');
+  }
+  &.main {
+    background-color: map.get($colors, 'primary-1');
+    border-radius: 0px 0px 16px 16px;
+    & > div:nth-of-type(2) {
+      column-gap: 6px;
+    }
+    & > div:nth-of-type(3) {
+      column-gap: 16px;
+    }
+  }
+  &.invisible {
+    background-color: transparent;
+  }
+  &.__text {
+    @include text('medium');
+  }
+}
+
+.icon {
+  background-repeat: no-repeat;
+  width: 18px;
+  height: 18px;
+  background-size: contain;
+  background-position: center;
+}
+.icon {
+  &-add {
+    background-image: url('../public/images/add.svg');
+  }
+  &-category {
+    background-image: url('../public/images/category.svg');
+  }
+  &-check {
+    background-image: url('../public/images/check.svg');
+  }
+  &-close {
+    background-image: url('../public/images/close.svg');
+  }
+  &-down {
+    background-image: url('../public/images/down.svg');
+  }
+  &-hear {
+    background-image: url('../public/images/hear.svg');
+  }
+  &-image {
+    background-image: url('../public/images/image.svg');
+  }
+  &-left {
+    background-image: url('../public/images/left.svg');
+  }
+  &-logout {
+    background-image: url('../public/images/logout.svg');
+  }
+  &-menu {
+    background-image: url('../public/images/menu.svg');
+  }
+  &-message {
+    background-image: url('../public/images/message.svg');
+  }
+  &-more {
+    background-image: url('../public/images/more.svg');
+  }
+  &-pin {
+    background-image: url('../public/images/pin.svg');
+  }
+  &-right {
+    background-image: url('../public/images/right.svg');
+  }
+  &-send {
+    background-image: url('../public/images/send.svg');
+  }
+  &-user {
+    background-image: url('../public/images/user.svg');
+  }
+}
+
+// .tmp {
+//   background-image: url('../public/images/category.svg');
+//   &:hover {
+//     filter: invert(71%) sepia(93%) saturate(1140%) hue-rotate(360deg)
+//       brightness(105%) contrast(101%);
+//   }
+// }
