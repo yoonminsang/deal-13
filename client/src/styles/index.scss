@@ -134,3 +134,31 @@
     border-color: map.get($colors, 'primary-1');
   }
 }
+
+.imgbox {
+  &-medium {
+    @include imgbox('medium');
+    border: 1px solid map.get($colors, 'grey-3');
+    background-color: map.get($colors, 'off-white');
+  }
+  &-large {
+    @include imgbox('large');
+    border: 1px solid map.get($colors, 'grey-3');
+    background-color: map.get($colors, 'off-white');
+  }
+  &-small {
+    @include imgbox('small');
+    border: 1px solid map.get($colors, 'grey-3');
+    background-color: map.get($colors, 'off-white');
+  }
+}
+
+.gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.24) 0%,
+    rgba(0, 0, 0, 0) 16.52%,
+    rgba(0, 0, 0, 0) 87.36%,
+    rgba(0, 0, 0, 0.24) 100%
+  );
+}
