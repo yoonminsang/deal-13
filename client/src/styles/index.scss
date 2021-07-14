@@ -106,3 +106,31 @@
   border: 1px solid map.get($colors, 'grey-5');
   background-color: map.get($colors, 'white');
 }
+
+.input-medium {
+  @include input('medium');
+  @include text('small');
+  color: map.get($colors, 'title-active');
+  border: 1px solid map.get($colors, 'grey-3');
+  &::placeholder {
+    color: map.get($colors, 'grey-1');
+  }
+  &:focus {
+    outline: none;
+    border-color: map.get($colors, 'primary-1');
+  }
+}
+
+.input-large {
+  @include input('large');
+  @include text('medium');
+  color: map.get($colors, 'title-active');
+  border: 1px solid map.get($colors, 'grey-3');
+  &::placeholder {
+    color: map.get($colors, 'grey-1');
+  }
+  &:focus {
+    outline: none;
+    border-color: map.get($colors, 'primary-1');
+  }
+}
