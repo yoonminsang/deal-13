@@ -9,7 +9,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const { user } = req;
   if (user) return res.json({ user });
-  return res.status(401).json('자동 로그인 실패');
+  return res.status(401).json({ user: null, text: '자동 로그인 실패' });
 });
 
 router.post('/register', (req, res, next) => {
