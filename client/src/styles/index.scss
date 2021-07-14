@@ -197,3 +197,18 @@
   padding: 2px 7px;
   min-width: 20px;
 }
+
+.category-list-item {
+  @include text('x-small');
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  & > div {
+    @extend .img-box-small;
+    margin-bottom: 16px;
+  }
+  &.active,
+  &:hover {
+    color: map.get($colors, 'primary-1');
+  }
+}
