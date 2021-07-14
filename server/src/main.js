@@ -12,9 +12,9 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// import passportConfig from './passport';
+import passportConfig from './passport/index.js';
 // import indexRouter from './routes/index';
-// import authRouter from './routes/auth';
+import authRouter from './routes/auth.js';
 
 dotenv.config();
 
@@ -26,7 +26,7 @@ const app = express();
 
 app.set('port', process.env.PORT || 3000);
 
-// passportConfig();
+passportConfig();
 
 app.use(cors(corsOption));
 if (process.env.NODE_ENV === 'production') {
@@ -51,11 +51,11 @@ app.use(
     name: 'baemin-cookie',
   }),
 );
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 // app.use('/', indexRouter);
-// app.use('/auth', authRouter);
+app.use('/api/auth', authRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
