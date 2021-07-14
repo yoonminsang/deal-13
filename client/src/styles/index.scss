@@ -135,19 +135,19 @@
   }
 }
 
-.imgbox {
+.img-box {
   &-medium {
-    @include imgbox('medium');
+    @include img-box('medium');
     border: 1px solid map.get($colors, 'grey-3');
     background-color: map.get($colors, 'off-white');
   }
   &-large {
-    @include imgbox('large');
+    @include img-box('large');
     border: 1px solid map.get($colors, 'grey-3');
     background-color: map.get($colors, 'off-white');
   }
   &-small {
-    @include imgbox('small');
+    @include img-box('small');
     border: 1px solid map.get($colors, 'grey-3');
     background-color: map.get($colors, 'off-white');
   }
@@ -161,4 +161,14 @@
     rgba(0, 0, 0, 0) 87.36%,
     rgba(0, 0, 0, 0.24) 100%
   );
+}
+
+.img-nav {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid map.get($colors, 'white');
+  &.active {
+    background-color: map.get($colors, 'white');
+  }
 }
