@@ -49,6 +49,25 @@
   }
 }
 
+@mixin input($size: 'medium') {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border-color: transparent;
+  @if $size == large {
+    height: 40px;
+    width: 290px;
+    top: 20px;
+    padding: 10px 16px 8px 16px;
+  } @else {
+    height: 36px;
+    width: 256px;
+    padding: 8px;
+  }
+}
+
 /*
   사용 예시
   .btn-primary-1 {
