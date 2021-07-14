@@ -172,3 +172,28 @@
     background-color: map.get($colors, 'white');
   }
 }
+
+.chat-bubble {
+  display: inline-block;
+  padding: 8px;
+  border: 1px solid map.get($colors, 'primary-1');
+  &.type-a {
+    border-radius: 0px 8px 8px 8px;
+    color: map.get($colors, 'title-active');
+  }
+  &.type-b {
+    border-radius: 8px 0px 8px 8px;
+    background-color: map.get($colors, 'primary-1');
+    color: map.get($colors, 'white');
+  }
+}
+
+.chat-badge {
+  @include text('x-small');
+  display: inline-block;
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'primary-3');
+  border-radius: 50%;
+  padding: 2px 7px;
+  min-width: 20px;
+}
