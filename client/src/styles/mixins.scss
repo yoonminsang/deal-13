@@ -2,7 +2,6 @@
   letter-spacing: 0em;
   font-style: normal;
   font-weight: 400;
-  color: red;
   @if $size == large {
     font-size: 18px;
     line-height: 24px;
@@ -18,8 +17,8 @@
   }
 }
 
-@mixin link {
-  @include text('large');
+@mixin link($size: 'medium') {
+  @include text($size);
   font-weight: 500;
 }
 
