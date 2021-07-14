@@ -55,7 +55,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // app.use('/', indexRouter);
-app.use('/auth', authRouter);
+app.use('/api/auth', authRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
