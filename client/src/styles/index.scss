@@ -89,7 +89,7 @@
 .btn-tap {
   @extend .btn-x-small;
   color: map.get($colors, 'grey-1');
-  background-color: map.get($colors, 'white');
+  background-color: transparent;
   border-bottom: 2px solid map.get($colors, 'grey-3');
   border-radius: 0;
   align-items: flex-end;
@@ -163,16 +163,6 @@
   );
 }
 
-.img-nav {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid map.get($colors, 'white');
-  &.active {
-    background-color: map.get($colors, 'white');
-  }
-}
-
 .chat-bubble {
   display: inline-block;
   padding: 8px;
@@ -226,6 +216,29 @@
     padding: 16px;
     &:not(:last-of-type) {
       border-bottom: 1px solid map.get($colors, 'grey-3');
+    }
+  }
+}
+
+.tap-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0 16px;
+  background-color: map.get($colors, 'off-white');
+}
+
+.img-navigation {
+  padding: 20px;
+  display: flex;
+  column-gap: 8px;
+  .img-nav {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid map.get($colors, 'white');
+    &.active {
+      background-color: map.get($colors, 'white');
     }
   }
 }
