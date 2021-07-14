@@ -9,13 +9,9 @@
   font-family: 'Noto Sans KR';
 }
 
-.icon {
-  background-image: url('../public/images/icon.png');
-  background-repeat: no-repeat;
-}
-
 .btn-medium {
   @include button('medium');
+  @include link('small');
   color: map.get($colors, 'white');
   background-color: map.get($colors, 'primary-1');
   &:hover {
@@ -31,6 +27,7 @@
 
 .btn-large {
   @include button('large');
+  @include link('medium');
   color: map.get($colors, 'white');
   background-color: map.get($colors, 'primary-1');
   &:hover {
@@ -42,6 +39,18 @@
   &.disable {
     background-color: map.get($colors, 'primary-2');
   }
+}
+
+.btn-small {
+  @include button('small');
+  @include link('small');
+  border: none;
+}
+
+.btn-x-small {
+  @include button('x-small');
+  @include link('small');
+  border: none;
 }
 
 .btn-fab {
@@ -57,4 +66,43 @@
   &.disable {
     background-color: map.get($colors, 'primary-2');
   }
+}
+
+.btn-location {
+  @extend .btn-medium;
+  justify-content: space-between;
+}
+
+.btn-category {
+  @extend .btn-x-small;
+  color: map.get($colors, 'grey-1');
+  background-color: map.get($colors, 'white');
+  border: 1px solid map.get($colors, 'grey-3');
+  border-radius: 16px;
+  &.active {
+    background-color: map.get($colors, 'primary-1');
+    border-color: map.get($colors, 'primary-1');
+    color: map.get($colors, 'white');
+  }
+}
+
+.btn-tap {
+  @extend .btn-x-small;
+  color: map.get($colors, 'grey-1');
+  background-color: map.get($colors, 'white');
+  border-bottom: 2px solid map.get($colors, 'grey-3');
+  border-radius: 0;
+  align-items: flex-end;
+  &.active {
+    border-bottom-color: map.get($colors, 'primary-1');
+    color: map.get($colors, 'primary-1');
+  }
+}
+
+.btn-status {
+  @extend .btn-small;
+  color: map.get($colors, 'title-active');
+  justify-content: space-around;
+  border: 1px solid map.get($colors, 'grey-5');
+  background-color: map.get($colors, 'white');
 }
