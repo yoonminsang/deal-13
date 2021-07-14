@@ -13,3 +13,48 @@
   background-image: url('../public/images/icon.png');
   background-repeat: no-repeat;
 }
+
+.btn-medium {
+  @include button('medium');
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'primary-1');
+  &:hover {
+    background-color: map.get($colors, 'primary-3');
+  }
+  &:focus {
+    background-color: map.get($colors, 'primary-1');
+  }
+  &.disable {
+    background-color: map.get($colors, 'primary-2');
+  }
+}
+
+.btn-large {
+  @include button('large');
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'primary-1');
+  &:hover {
+    background-color: map.get($colors, 'primary-3');
+  }
+  &:focus {
+    background-color: map.get($colors, 'primary-1');
+  }
+  &.disable {
+    background-color: map.get($colors, 'primary-2');
+  }
+}
+
+.btn-fab {
+  @include button('fab');
+  color: map.get($colors, 'white');
+  background-color: map.get($colors, 'primary-1');
+  &:hover {
+    background-color: map.get($colors, 'primary-3');
+  }
+  &:focus {
+    background-color: map.get($colors, 'primary-1');
+  }
+  &.disable {
+    background-color: map.get($colors, 'primary-2');
+  }
+}
