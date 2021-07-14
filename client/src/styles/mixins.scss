@@ -23,6 +23,33 @@
   font-weight: 500;
 }
 
+@mixin button($size: 'medium') {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border-color: transparent;
+  padding: 8px 16px;
+  @if $size == large {
+    height: 42px;
+    width: 290px;
+  } @else if $size == fab {
+    height: 56px;
+    width: 56px;
+    border-radius: 50%;
+  } @else if $size == small {
+    height: 40px;
+    width: 102px;
+  } @else if $size == x-small {
+    height: 31px;
+    width: 82px;
+  } @else {
+    height: 36px;
+    width: 136px;
+  }
+}
+
 /*
   사용 예시
   .btn-primary-1 {
