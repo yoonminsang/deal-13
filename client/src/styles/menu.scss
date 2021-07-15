@@ -1,0 +1,5 @@
+.gnb-container {
+  background-color: map.get($colors, 'off-white');
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
