@@ -590,6 +590,12 @@
   }
 }
 
+.slidein {
+  min-height: 100vh;
+}
+
+@import './Main.scss';
+
 // .tmp {
 //   background-image: url('../public/images/category.svg');
 // &:hover {
