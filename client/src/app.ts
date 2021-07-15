@@ -1,4 +1,5 @@
 import './styles/App.scss';
+import './styles/index.scss';
 import Main from './components/Main';
 import Category from './components/Category';
 import Login from './components/Login';
@@ -11,10 +12,13 @@ import Region from './components/Region';
 import Write from './components/Write';
 import Signin from './components/Signin';
 
-// action에 로그인 로그아웃 생각중
 interface ActionObj {
   go: string;
   back: string;
+  goMain: string;
+  user: string;
+  category: string;
+  region: string;
 }
 interface RenderObj {
   login: string;
@@ -32,6 +36,10 @@ interface RenderObj {
 const actionObj: ActionObj = {
   go: 'go',
   back: 'back',
+  goMain: 'goMain',
+  user: 'user',
+  category: 'category',
+  region: 'region',
 };
 const renderObj: RenderObj = {
   login: 'login',
@@ -59,7 +67,7 @@ function App() {
   };
   const goMain = (): void => {
     const nextDepth = [];
-    this.setState(actionObj.go, { ...this.state, depth: nextDepth });
+    this.setState(actionObj.goMain, { ...this.state, depth: nextDepth });
   };
   const historyPush = (): void => {
     const nextUrl = this.state.depth.join('/') || '/';
@@ -67,11 +75,12 @@ function App() {
   };
 
   this.state = {
-    user: null,
-    category: null,
+    user: undefined,
+    category: undefined,
     depth: [],
   };
-  const main = new Main({ app, user: this.state.user, go });
+
+  const main = new Main({ app, go });
   const login = new Login({ app, user: this.state.user, go, back });
   const signin = new Signin({ app, user: this.state.user, back, goMain });
   const account = new Account({ app, user: this.state.user, back, goMain });
@@ -87,7 +96,7 @@ function App() {
   });
   const region = new Region({ app, user: this.state.user, back });
 
-  this.setState = (action: string, nextState: any) => {
+  this.setState = (action: string, nextState: any): any => {
     console.log(
       'setstate',
       'action:',
@@ -101,15 +110,17 @@ function App() {
     switch (action) {
       case actionObj.go:
       case actionObj.back:
+      case actionObj.goMain:
         historyPush();
         return this.render(action);
-      //   case LOGIN:
-      //   case LOGOUT:
-      //   case USER:
-      //     return;
+      case actionObj.user:
+      case actionObj.category:
+        return this.render(action);
+      default:
+        console.log('action name is not found');
     }
   };
-  this.render = (action: string) => {
+  this.render = (action: string): any => {
     console.log('render', action, this.state);
     switch (action) {
       case actionObj.go:
@@ -145,14 +156,65 @@ function App() {
         const lastChild = app.lastElementChild;
         lastChild.classList.replace('slidein', 'slideout');
         setTimeout(() => {
-          app.removeChild(lastChild);
+          // app.removeChild(lastChild);
+          lastChild.remove();
         }, 500);
         return;
-      default:
-        main.render();
+      case actionObj.goMain:
+        while (app.children.length !== 1) {
+          // app.removeChild(app.children[1]);
+          app.children[1].remove();
+        }
+        return;
+      case actionObj.user:
+        console.log('user render');
+        main.setState(actionObj.user, this.state.user);
+        // 여기다가 user 필요한 컴포넌트 전부 같은방식
+        return;
+      case actionObj.category:
+        console.log('category render');
+        main.setState(actionObj.category, this.state.category);
+        // 여기다가 category 필요한 컴포넌트 전부 같은방식
+        return;
     }
   };
-  this.render();
+
+  const autoLogin = (): void => {
+    fetch('/api/auth', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        const { user, text } = data;
+        this.setState(actionObj.user, { ...this.state, user });
+        if (text) console.log(data.text);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  const setCategory = (category: string = 'all'): string => {
+    localStorage.setItem('category', category);
+    return category;
+    // return localStorage.getItem('category');
+  };
+
+  const getCategory = (): void => {
+    const category = localStorage.getItem('category') || setCategory();
+    this.setState(actionObj.category, { ...this.state, category });
+  };
+
+  const init = (): void => {
+    autoLogin();
+    getCategory();
+  };
+  init();
 }
 
 new App();

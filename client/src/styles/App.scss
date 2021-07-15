@@ -1,6 +1,11 @@
 #app {
   > div {
     position: absolute;
+    width: 100%;
+    background: white;
+    left: 0;
+    top: 0;
+    // 임시야 left,top
   }
 }
 
