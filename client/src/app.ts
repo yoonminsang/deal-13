@@ -10,7 +10,7 @@ import Menu from './components/Menu';
 import Post from './components/Post';
 import Region from './components/Region';
 import Write from './components/Write';
-import Signin from './components/Signin';
+import Signup from './components/Signup';
 
 interface ActionObj {
   go: string;
@@ -23,7 +23,7 @@ interface ActionObj {
 interface RenderObj {
   login: string;
   account: string;
-  signin: string;
+  signup: string;
   category: string;
   menu: string;
   write: string;
@@ -44,7 +44,7 @@ const actionObj: ActionObj = {
 const renderObj: RenderObj = {
   login: 'login',
   account: 'account',
-  signin: 'signin',
+  signup: 'signup',
   category: 'category',
   menu: 'menu',
   write: 'write',
@@ -80,7 +80,6 @@ function App() {
   this.state = {
     user: undefined,
     category: undefined,
-    region: [],
     depth: [],
   };
 
@@ -92,7 +91,7 @@ function App() {
     back,
     authProcess,
   });
-  const signin = new Signin({ app, user: this.state.user, back, goMain });
+  const signup = new Signup({ app, user: this.state.user, back, goMain });
   const account = new Account({ app, user: this.state.user, back, goMain });
   const category = new Category({ app, user: this.state.user, back });
   const menu = new Menu({ app, user: this.state.user, back });
@@ -107,15 +106,7 @@ function App() {
   const region = new Region({ app, user: this.state.user, back });
 
   this.setState = (action: string, nextState: any): any => {
-    console.log(
-      'setstate',
-      'action:',
-      action,
-      'this.state: ',
-      this.state,
-      'nextstate: ',
-      nextState,
-    );
+    console.log('app setstate');
     this.state = nextState;
     switch (action) {
       case actionObj.go:
@@ -131,7 +122,7 @@ function App() {
     }
   };
   this.render = (action: string): any => {
-    console.log('render', action, this.state);
+    console.log('app render', 'action: ', action, 'state: ', this.state);
     switch (action) {
       case actionObj.go:
         const name = this.state.depth[this.state.depth.length - 1];
@@ -140,8 +131,8 @@ function App() {
             return category.render();
           case renderObj.login:
             return login.render();
-          case renderObj.signin:
-            return signin.render();
+          case renderObj.signup:
+            return signup.render();
           case renderObj.account:
             return account.render();
           case renderObj.menu:
@@ -175,12 +166,10 @@ function App() {
         }
         return;
       case actionObj.user:
-        console.log('user render');
         main.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
-        console.log('category render');
         main.setState(actionObj.category, this.state.category);
         // 여기다가 category 필요한 컴포넌트 전부 같은방식
         return;
@@ -223,7 +212,6 @@ function App() {
     //   ...this.state,
     //   user: { uuid: 'uu', id: 'minsang', region: ['방배동', '관악동'] },
     // });
-    // fake
     getCategory();
   };
   init();
