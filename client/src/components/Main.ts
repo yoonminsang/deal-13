@@ -27,15 +27,12 @@ function Main({ app, go }) {
   </div>
   // svg에 fill 하얀색, js-modal 밑에 모달칸을 미리 만들어두자. absolute blind로
   <div>여기에 글 불러오기</div>`;
-  $target.addEventListener('click', (e: MouseEvent) => {
+  $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
     if (classList.contains('render')) {
       go(classList[0].slice(3));
     }
-    // if (e.target.className === 'auth') {
-    //   go('auth');
-    // }
   });
   this.state = {
     user: undefined,
