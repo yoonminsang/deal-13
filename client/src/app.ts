@@ -70,8 +70,11 @@ function App() {
     this.setState(actionObj.goMain, { ...this.state, depth: nextDepth });
   };
   const historyPush = (): void => {
-    const nextUrl = this.state.depth.join('/') || '/';
-    history.pushState('', '', nextUrl);
+    // const nextUrl = this.state.depth.join('/') || '/';
+    // history.pushState('', '', nextUrl);
+  };
+  const authProcess = (user) => {
+    this.setState(actionObj.user, { ...this.state, user });
   };
 
   this.state = {
@@ -82,7 +85,13 @@ function App() {
   };
 
   const main = new Main({ app, go });
-  const login = new Login({ app, user: this.state.user, go, back });
+  const login = new Login({
+    app,
+    user: this.state.user,
+    go,
+    back,
+    authProcess,
+  });
   const signin = new Signin({ app, user: this.state.user, back, goMain });
   const account = new Account({ app, user: this.state.user, back, goMain });
   const category = new Category({ app, user: this.state.user, back });
@@ -139,14 +148,12 @@ function App() {
             return menu.render();
           case renderObj.write:
             return write.render();
-          case renderObj.post:
+          case renderObj.post.slice(0, 4):
             return post.render();
           case renderObj.chatting:
             return chatting.render();
           case renderObj.chattingDetail:
             return chattingDetail.render();
-          case renderObj.post.slice(0, 4):
-            return post.render();
           case renderObj.region:
             return region.render();
           default:
@@ -190,7 +197,7 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         const { user, text } = data;
-        this.setState(actionObj.user, { ...this.state, user });
+        authProcess(user);
         if (text) console.log(data.text);
       })
       .catch((e) => {
@@ -212,10 +219,10 @@ function App() {
   const init = (): void => {
     autoLogin();
     // fake
-    this.setState(actionObj.user, {
-      ...this.state,
-      user: { uuid: 'uu', id: 'minsang', region: ['방배동', '관악동'] },
-    });
+    // this.setState(actionObj.user, {
+    //   ...this.state,
+    //   user: { uuid: 'uu', id: 'minsang', region: ['방배동', '관악동'] },
+    // });
     // fake
     getCategory();
   };
