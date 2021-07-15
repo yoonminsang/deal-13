@@ -1,0 +1,15 @@
+.main {
+  .drop-down-list {
+    position: absolute;
+    left: 100px;
+    top: 48px;
+    right: 77px;
+    transition: all 0.5s;
+    opacity: 1;
+  }
+  .blind {
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+  }
+}
