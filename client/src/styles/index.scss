@@ -419,6 +419,46 @@
   }
 }
 
+.location-bar {
+  @include text('small');
+  color: map.get($colors, 'title-active');
+  background-color: map.get($colors, 'white');
+  height: 36px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  .icon {
+    filter: map.get($filter_colors, 'title-active');
+    margin-right: 6px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.product-bar {
+  background-color: map.get($colors, 'white');
+  height: 68px;
+  padding: 16px;
+  display: flex;
+  grid-gap: 16px;
+  align-items: center;
+  justify-content: space-around;
+  .icon {
+    width: 22px;
+    height: 22px;
+  }
+  .separator {
+    background-color: map.get($colors, 'grey-3');
+    height: 100%;
+    width: 1px;
+  }
+  &__price {
+    @include text('small');
+    font-weight: 500;
+    color: map.get($colors, 'title-active');
+  }
+}
+
 // .tmp {
 //   background-image: url('../public/images/category.svg');
 // &:hover {
