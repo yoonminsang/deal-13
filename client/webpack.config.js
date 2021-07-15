@@ -21,12 +21,11 @@ export default () => {
     module: {
       rules: [
         {
-          test: /\.(png|jpg|jpeg|gif)$/i,
+          test: /\.(png|jpg|jpeg|gif|svg)$/i,
           use: {
             loader: 'file-loader',
             options: {
-              publicPath: './dist/',
-              name: '[name].[ext]?[hash]',
+              name: 'assets/[name].[ext]?[hash]',
             },
           },
         },

@@ -68,7 +68,7 @@
   }
 }
 
-@mixin imgbox($size: 'medium') {
+@mixin img-box($size: 'medium') {
   @if $size == large {
     height: 106px;
     width: 106px;
