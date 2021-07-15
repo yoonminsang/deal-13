@@ -3,11 +3,13 @@ function Main({ app, go }) {
     user: string;
     category: string;
     post: string;
+    primaryRegion: string;
   }
   const stateObj: StateObj = {
     user: 'user',
     category: 'category',
     post: 'post',
+    primaryRegion: 'primaryRegion',
   };
 
   const $target = document.createElement('div');
@@ -77,6 +79,7 @@ function Main({ app, go }) {
 
   const setPrimaryRegion = (primaryRegion: string = '0'): string => {
     localStorage.setItem('primaryRegion', primaryRegion);
+    this.rerender(stateObj.primaryRegion);
     return primaryRegion;
     // return localStorage.getItem('primaryRegion');
   };
@@ -133,12 +136,15 @@ function Main({ app, go }) {
     const target = e.target as HTMLElement;
     const classList = target.classList;
     if (classList.contains('render')) {
+      $dropDwon.classList.add('blind');
       go(classList[0].slice(3));
     } else if (classList.contains('js-modal')) {
       $dropDwon.classList.toggle('blind');
+    } else if (classList.contains('region')) {
+      setPrimaryRegion(target.classList[1]);
+      $dropDwon.classList.add('blind');
     }
   });
-
   this.state = {
     user: undefined,
     category: undefined,
@@ -178,6 +184,9 @@ function Main({ app, go }) {
             makeListItem(id, url, name, region, time, price, chat, love),
           )
           .join('');
+        return;
+      case stateObj.primaryRegion:
+        $region.textContent = this.state.user.region[getPrimaryRegion()];
         return;
       default:
         console.log('state name is not found');
