@@ -77,6 +77,7 @@ function App() {
   this.state = {
     user: undefined,
     category: undefined,
+    region: [],
     depth: [],
   };
 
@@ -144,7 +145,7 @@ function App() {
             return chatting.render();
           case renderObj.chattingDetail:
             return chattingDetail.render();
-          case renderObj.post:
+          case renderObj.post.slice(0, 4):
             return post.render();
           case renderObj.region:
             return region.render();
@@ -186,9 +187,7 @@ function App() {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         const { user, text } = data;
         this.setState(actionObj.user, { ...this.state, user });
@@ -212,6 +211,12 @@ function App() {
 
   const init = (): void => {
     autoLogin();
+    // fake
+    this.setState(actionObj.user, {
+      ...this.state,
+      user: { uuid: 'uu', id: 'minsang', region: ['방배동', '관악동'] },
+    });
+    // fake
     getCategory();
   };
   init();
