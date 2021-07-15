@@ -17,6 +17,10 @@
   background-position: center;
 }
 
+.error {
+  color: map.get($colors, 'error');
+}
+
 .icon {
   &-add {
     background-image: url('../public/images/add.svg');
@@ -511,6 +515,33 @@
     }
     & > p:first-of-type {
       margin-right: 10px;
+    }
+  }
+}
+
+.chat-list-item {
+  height: 72px;
+  padding: 16px;
+  background-color: map.get($colors, 'white');
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  &__name {
+    @include link('small');
+    color: map.get($colors, 'title-active');
+  }
+  &__message {
+    @include text('small');
+    color: map.get($colors, 'grey-1');
+  }
+  &__info {
+    @include text('x-small');
+    color: map.get($colors, 'grey-1');
+  }
+  &__content-right {
+    display: flex;
+    justify-content: flex-end;
+    .img-box-small {
+      margin-left: 16px;
     }
   }
 }
