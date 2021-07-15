@@ -1,4 +1,3 @@
-import '../styles/Main.scss';
 function Main({ app, go }) {
   interface StateObj {
     user: string;
@@ -30,7 +29,7 @@ function Main({ app, go }) {
       <div class="js-menu render icon icon-menu"></div>
     </div>
   </div>
-  <div class="product-list">텅~~</div>`;
+  <div class="product-list"></div>`;
 
   const $listItems = $target.querySelector('.product-list');
   const $auth = $target.querySelector('.auth');
@@ -46,32 +45,30 @@ function Main({ app, go }) {
     price,
     chat,
     love,
-  ): void => {
-    const listItem = document.createElement('div');
-    listItem.className = `js-post#${id} product-list-item`;
-    listItem.innerHTML = `
-    <div class="img-box-large">
-      <img src="${url}" alt="이미지">
-    </div>
-    <div class="product-list-item__content">
-      <div class="icon icon-heart product-list-item__heart"></div>
-      <p class="product-list-item__title">${name}</p>
-      <p class="product-list-item__info">${region} - ${time}</p>
-      <p class="product-list-item__price">${price}</p>
-      <div class="product-list-item__bottom">
-        <div class="icon icon-message"></div>
-        <p>${chat}</p>
-        <div class="icon icon-heart"></div>
-        <p>${love}</p>
+  ): string => {
+    return `
+    <div class="js-post#${id} product-list-item">
+      <div class="img-box-large">
+        <img src="${url}" alt="이미지">
+      </div>
+      <div class="product-list-item__content">
+        <div class="icon icon-heart product-list-item__heart"></div>
+        <p class="product-list-item__title">${name}</p>
+        <p class="product-list-item__info">${region} - ${time}</p>
+        <p class="product-list-item__price">${price}</p>
+        <div class="product-list-item__bottom">
+          <div class="icon icon-message"></div>
+          <p>${chat}</p>
+          <div class="icon icon-heart"></div>
+          <p>${love}</p>
+        </div>
       </div>
     </div>
     `;
   };
 
-  const makeRegionItem = (number: number, region: string): void => {
-    const listItem = document.createElement('li');
-    listItem.className = `region ${number} drop-down-item`;
-    listItem.textContent = region;
+  const makeRegionItem = (number: number, region: string): string => {
+    return `<li class="region ${number} drop-down-item">${region}</li>`;
   };
 
   const makeMyRegion = (): string => {
@@ -89,7 +86,8 @@ function Main({ app, go }) {
       localStorage.getItem('primaryRegion') || setPrimaryRegion();
     return primaryRegion;
   };
-  // 지역 살제할땐 무조건 setPrimaryRegion('1')
+  // 지역 살제할땐 무조건 setPrimaryRegion('1'),
+  // 아니 무조건 db에서 하는걸로 나중에 수정
 
   const getApi = (): void => {
     if (
@@ -97,8 +95,9 @@ function Main({ app, go }) {
       this.state.user.region &&
       this.state.user.region[0] &&
       this.state.category
-    )
+    ) {
       // this.state.user
+
       fetch(
         `/api/post/${this.state.user.region[getPrimaryRegion()]}/${
           this.state.category
@@ -111,14 +110,23 @@ function Main({ app, go }) {
         },
       )
         .then((res) => res.json())
-        .then((data) => {
-          const { post, text } = data;
+        .then(({ post, text }) => {
           this.setState(stateObj.post, post);
           if (text) console.log(text);
         })
         .catch((e) => {
           console.error(e);
         });
+
+      // fake
+      // const post = [
+      //   ['1', 'url', '반팔', '석수동', '1일전', '10,000', '1', '2'],
+      // ];
+      // this.setState(stateObj.post, post);
+    } else if (this.state.user === null) {
+      $listItems.innerHTML =
+        '<div class="need-login"><div>로그인해주세요!!!</div></div>';
+    }
   };
 
   $target.addEventListener('click', (e) => {
@@ -134,7 +142,7 @@ function Main({ app, go }) {
   this.state = {
     user: undefined,
     category: undefined,
-    post: [],
+    post: undefined,
   };
 
   this.setState = (nextStateName, nextState) => {
@@ -147,8 +155,7 @@ function Main({ app, go }) {
   };
 
   this.rerender = (changeStateName) => {
-    console.log('main rerender', this.state);
-
+    console.log('main rerender', this.state, changeStateName);
     switch (changeStateName) {
       case stateObj.user:
         if (this.state.user) {
@@ -156,22 +163,22 @@ function Main({ app, go }) {
           $region.textContent = this.state.user.region[getPrimaryRegion()];
           $dropDwon.innerHTML =
             this.state.user.region
-              .map((v, i) => {
-                makeRegionItem(i, v);
-              })
+              .map((v, i) => makeRegionItem(i, v))
               .join('') + makeMyRegion();
         } else $auth.classList.replace('js-account', 'js-login');
+        getApi();
         return;
       case stateObj.category:
-        if (this.state.category) {
-          getApi();
-        }
+        if (this.state.category) getApi();
+        else console.log('localstorage category error or main state error');
+        return;
       case stateObj.post:
         $listItems.innerHTML = this.state.post
           .map(([id, url, name, region, time, price, chat, love]: string[7]) =>
             makeListItem(id, url, name, region, time, price, chat, love),
           )
           .join('');
+        return;
       default:
         console.log('state name is not found');
     }
