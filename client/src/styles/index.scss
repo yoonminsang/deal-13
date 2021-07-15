@@ -546,6 +546,26 @@
   }
 }
 
+.chat-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: transparent;
+  .btn-chat-send {
+    border: 0;
+    padding: 6px;
+    width: 36px;
+    height: 36px;
+    .icon {
+      filter: map.get($filter_colors, 'primary-1');
+    }
+    &.empty .icon {
+      filter: map.get($filter_colors, 'grey-1');
+    }
+  }
+}
+
 // .tmp {
 //   background-image: url('../public/images/category.svg');
 // &:hover {
