@@ -96,7 +96,7 @@ function App() {
   });
   const region = new Region({ app, user: this.state.user, back });
 
-  this.setState = (action: string, nextState: any) => {
+  this.setState = (action: string, nextState: any): any => {
     console.log(
       'setstate',
       'action:',
@@ -120,7 +120,7 @@ function App() {
         console.log('action name is not found');
     }
   };
-  this.render = (action: string) => {
+  this.render = (action: string): any => {
     console.log('render', action, this.state);
     switch (action) {
       case actionObj.go:
@@ -179,7 +179,7 @@ function App() {
     }
   };
 
-  const autoLogin = () => {
+  const autoLogin = (): void => {
     fetch('/api/auth', {
       method: 'GET',
       headers: {
@@ -205,12 +205,12 @@ function App() {
     // return localStorage.getItem('category');
   };
 
-  const getCategory = (): any => {
+  const getCategory = (): void => {
     const category = localStorage.getItem('category') || setCategory();
     this.setState(actionObj.category, { ...this.state, category });
   };
 
-  const init = () => {
+  const init = (): void => {
     autoLogin();
     getCategory();
   };
