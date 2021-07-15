@@ -33,8 +33,8 @@
   &-down {
     background-image: url('../public/images/down.svg');
   }
-  &-hear {
-    background-image: url('../public/images/hear.svg');
+  &-heart {
+    background-image: url('../public/images/heart.svg');
   }
   &-image {
     background-image: url('../public/images/image.svg');
@@ -389,6 +389,33 @@
   }
   &.__text {
     @include text('medium');
+  }
+}
+
+.info-saler {
+  background-color: map.get($colors, 'off-white');
+  height: 48px;
+  width: 288px;
+  padding: 8px 16px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 0.7fr 0.3fr;
+  grid-gap: 8px;
+  &__label {
+    @include text('small');
+    color: map.get($colors, 'title-active');
+    font-weight: 500;
+  }
+  &__name {
+    @include text('small');
+    color: map.get($colors, 'title-active');
+    font-weight: 500;
+    text-align: center;
+  }
+  &__region {
+    @include text('x-small');
+    color: map.get($colors, 'grey-1');
+    font-weight: 500;
   }
 }
 
