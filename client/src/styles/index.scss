@@ -9,6 +9,69 @@
   font-family: 'Noto Sans KR';
 }
 
+.icon {
+  background-repeat: no-repeat;
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-position: center;
+}
+
+.icon {
+  &-add {
+    background-image: url('../public/images/add.svg');
+  }
+  &-category {
+    background-image: url('../public/images/category.svg');
+  }
+  &-check {
+    background-image: url('../public/images/check.svg');
+  }
+  &-close {
+    background-image: url('../public/images/close.svg');
+  }
+  &-down {
+    background-image: url('../public/images/down.svg');
+  }
+  &-hear {
+    background-image: url('../public/images/hear.svg');
+  }
+  &-image {
+    background-image: url('../public/images/image.svg');
+  }
+  &-left {
+    background-image: url('../public/images/left.svg');
+  }
+  &-logout {
+    background-image: url('../public/images/logout.svg');
+  }
+  &-menu {
+    background-image: url('../public/images/menu.svg');
+  }
+  &-message {
+    background-image: url('../public/images/message.svg');
+  }
+  &-more {
+    background-image: url('../public/images/more.svg');
+  }
+  &-pin {
+    background-image: url('../public/images/pin.svg');
+  }
+  &-right {
+    background-image: url('../public/images/right.svg');
+  }
+  &-send {
+    background-image: url('../public/images/send.svg');
+  }
+  &-user {
+    background-image: url('../public/images/user.svg');
+  }
+}
+
+[class*='btn'] {
+  cursor: pointer;
+}
+
 .btn-medium {
   @include button('medium');
   @include link('small');
@@ -55,8 +118,10 @@
 
 .btn-fab {
   @include button('fab');
-  color: map.get($colors, 'white');
   background-color: map.get($colors, 'primary-1');
+  .icon {
+    filter: map.get($filter_colors, 'white');
+  }
   &:hover {
     background-color: map.get($colors, 'primary-3');
   }
@@ -71,6 +136,9 @@
 .btn-location {
   @extend .btn-medium;
   justify-content: space-between;
+  .icon {
+    filter: map.get($filter_colors, 'white');
+  }
 }
 
 .btn-category {
@@ -105,6 +173,50 @@
   justify-content: space-around;
   border: 1px solid map.get($colors, 'grey-5');
   background-color: map.get($colors, 'white');
+  .icon {
+    filter: map.get($filter_colors, 'grey-1');
+    width: 12px;
+    height: 12px;
+    margin-top: 2px;
+  }
+}
+
+.btn-img {
+  @include button('small');
+  @include text('x-small');
+  color: map.get($colors, 'grey-1');
+  border: 1px solid map.get($colors, 'grey-3');
+  background-color: map.get($colors, 'off-white');
+  width: 76px;
+  height: 76px;
+  flex-direction: column;
+  position: relative;
+  & > .icon {
+    filter: map.get($filter_colors, 'grey-1');
+    margin-bottom: 4px;
+  }
+  .btn-img__close {
+    background-color: map.get($colors, 'title-active');
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    right: -12px;
+    top: -12px;
+    border-radius: 50%;
+    display: none;
+    .icon {
+      filter: map.get($filter_colors, 'white');
+      width: 12px;
+      height: 12px;
+    }
+  }
+  &.active {
+    .btn-img__close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 
 .input-medium {
@@ -261,11 +373,15 @@
   &.main {
     background-color: map.get($colors, 'primary-1');
     border-radius: 0px 0px 16px 16px;
+    color: map.get($colors, 'white');
     & > div:nth-of-type(2) {
       column-gap: 6px;
     }
     & > div:nth-of-type(3) {
       column-gap: 16px;
+    }
+    .icon {
+      filter: map.get($filter_colors, 'white');
     }
   }
   &.invisible {
@@ -276,68 +392,10 @@
   }
 }
 
-.icon {
-  background-repeat: no-repeat;
-  width: 18px;
-  height: 18px;
-  background-size: contain;
-  background-position: center;
-}
-.icon {
-  &-add {
-    background-image: url('../public/images/add.svg');
-  }
-  &-category {
-    background-image: url('../public/images/category.svg');
-  }
-  &-check {
-    background-image: url('../public/images/check.svg');
-  }
-  &-close {
-    background-image: url('../public/images/close.svg');
-  }
-  &-down {
-    background-image: url('../public/images/down.svg');
-  }
-  &-hear {
-    background-image: url('../public/images/hear.svg');
-  }
-  &-image {
-    background-image: url('../public/images/image.svg');
-  }
-  &-left {
-    background-image: url('../public/images/left.svg');
-  }
-  &-logout {
-    background-image: url('../public/images/logout.svg');
-  }
-  &-menu {
-    background-image: url('../public/images/menu.svg');
-  }
-  &-message {
-    background-image: url('../public/images/message.svg');
-  }
-  &-more {
-    background-image: url('../public/images/more.svg');
-  }
-  &-pin {
-    background-image: url('../public/images/pin.svg');
-  }
-  &-right {
-    background-image: url('../public/images/right.svg');
-  }
-  &-send {
-    background-image: url('../public/images/send.svg');
-  }
-  &-user {
-    background-image: url('../public/images/user.svg');
-  }
-}
-
 // .tmp {
 //   background-image: url('../public/images/category.svg');
-//   &:hover {
-//     filter: invert(71%) sepia(93%) saturate(1140%) hue-rotate(360deg)
-//       brightness(105%) contrast(101%);
-//   }
+// &:hover {
+//   filter: invert(71%) sepia(93%) saturate(1140%) hue-rotate(360deg)
+//     brightness(105%) contrast(101%);
+// }
 // }
