@@ -35,6 +35,9 @@
   }
   &-heart {
     background-image: url('../public/images/heart.svg');
+    &.active {
+      filter: map.get($filter_colors, 'primary-1');
+    }
   }
   &-image {
     background-image: url('../public/images/image.svg');
@@ -456,6 +459,59 @@
     @include text('small');
     font-weight: 500;
     color: map.get($colors, 'title-active');
+  }
+}
+
+.product-list-item {
+  border-bottom: 1px solid map.get($colors, 'grey-3');
+  background-color: map.get($colors, 'white');
+  width: 100%;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: auto auto;
+  position: relative;
+  &:not(:last-of-type) {
+    margin-bottom: 16px;
+  }
+  &__content {
+    padding-left: 16px;
+  }
+  &__heart {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+  }
+  &__title {
+    @include link('medium');
+    color: map.get($colors, 'title-active');
+    margin-bottom: 4px;
+  }
+  &__info {
+    @include text('small');
+    color: map.get($colors, 'grey-1');
+    margin-bottom: 4px;
+  }
+  &__price {
+    @include link('medium');
+    color: map.get($colors, 'title-active');
+  }
+  &__bottom {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    column-gap: 4px;
+    color: map.get($colors, 'grey-1');
+    .icon {
+      width: 16px;
+      height: 16px;
+      filter: map.get($filter_colors, 'grey-1');
+    }
+    & > p:first-of-type {
+      margin-right: 10px;
+    }
   }
 }
 
