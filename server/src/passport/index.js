@@ -9,14 +9,28 @@ const passportConfig = () => {
     console.log('serialize', user.uuid);
     done(null, user.uuid);
   });
-  passport.deserializeUser((uuid, done) => {
-    db.query(`SELECT uuid, id WHERE uuid=${uuid}`)
-      .then((res) => {
-        done(null, res[0][0]);
-      })
-      .error((e) => {
-        console.error('deserialize error', e);
-      });
+  passport.deserializeUser(async (uuid, done) => {
+    const [[user]] = await db.query(
+      `SELECT uuid, id FROM users WHERE uuid='${uuid}' LIMIT 1`,
+    );
+    // console.log(user);
+    const [region_list] = await db.query(
+      `SELECT region_id FROM region_list WHERE user_id='${user.uuid}'`,
+    );
+    // console.log(region_list);
+    const regionList = region_list.map((v) => v.region_id + '').join(',');
+    // console.log(regionList);
+    const [regions] = await db.query(
+      `SELECT region FROM regions WHERE id IN ('${regionList}')`,
+    );
+    // console.log(regions);
+    user.region = regions.map((v) => v.region);
+    // console.log(user);
+    // 일단 임시방편...방법 주말에 알아볼것 join
+    // const [[user]] = await db.query(
+    //   `SELECT uuid, id FROM users WHERE uuid='${uuid}' LIMIT 1`,
+    // );
+    done(null, user);
   });
 
   passport.use(
@@ -25,22 +39,21 @@ const passportConfig = () => {
         usernameField: 'id',
         passwordField: 'password',
       },
-      (id, password, done) => {
-        console.log('local strategy', id);
-        db.query(`SELECT * from users where id=${id})`)
-          .then(([userRes]) => {
-            const user = userRes && userRes[0];
-            if (user) {
-              bcrypt.compare(password, user.password).then((bcryRes) => {
-                if (bcryRes) return done(null, user);
-                return done(null, false);
-              });
-            }
+      async (id, password, done) => {
+        try {
+          console.log('local strategy', id, password);
+          const [[user]] = await db.query(
+            `SELECT * FROM users WHERE id='${id}'`,
+          );
+          if (user) {
+            const match = await bcrypt.compare(password, user.password);
+            if (match) return done(null, user);
             return done(null, false);
-          })
-          .error((e) => {
-            console.error('local pasport error', e);
-          });
+          }
+          return done(null, false);
+        } catch (e) {
+          console.error('local passport error', e);
+        }
       },
     ),
   );
