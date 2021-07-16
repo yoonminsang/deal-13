@@ -77,6 +77,16 @@ function App() {
     this.setState(actionObj.user, { ...this.state, user });
   };
 
+  const setCategory = (category: string = 'all'): string => {
+    localStorage.setItem('category', category);
+    this.setState('category', {
+      ...this.state,
+      category,
+    });
+    return category;
+    // return localStorage.getItem('category');
+  };
+
   this.state = {
     user: undefined,
     category: undefined,
@@ -98,7 +108,12 @@ function App() {
     goMain,
   });
   const account = new Account({ app, back, authProcess });
-  const category = new Category({ app, user: this.state.user, back });
+  const category = new Category({
+    app,
+    setCategory,
+    user: this.state.user,
+    back,
+  });
   const menu = new Menu({ app, user: this.state.user, back });
   const write = new Write({ app, user: this.state.user, back, goMain });
   const post = new Post({ app, user: this.state.user, go, back });
@@ -126,6 +141,7 @@ function App() {
         console.log('action name is not found');
     }
   };
+
   this.render = (action: string): any => {
     console.log('app render', 'action: ', action, 'state: ', this.state);
     switch (action) {
@@ -133,11 +149,11 @@ function App() {
         const name = this.state.depth[this.state.depth.length - 1];
         switch (name) {
           case renderObj.category:
-            return category.render();
+            return category.render(this.state.category);
           case renderObj.login:
             return login.render();
           case renderObj.signup:
-            return signup.render();
+          // return signup.render();
           case renderObj.account:
             return account.render();
           case renderObj.menu:
@@ -202,12 +218,6 @@ function App() {
         .catch((e) => {
           console.error(e);
         });
-  };
-
-  const setCategory = (category: string = 'all'): string => {
-    localStorage.setItem('category', category);
-    return category;
-    // return localStorage.getItem('category');
   };
 
   const getCategory = (): void => {

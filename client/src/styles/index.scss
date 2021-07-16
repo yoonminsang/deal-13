@@ -27,6 +27,7 @@
   }
   &-category {
     background-image: url('../public/images/category.svg');
+    cursor: pointer;
   }
   &-check {
     background-image: url('../public/images/check.svg');
@@ -40,7 +41,7 @@
   &-heart {
     background-image: url('../public/images/heart.svg');
     &.active {
-      filter: map.get($filter_colors, 'primary-1');
+      background-image: url('../public/images/heart-fill.svg');
     }
   }
   &-image {
@@ -48,12 +49,14 @@
   }
   &-left {
     background-image: url('../public/images/left.svg');
+    cursor: pointer;
   }
   &-logout {
     background-image: url('../public/images/logout.svg');
   }
   &-menu {
     background-image: url('../public/images/menu.svg');
+    cursor: pointer;
   }
   &-message {
     background-image: url('../public/images/message.svg');
@@ -72,6 +75,7 @@
   }
   &-user {
     background-image: url('../public/images/user.svg');
+    cursor: pointer;
   }
 }
 
@@ -482,13 +486,16 @@
   width: 100%;
   padding: 16px;
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: 120px auto;
   position: relative;
   &:not(:last-of-type) {
     margin-bottom: 16px;
   }
   &__content {
     padding-left: 16px;
+    .icon {
+      cursor: pointer;
+    }
   }
   &__heart {
     position: absolute;
@@ -499,6 +506,8 @@
     @include link('medium');
     color: map.get($colors, 'title-active');
     margin-bottom: 4px;
+    width: auto;
+    cursor: pointer;
   }
   &__info {
     @include text('small');
@@ -531,10 +540,13 @@
 
 .chat-list-item {
   height: 72px;
-  padding: 16px;
+  padding: 16px 0 8px 0;
+  margin: 0 16px 8px 16px;
   background-color: map.get($colors, 'white');
+  border-bottom: 1px solid map.get($colors, 'grey-3');
   display: grid;
   grid-template-columns: 1fr 1fr;
+  cursor: pointer;
   &__name {
     @include link('small');
     color: map.get($colors, 'title-active');
