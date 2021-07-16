@@ -153,7 +153,7 @@ function App() {
           case renderObj.login:
             return login.render();
           case renderObj.signup:
-          // return signup.render();
+            return signup.render();
           case renderObj.account:
             return account.render();
           case renderObj.menu:
