@@ -120,7 +120,7 @@ const isBackButton = (e: MouseEvent) => {
   return target.classList.contains('js-back');
 };
 
-function Menu({ app, user, back }) {
+function Menu({ app, back }) {
   this.state = {
     tap: 0,
     chatList: tmpChatList,

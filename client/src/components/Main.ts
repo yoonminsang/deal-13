@@ -120,9 +120,7 @@ function Main({ app, go }) {
       //     console.error(e);
       //   });
       // fake
-      const post = [
-        ['1', 'github.com', '반팔', '석수동', '1일전', '10,000', '1', '2'],
-      ];
+      const post = [['1', '', '반팔', '석수동', '1일전', '10,000', '1', '2']];
       this.setState(stateObj.post, post);
     } else if (this.state.user === null) {
       $listItems.innerHTML =
@@ -143,6 +141,7 @@ function Main({ app, go }) {
       $dropDwon.classList.add('blind');
     }
   });
+
   this.state = {
     user: undefined,
     category: undefined,
@@ -159,7 +158,6 @@ function Main({ app, go }) {
   };
 
   this.rerender = (changeStateName) => {
-    console.log('main rerender', this.state, changeStateName);
     switch (changeStateName) {
       case stateObj.user:
         if (this.state.user) {
