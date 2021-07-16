@@ -1,0 +1,31 @@
+.auth {
+  .auth-inner {
+    padding: 24px 15px;
+    input,
+    button {
+      width: 100%;
+    }
+    .btn-transparent {
+      background: transparent;
+      border: 0;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 24px;
+    }
+    .js-form {
+      > div {
+        margin-left: 5px;
+      }
+      > div:not(:first-child) {
+        margin-top: 24px;
+      }
+      input:not(:first-child) {
+        margin-top: 8px;
+      }
+      input + input {
+        margin-top: 15px !important;
+      }
+    }
+  }
+}
