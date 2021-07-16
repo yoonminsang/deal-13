@@ -10,7 +10,7 @@ import Menu from './components/Menu';
 import Post from './components/Post';
 import Region from './components/Region';
 import Write from './components/Write';
-import Signin from './components/Signin';
+import Signup from './components/Signup';
 
 interface ActionObj {
   go: string;
@@ -23,7 +23,7 @@ interface ActionObj {
 interface RenderObj {
   login: string;
   account: string;
-  signin: string;
+  signup: string;
   category: string;
   menu: string;
   write: string;
@@ -44,7 +44,7 @@ const actionObj: ActionObj = {
 const renderObj: RenderObj = {
   login: 'login',
   account: 'account',
-  signin: 'signin',
+  signup: 'signup',
   category: 'category',
   menu: 'menu',
   write: 'write',
@@ -70,8 +70,11 @@ function App() {
     this.setState(actionObj.goMain, { ...this.state, depth: nextDepth });
   };
   const historyPush = (): void => {
-    const nextUrl = this.state.depth.join('/') || '/';
-    history.pushState('', '', nextUrl);
+    // const nextUrl = this.state.depth.join('/') || '/';
+    // history.pushState('', '', nextUrl);
+  };
+  const authProcess = (user) => {
+    this.setState(actionObj.user, { ...this.state, user });
   };
 
   this.state = {
@@ -81,8 +84,14 @@ function App() {
   };
 
   const main = new Main({ app, go });
-  const login = new Login({ app, user: this.state.user, go, back });
-  const signin = new Signin({ app, user: this.state.user, back, goMain });
+  const login = new Login({
+    app,
+    user: this.state.user,
+    go,
+    back,
+    authProcess,
+  });
+  const signup = new Signup({ app, user: this.state.user, back, goMain });
   const account = new Account({ app, user: this.state.user, back, goMain });
   const category = new Category({ app, user: this.state.user, back });
   const menu = new Menu({ app, user: this.state.user, back });
@@ -97,15 +106,7 @@ function App() {
   const region = new Region({ app, user: this.state.user, back });
 
   this.setState = (action: string, nextState: any): any => {
-    console.log(
-      'setstate',
-      'action:',
-      action,
-      'this.state: ',
-      this.state,
-      'nextstate: ',
-      nextState,
-    );
+    console.log('app setstate');
     this.state = nextState;
     switch (action) {
       case actionObj.go:
@@ -121,7 +122,7 @@ function App() {
     }
   };
   this.render = (action: string): any => {
-    console.log('render', action, this.state);
+    console.log('app render', 'action: ', action, 'state: ', this.state);
     switch (action) {
       case actionObj.go:
         const name = this.state.depth[this.state.depth.length - 1];
@@ -130,22 +131,20 @@ function App() {
             return category.render();
           case renderObj.login:
             return login.render();
-          case renderObj.signin:
-            return signin.render();
+          case renderObj.signup:
+            return signup.render();
           case renderObj.account:
             return account.render();
           case renderObj.menu:
             return menu.render();
           case renderObj.write:
             return write.render();
-          case renderObj.post:
+          case renderObj.post.slice(0, 4):
             return post.render();
           case renderObj.chatting:
             return chatting.render();
           case renderObj.chattingDetail:
             return chattingDetail.render();
-          case renderObj.post:
-            return post.render();
           case renderObj.region:
             return region.render();
           default:
@@ -167,12 +166,10 @@ function App() {
         }
         return;
       case actionObj.user:
-        console.log('user render');
         main.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
-        console.log('category render');
         main.setState(actionObj.category, this.state.category);
         // 여기다가 category 필요한 컴포넌트 전부 같은방식
         return;
@@ -186,12 +183,10 @@ function App() {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
         const { user, text } = data;
-        this.setState(actionObj.user, { ...this.state, user });
+        authProcess(user);
         if (text) console.log(data.text);
       })
       .catch((e) => {
@@ -212,6 +207,11 @@ function App() {
 
   const init = (): void => {
     autoLogin();
+    // fake
+    // this.setState(actionObj.user, {
+    //   ...this.state,
+    //   user: { uuid: 'uu', id: 'minsang', region: ['방배동', '관악동'] },
+    // });
     getCategory();
   };
   init();
