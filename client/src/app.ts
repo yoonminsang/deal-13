@@ -61,19 +61,23 @@ function App() {
     const nextDepth = [...this.state.depth, next];
     this.setState(actionObj.go, { ...this.state, depth: nextDepth });
   };
+
   const back = (): void => {
     const nextDepth = this.state.depth.slice(0, this.state.depth.length - 1);
     this.setState(actionObj.back, { ...this.state, depth: nextDepth });
   };
+
   const goMain = (): void => {
     const nextDepth = [];
     this.setState(actionObj.goMain, { ...this.state, depth: nextDepth });
   };
+
   const historyPush = (): void => {
     // const nextUrl = this.state.depth.join('/') || '/';
     // history.pushState('', '', nextUrl);
   };
-  const authProcess = (user) => {
+
+  const authProcess = (user: string) => {
     this.setState(actionObj.user, { ...this.state, user });
   };
 
@@ -87,23 +91,45 @@ function App() {
     // return localStorage.getItem('category');
   };
 
-  this.state = {
-    user: undefined,
-    category: undefined,
-    depth: [],
+  const getCategory = (): void => {
+    const category = localStorage.getItem('category') || setCategory();
+    this.setState(actionObj.category, { ...this.state, category });
+  };
+
+  const autoLogin = (): void => {
+    if (localStorage.getItem('user'))
+      fetch('/api/auth', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => {
+          if (res.ok) return res.json();
+          else throw new Error('자동 로그인 실패');
+        })
+        .then((data) => {
+          const { user, text } = data;
+          authProcess(user);
+          if (text) console.log(data.text);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    else {
+      authProcess(null);
+    }
   };
 
   const main = new Main({ app, go });
   const login = new Login({
     app,
-    user: this.state.user,
     go,
     back,
     authProcess,
   });
   const signup = new Signup({
     app,
-    user: this.state.user,
     back,
     goMain,
   });
@@ -111,19 +137,23 @@ function App() {
   const category = new Category({
     app,
     setCategory,
-    user: this.state.user,
     back,
   });
-  const menu = new Menu({ app, user: this.state.user, back });
-  const write = new Write({ app, user: this.state.user, back, goMain });
-  const post = new Post({ app, user: this.state.user, go, back });
-  const chatting = new Chatting({ app, user: this.state.user, go, back });
+  const menu = new Menu({ app, back });
+  const write = new Write({ app, back, goMain });
+  const post = new Post({ app, go, back });
+  const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
     app,
-    user: this.state.user,
     back,
   });
-  const region = new Region({ app, user: this.state.user, back });
+  const region = new Region({ app, back });
+
+  this.state = {
+    user: undefined,
+    category: undefined,
+    depth: [],
+  };
 
   this.setState = (action: string, nextState: any): any => {
     console.log('app setstate');
@@ -133,7 +163,6 @@ function App() {
       case actionObj.back:
       case actionObj.goMain:
         historyPush();
-        return this.render(action);
       case actionObj.user:
       case actionObj.category:
         return this.render(action);
@@ -146,7 +175,9 @@ function App() {
     console.log('app render', 'action: ', action, 'state: ', this.state);
     switch (action) {
       case actionObj.go:
-        const name = this.state.depth[this.state.depth.length - 1];
+        const lastDepth = this.state.depth[this.state.depth.length - 1];
+        const name =
+          lastDepth.search(/\#/g) === -1 ? lastDepth : renderObj.post;
         switch (name) {
           case renderObj.category:
             return category.render(this.state.category);
@@ -160,7 +191,7 @@ function App() {
             return menu.render();
           case renderObj.write:
             return write.render();
-          case renderObj.post.slice(0, 4):
+          case renderObj.post:
             return post.render();
           case renderObj.chatting:
             return chatting.render();
@@ -198,40 +229,8 @@ function App() {
     }
   };
 
-  const autoLogin = (): void => {
-    if (localStorage.getItem('user'))
-      fetch('/api/auth', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((res) => {
-          if (res.ok) return res.json();
-          else throw new Error('자동 로그인 실패');
-        })
-        .then((data) => {
-          const { user, text } = data;
-          authProcess(user);
-          if (text) console.log(data.text);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-  };
-
-  const getCategory = (): void => {
-    const category = localStorage.getItem('category') || setCategory();
-    this.setState(actionObj.category, { ...this.state, category });
-  };
-
   const init = (): void => {
     autoLogin();
-    // fake
-    // this.setState(actionObj.user, {
-    //   ...this.state,
-    //   user: { uuid: 'uu', id: 'minsang', region: ['방배동', '관악동'] },
-    // });
     getCategory();
   };
   init();
