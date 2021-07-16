@@ -40,7 +40,6 @@ function Login({ app, user, go, back, authProcess }) {
     if (classList.contains('js-back')) {
       back();
     } else if (classList.contains('render')) {
-      console.log(classList[0].slice(3));
       go(classList[0].slice(3));
     }
   });
@@ -62,14 +61,17 @@ function Login({ app, user, go, back, authProcess }) {
         }),
       })
         .then((res) => {
-          return res.json();
+          if (res.ok) {
+            return res.json();
+          } else if (res.status === 409)
+            alert('아이디 또는 비밀번호가 틀립니다');
         })
-        .then(({ user, text }) => {
+        .then(({ user }) => {
           if (user) {
-            authProcess();
+            authProcess(user);
             back();
-          } else {
-            if (text) alert(text);
+            localStorage.setItem('user', 'true');
+            console.log('로그인');
           }
         })
         .catch((e) => {
@@ -78,6 +80,8 @@ function Login({ app, user, go, back, authProcess }) {
   });
   this.state = user;
   this.render = () => {
+    $id.value = '';
+    $password.value = '';
     $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
   };
