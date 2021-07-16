@@ -523,7 +523,7 @@
       height: 16px;
       filter: map.get($filter_colors, 'grey-1');
     }
-    & > p:first-of-type {
+    & > p:not(:last-of-type) {
       margin-right: 10px;
     }
   }
@@ -544,6 +544,9 @@
     color: map.get($colors, 'grey-1');
   }
   &__info {
+    text-align: right;
+  }
+  &__time {
     @include text('x-small');
     color: map.get($colors, 'grey-1');
   }
@@ -613,3 +616,5 @@
 //     brightness(105%) contrast(101%);
 // }
 // }
+
+@import './menu.scss';
