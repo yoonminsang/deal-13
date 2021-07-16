@@ -307,11 +307,21 @@
   min-width: 20px;
 }
 
+.category-list {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 24px 62px;
+}
+
 .category-list-item {
   @include text('x-small');
   display: flex;
   align-items: center;
   flex-direction: column;
+  width: fit-content;
+  margin: 0 auto;
+  cursor: pointer;
   & > div {
     @extend .img-box-small;
     margin-bottom: 16px;
