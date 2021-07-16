@@ -91,8 +91,13 @@ function App() {
     back,
     authProcess,
   });
-  const signup = new Signup({ app, user: this.state.user, back, goMain });
-  const account = new Account({ app, user: this.state.user, back, goMain });
+  const signup = new Signup({
+    app,
+    user: this.state.user,
+    back,
+    goMain,
+  });
+  const account = new Account({ app, back, authProcess });
   const category = new Category({ app, user: this.state.user, back });
   const menu = new Menu({ app, user: this.state.user, back });
   const write = new Write({ app, user: this.state.user, back, goMain });
@@ -167,6 +172,7 @@ function App() {
         return;
       case actionObj.user:
         main.setState(actionObj.user, this.state.user);
+        account.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
@@ -177,21 +183,25 @@ function App() {
   };
 
   const autoLogin = (): void => {
-    fetch('/api/auth', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const { user, text } = data;
-        authProcess(user);
-        if (text) console.log(data.text);
+    if (localStorage.getItem('user'))
+      fetch('/api/auth', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
-      .catch((e) => {
-        console.error(e);
-      });
+        .then((res) => {
+          if (res.ok) return res.json();
+          else throw new Error('자동 로그인 실패');
+        })
+        .then((data) => {
+          const { user, text } = data;
+          authProcess(user);
+          if (text) console.log(data.text);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
   };
 
   const setCategory = (category: string = 'all'): string => {
