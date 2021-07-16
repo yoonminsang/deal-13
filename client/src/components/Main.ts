@@ -100,32 +100,30 @@ function Main({ app, go }) {
       this.state.category
     ) {
       // this.state.user
-
-      fetch(
-        `/api/post/${this.state.user.region[getPrimaryRegion()]}/${
-          this.state.category
-        }`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
-        .then((res) => res.json())
-        .then(({ post, text }) => {
-          this.setState(stateObj.post, post);
-          if (text) console.log(text);
-        })
-        .catch((e) => {
-          console.error(e);
-        });
-
+      // fetch(
+      //   `/api/post/${this.state.user.region[getPrimaryRegion()]}/${
+      //     this.state.category
+      //   }`,
+      //   {
+      //     method: 'GET',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //   },
+      // )
+      //   .then((res) => res.json())
+      //   .then(({ post, text }) => {
+      //     this.setState(stateObj.post, post);
+      //     if (text) console.log(text);
+      //   })
+      //   .catch((e) => {
+      //     console.error(e);
+      //   });
       // fake
-      // const post = [
-      //   ['1', 'url', '반팔', '석수동', '1일전', '10,000', '1', '2'],
-      // ];
-      // this.setState(stateObj.post, post);
+      const post = [
+        ['1', 'github.com', '반팔', '석수동', '1일전', '10,000', '1', '2'],
+      ];
+      this.setState(stateObj.post, post);
     } else if (this.state.user === null) {
       $listItems.innerHTML =
         '<div class="need-login"><div>로그인해주세요!!!</div></div>';
@@ -171,7 +169,11 @@ function Main({ app, go }) {
             this.state.user.region
               .map((v, i) => makeRegionItem(i, v))
               .join('') + makeMyRegion();
-        } else $auth.classList.replace('js-account', 'js-login');
+        } else {
+          $auth.classList.replace('js-account', 'js-login');
+          $region.textContent = '장소';
+          $dropDwon.innerHTML = makeMyRegion();
+        }
         getApi();
         return;
       case stateObj.category:
