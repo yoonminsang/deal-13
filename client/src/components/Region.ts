@@ -1,5 +1,5 @@
 import '../styles/Region.scss';
-function Region({ app, back, setPrimaryRegion }) {
+function Region({ app, back, setPrimaryRegion, autoLogin }) {
   interface StateObj {
     user: string;
     primaryRegion: string;
@@ -94,6 +94,29 @@ function Region({ app, back, setPrimaryRegion }) {
         alert('현재 이용중인 동네는 삭제할 수 없습니다');
       } else {
         // 삭제
+        const region = $input.value;
+        fetch('/api/region/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            region,
+          }),
+        })
+          .then((res) => {
+            if (res.ok || res.status === 409) return res.json();
+          })
+          .then(({ text, error }) => {
+            if (error) alert(error);
+            else if (text) {
+              console.log(text);
+              autoLogin();
+            }
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
     } else if (regionClosest && !regionClosest.classList.contains('active')) {
       const index = target.classList[0].slice(7);
@@ -136,8 +159,7 @@ function Region({ app, back, setPrimaryRegion }) {
           if (error) alert(error);
           else if (text) {
             console.log(text);
-            this.setState(stateObj.modal, false);
-            // 지역을 어떻게 추가할지 고민중
+            autoLogin();
           }
         })
         .catch((e) => {
@@ -179,6 +201,7 @@ function Region({ app, back, setPrimaryRegion }) {
               .map((region, i) => makeRegion(region, i))
               .join('');
           }
+          this.setState(stateObj.modal, false);
         } else console.log('account user rerender error');
         return;
       case stateObj.primaryRegion:
