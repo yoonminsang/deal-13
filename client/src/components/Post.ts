@@ -1,9 +1,9 @@
-function Post({ app, user, go, back }) {
+function Post({ app, go, back }) {
   const target = document.createElement('div');
   target.className = 'post slidein';
   target.innerHTML = `post`;
   target.addEventListener('click', back);
-  this.state = user;
+  // this.state = user;
   this.render = () => {
     target.classList.replace('slideout', 'slidein');
     app.appendChild(target);

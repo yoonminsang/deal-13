@@ -8,7 +8,7 @@ function Account({ app, back, authProcess }) {
   };
 
   const $target = document.createElement('div');
-  $target.className = 'account slidein';
+  $target.className = 'account slidein auth';
   $target.innerHTML = `
   <div class="top-bar off-white">
     <div>
@@ -24,8 +24,10 @@ function Account({ app, back, authProcess }) {
     <button class="js-logout btn-large" type="submit">로그아웃</button>
   </div>
   `;
+
   const $userId = $target.querySelector('.user-id');
   const $logout = $target.querySelector('.js-logout');
+
   $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
@@ -33,7 +35,8 @@ function Account({ app, back, authProcess }) {
       back();
     }
   });
-  $logout.addEventListener('click', (e) => {
+
+  $logout.addEventListener('click', () => {
     fetch('/api/auth/logout', {
       method: 'GET',
       headers: {
@@ -52,6 +55,7 @@ function Account({ app, back, authProcess }) {
         console.log(e);
       });
   });
+
   this.state = {
     user: undefined,
   };
@@ -64,11 +68,10 @@ function Account({ app, back, authProcess }) {
     app.appendChild($target);
   };
   this.rerender = (changeStateName) => {
-    console.log('account rerender', this.state, changeStateName);
     switch (changeStateName) {
       case stateObj.user:
         if (this.state.user) $userId.textContent = this.state.user.id;
-        else console.log('account this.state rerender error');
+        else console.log('account rerender error');
         return;
       default:
         console.log('state name is not found');

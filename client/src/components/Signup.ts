@@ -1,4 +1,4 @@
-function Signup({ app, user, back, goMain }) {
+function Signup({ app, back, goMain }) {
   const $target = document.createElement('div');
   $target.className = 'signup slidein auth';
   $target.innerHTML = `
@@ -45,6 +45,7 @@ function Signup({ app, user, back, goMain }) {
     </form>
   </div>
   `;
+
   const $form = $target.querySelector('.js-form');
   const $id: HTMLInputElement = $form.querySelector('.js-id');
   const $password: HTMLInputElement = $form.querySelector('.js-password');
@@ -53,13 +54,26 @@ function Signup({ app, user, back, goMain }) {
   );
   const $region: HTMLInputElement = $form.querySelector('.js-region');
 
-  $target.addEventListener('click', (e: MouseEvent) => {
+  $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
     if (classList.contains('js-back')) {
       back();
     }
   });
+
+  $target.addEventListener('input', (e) => {
+    const target = e.target as HTMLInputElement;
+    switch (target) {
+      case $id:
+        target.value = target.value.replace(/[^0-9a-z]/gi, '');
+        return;
+      case $region:
+        target.value = target.value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣0-9]/gi, '');
+        return;
+    }
+  });
+
   $form.addEventListener('submit', (e) => {
     e.preventDefault();
     const id = $id.value;
@@ -70,7 +84,8 @@ function Signup({ app, user, back, goMain }) {
     else if (!password) alert('비밀번호를 입력하세요!!');
     else if (!passwordConfirm) alert('비밀번호 확인을 입력하세요!!');
     else if (!region) alert('우리 동네를 입력하세요!!');
-    // 유효성 검사 추가
+    else if (password !== passwordConfirm) alert('비밀번호가 다릅니다!!');
+    else if (!/동$/.test(region)) alert('우리 동네를 확안하세요!!');
     else
       fetch('/api/auth/signup', {
         method: 'POST',
@@ -84,17 +99,22 @@ function Signup({ app, user, back, goMain }) {
         }),
       })
         .then((res) => {
-          if (res.ok) {
-            alert('회원가입 완료');
+          if (res.ok || res.status === 409) return res.json();
+        })
+        .then(({ text, error }) => {
+          if (error) alert(error);
+          else if (text) {
+            alert(text);
             goMain();
-            return res.json();
-          } else if (res.status === 409) alert('아이디가 존재합니다!!');
+          }
         })
         .catch((e) => {
           console.log(e);
         });
   });
-  this.state = user;
+
+  this.state = { user: undefined };
+
   this.render = () => {
     $id.value = '';
     $password.value = '';

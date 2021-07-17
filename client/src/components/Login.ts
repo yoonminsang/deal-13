@@ -1,5 +1,5 @@
 import '../styles/Login.scss';
-function Login({ app, user, go, back, authProcess }) {
+function Login({ app, go, back, authProcess }) {
   const $target = document.createElement('div');
   $target.className = 'login slidein auth';
   $target.innerHTML = `
@@ -31,9 +31,11 @@ function Login({ app, user, go, back, authProcess }) {
     </form>
   </div>
   `;
+
   const $form = $target.querySelector('.js-form');
   const $id: HTMLInputElement = $form.querySelector('.js-id');
   const $password: HTMLInputElement = $form.querySelector('.js-password');
+
   $target.addEventListener('click', (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
@@ -43,6 +45,7 @@ function Login({ app, user, go, back, authProcess }) {
       go(classList[0].slice(3));
     }
   });
+
   $form.addEventListener('submit', (e) => {
     e.preventDefault();
     const id = $id.value;
@@ -61,24 +64,23 @@ function Login({ app, user, go, back, authProcess }) {
         }),
       })
         .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else if (res.status === 409)
-            alert('아이디 또는 비밀번호가 틀립니다');
+          if (res.ok || res.status === 409) return res.json();
         })
-        .then(({ user }) => {
-          if (user) {
+        .then(({ user, error }) => {
+          if (error) alert(error);
+          else if (user) {
             authProcess(user);
             back();
             localStorage.setItem('user', 'true');
-            console.log('로그인');
+            console.log('로그인 성공');
           }
         })
         .catch((e) => {
           console.log(e);
         });
   });
-  this.state = user;
+
+  this.state = { user: undefined };
   this.render = () => {
     $id.value = '';
     $password.value = '';
