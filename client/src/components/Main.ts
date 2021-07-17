@@ -1,4 +1,4 @@
-function Main({ app, go }) {
+function Main({ app, go, setPrimaryRegion }) {
   interface StateObj {
     user: string;
     category: string;
@@ -77,21 +77,6 @@ function Main({ app, go }) {
     return '<li class="js-region render drop-down-item">내 동네 설정하기</li>';
   };
 
-  const setPrimaryRegion = (primaryRegion: string = '0'): string => {
-    localStorage.setItem('primaryRegion', primaryRegion);
-    this.rerender(stateObj.primaryRegion);
-    return primaryRegion;
-    // return localStorage.getItem('primaryRegion');
-  };
-
-  const getPrimaryRegion = (): string => {
-    const primaryRegion =
-      localStorage.getItem('primaryRegion') || setPrimaryRegion();
-    return primaryRegion;
-  };
-  // 지역 살제할땐 무조건 setPrimaryRegion('1'),
-  // 아니 무조건 db에서 하는걸로 나중에 수정
-
   const getApi = (): void => {
     if (
       this.state.user &&
@@ -146,6 +131,7 @@ function Main({ app, go }) {
     user: undefined,
     category: undefined,
     post: undefined,
+    primaryRegion: undefined,
   };
 
   this.setState = (nextStateName, nextState) => {
@@ -162,7 +148,8 @@ function Main({ app, go }) {
       case stateObj.user:
         if (this.state.user) {
           $auth.classList.replace('js-login', 'js-account');
-          $region.textContent = this.state.user.region[getPrimaryRegion()];
+          $region.textContent =
+            this.state.user.region[this.state.primaryRegion];
           $dropDwon.innerHTML =
             this.state.user.region
               .map((v, i) => makeRegionItem(i, v))
@@ -186,12 +173,13 @@ function Main({ app, go }) {
           .join('');
         return;
       case stateObj.primaryRegion:
-        $region.textContent = this.state.user.region[getPrimaryRegion()];
+        $region.textContent = this.state.user.region[this.state.primaryRegion];
         return;
       default:
         console.log('state name is not found');
     }
   };
+
   this.render();
 }
 export default Main;
