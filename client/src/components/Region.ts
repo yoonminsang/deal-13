@@ -12,7 +12,7 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
   };
 
   const $target = document.createElement('div');
-  $target.className = 'region slidein';
+  $target.className = 'region';
   $target.innerHTML = `
   <div class="top-bar off-white">
     <div>
@@ -179,8 +179,8 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
   };
 
   this.render = () => {
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
 
   this.rerender = (changeStateName) => {

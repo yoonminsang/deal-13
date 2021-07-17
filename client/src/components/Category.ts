@@ -136,7 +136,7 @@ function Category({ app, setCategory, back }) {
   };
 
   const $target = document.createElement('div');
-  $target.className = 'category slidein';
+  $target.className = 'category';
   this.state = {
     category: 'all',
   };
@@ -147,9 +147,9 @@ function Category({ app, setCategory, back }) {
   };
 
   this.render = (category: string) => {
-    $target.classList.replace('slideout', 'slidein');
     $target.innerHTML = createHeader() + getCategoryList(this.state.category);
     app.appendChild($target);
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
 
   this.rerender = (changeStateName) => {

@@ -260,14 +260,14 @@ function Menu({ app, back }) {
   };
 
   this.render = () => {
-    $target.className = 'menu slidein';
+    $target.className = 'menu';
     $target.innerHTML = createHeader() + createGNB(this.state.tap);
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
     rerenderMenuBody();
     const gnbContainer: HTMLDivElement =
       document.querySelector('.gnb-container');
     gnbContainer?.addEventListener('click', (e) => handleTap(e));
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
 
   this.rerender = rerenderMenuBody;

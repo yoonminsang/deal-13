@@ -1,7 +1,7 @@
 import '../styles/Login.scss';
 function Login({ app, go, back, authProcess }) {
   const $target = document.createElement('div');
-  $target.className = 'login slidein auth';
+  $target.className = 'login auth';
   $target.innerHTML = `
   <div class="top-bar off-white">
     <div>
@@ -84,8 +84,8 @@ function Login({ app, go, back, authProcess }) {
   this.render = () => {
     $id.value = '';
     $password.value = '';
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
 }
 export default Login;

@@ -1,6 +1,6 @@
 function Signup({ app, back, goMain }) {
   const $target = document.createElement('div');
-  $target.className = 'signup slidein auth';
+  $target.className = 'signup auth';
   $target.innerHTML = `
   <div class="top-bar off-white">
     <div>
@@ -120,8 +120,8 @@ function Signup({ app, back, goMain }) {
     $password.value = '';
     $passwordConfirm.value = '';
     $region.value = '';
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
 }
 export default Signup;
