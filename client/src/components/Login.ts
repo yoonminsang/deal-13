@@ -64,17 +64,15 @@ function Login({ app, go, back, authProcess }) {
         }),
       })
         .then((res) => {
-          if (res.ok) {
-            return res.json();
-          } else if (res.status === 409)
-            alert('아이디 또는 비밀번호가 틀립니다');
+          if (res.ok || res.status === 409) return res.json();
         })
-        .then(({ user }) => {
-          if (user) {
+        .then(({ user, error }) => {
+          if (error) alert(error);
+          else if (user) {
             authProcess(user);
             back();
             localStorage.setItem('user', 'true');
-            console.log('로그인');
+            console.log('로그인 성공');
           }
         })
         .catch((e) => {
@@ -84,9 +82,6 @@ function Login({ app, go, back, authProcess }) {
 
   this.state = { user: undefined };
   this.render = () => {
-    if (this.state.user) {
-      // history 적용시키고 뒤로가기 또는 메인으로 리다이렉트
-    }
     $id.value = '';
     $password.value = '';
     $target.classList.replace('slideout', 'slidein');

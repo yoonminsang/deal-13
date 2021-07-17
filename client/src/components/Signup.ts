@@ -99,11 +99,14 @@ function Signup({ app, back, goMain }) {
         }),
       })
         .then((res) => {
-          if (res.ok) {
-            alert('회원가입 완료');
+          if (res.ok || res.status === 409) return res.json();
+        })
+        .then(({ text, error }) => {
+          if (error) alert(error);
+          else if (text) {
+            alert(text);
             goMain();
-            return res.json();
-          } else if (res.status === 409) alert('아이디가 존재합니다!!');
+          }
         })
         .catch((e) => {
           console.log(e);
@@ -111,10 +114,8 @@ function Signup({ app, back, goMain }) {
   });
 
   this.state = { user: undefined };
+
   this.render = () => {
-    if (this.state.user) {
-      // history 적용시키고 뒤로가기 또는 메인으로 리다이렉트
-    }
     $id.value = '';
     $password.value = '';
     $passwordConfirm.value = '';
