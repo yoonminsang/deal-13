@@ -127,23 +127,42 @@ const isBackButton = (e: MouseEvent) => {
   return target.classList.contains('js-back');
 };
 
-function Category({ app, setCategory, user, back }) {
+function Category({ app, setCategory, back }) {
+  interface StateObj {
+    category: string;
+  }
+  const stateObj: StateObj = {
+    category: 'category',
+  };
+
   const $target = document.createElement('div');
   $target.className = 'category slidein';
   this.state = {
     category: 'all',
   };
-  this.setState = (category: string) => {
-    this.state = {
-      ...this.state,
-      category,
-    };
+
+  this.setState = (nextStateName, nextState) => {
+    this.state = { ...this.state, [nextStateName]: nextState };
+    this.rerender(nextStateName);
   };
+
   this.render = (category: string) => {
-    this.setState(category);
     $target.classList.replace('slideout', 'slidein');
     $target.innerHTML = createHeader() + getCategoryList(this.state.category);
     app.appendChild($target);
+  };
+
+  this.rerender = (changeStateName) => {
+    switch (changeStateName) {
+      case stateObj.category:
+        if (this.state.category)
+          $target.innerHTML =
+            createHeader() + getCategoryList(this.state.category);
+        else console.log('category rerender error');
+        return;
+      default:
+        console.log('state name is not found');
+    }
   };
 
   $target.addEventListener('click', (e) => {

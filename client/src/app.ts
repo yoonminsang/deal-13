@@ -217,7 +217,7 @@ function App() {
         switch (name) {
           case renderObj.category:
             if (!this.state.user) return goLogin();
-            return category.render(this.state.category);
+            return category.render();
           case renderObj.login:
             if (this.state.user) return goMain();
             return login.render();
@@ -279,7 +279,7 @@ function App() {
         return;
       case actionObj.category:
         main.setState(actionObj.category, this.state.category);
-        // category.setState(actionObj.category, this.state.category);
+        category.setState(actionObj.category, this.state.category);
         return;
       case actionObj.primaryRegion:
         main.setState(actionObj.primaryRegion, this.state.primaryRegion);

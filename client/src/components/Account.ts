@@ -64,9 +64,6 @@ function Account({ app, back, authProcess }) {
     this.rerender(nextStateName);
   };
   this.render = () => {
-    if (this.state.user === null) {
-      // history 적용시키고 뒤로가기 또는 메인으로 리다이렉트
-    }
     $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
   };
