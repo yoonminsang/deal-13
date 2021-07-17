@@ -148,7 +148,21 @@
   @extend .btn-medium;
   justify-content: space-between;
   .icon {
-    filter: map.get($filter_colors, 'white');
+    filter: map.get($filter_colors, 'primary-2');
+  }
+  background-color: map.get($colors, 'white');
+  color: map.get($colors, 'primary-2');
+  border: 1px solid map.get($colors, 'primary-1');
+
+  &.active {
+    background-color: map.get($colors, 'primary-1');
+    color: map.get($colors, 'white');
+    .icon {
+      filter: map.get($filter_colors, 'white');
+    }
+  }
+  &.noraml {
+    justify-content: center;
   }
 }
 

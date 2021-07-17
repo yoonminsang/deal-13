@@ -55,6 +55,7 @@ const renderObj: RenderObj = {
   chattingDetail: 'chattingDetail',
   region: 'region',
 };
+const AUTO = 'auto';
 
 function App() {
   const app = document.querySelector('#app');
@@ -100,7 +101,7 @@ function App() {
 
   const autoGetCategory = (): void => {
     const category =
-      localStorage.getItem(actionObj.category) || setCategory('all', 'auto');
+      localStorage.getItem(actionObj.category) || setCategory('all', AUTO);
     this.setState(actionObj.category, { ...this.state, category });
   };
 
@@ -117,7 +118,7 @@ function App() {
   const autoGetPrimaryRegion = (): void => {
     const primaryRegion =
       localStorage.getItem(actionObj.primaryRegion) ||
-      setPrimaryRegion('0', 'auto');
+      setPrimaryRegion('0', AUTO);
     this.setState(actionObj.primaryRegion, { ...this.state, primaryRegion });
   };
   // 지역 삭제할땐 무조건 setPrimaryRegion('0'),
@@ -179,7 +180,7 @@ function App() {
     app,
     back,
   });
-  const region = new Region({ app, back, setPrimaryRegion });
+  const region = new Region({ app, back, setPrimaryRegion, autoLogin });
 
   this.state = {
     user: undefined,
