@@ -4,12 +4,14 @@ function Main({ app, go, setPrimaryRegion }) {
     category: string;
     post: string;
     primaryRegion: string;
+    modal: string;
   }
   const stateObj: StateObj = {
     user: 'user',
     category: 'category',
     post: 'post',
     primaryRegion: 'primaryRegion',
+    modal: 'modal',
   };
 
   const $target = document.createElement('div');
@@ -117,13 +119,13 @@ function Main({ app, go, setPrimaryRegion }) {
     const target = e.target as HTMLElement;
     const classList = target.classList;
     if (classList.contains('render')) {
-      $dropDwon.classList.add('blind');
+      this.setState(stateObj.modal, false);
       go(classList[0].slice(3));
     } else if (classList.contains('js-modal')) {
-      $dropDwon.classList.toggle('blind');
+      this.setState(stateObj.modal, !this.state.modal);
     } else if (classList.contains('region')) {
       setPrimaryRegion(target.classList[1]);
-      $dropDwon.classList.add('blind');
+      this.setState(stateObj.modal, false);
     }
   });
 
@@ -132,6 +134,7 @@ function Main({ app, go, setPrimaryRegion }) {
     category: undefined,
     post: undefined,
     primaryRegion: undefined,
+    modal: false,
   };
 
   this.setState = (nextStateName, nextState) => {
@@ -174,6 +177,10 @@ function Main({ app, go, setPrimaryRegion }) {
         return;
       case stateObj.primaryRegion:
         $region.textContent = this.state.user.region[this.state.primaryRegion];
+        return;
+      case stateObj.modal:
+        if (this.state.modal) $dropDwon.classList.remove('blind');
+        else $dropDwon.classList.add('blind');
         return;
       default:
         console.log('state name is not found');
