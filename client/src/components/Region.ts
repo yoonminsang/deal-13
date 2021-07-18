@@ -1,5 +1,5 @@
 import '../styles/Region.scss';
-function Region({ app, back, setPrimaryRegion, autoLogin }) {
+function Region({ app, setPrimaryRegion, autoLogin }) {
   interface StateObj {
     user: string;
     primaryRegion: string;
@@ -12,7 +12,7 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
   };
 
   const $target = document.createElement('div');
-  $target.className = 'region slidein';
+  $target.className = 'region';
   $target.innerHTML = `
   <div class="top-bar off-white">
     <div>
@@ -87,9 +87,7 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
     const classList = target.classList;
     const regionClosest = target.closest('.js-region');
     const addClosest = target.closest('.js-add');
-    if (classList.contains('js-back')) {
-      back();
-    } else if (classList.contains('icon-close')) {
+    if (classList.contains('icon-close')) {
       if (regionClosest.classList.contains('active')) {
         alert('현재 이용중인 동네는 삭제할 수 없습니다');
       } else {
@@ -179,8 +177,8 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
   };
 
   this.render = () => {
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
 
   this.rerender = (changeStateName) => {
@@ -202,7 +200,7 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
               .join('');
           }
           this.setState(stateObj.modal, false);
-        } else console.log('account user rerender error');
+        }
         return;
       case stateObj.primaryRegion:
         if (this.state.primaryRegion) {

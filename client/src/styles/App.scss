@@ -1,35 +1,13 @@
 #app {
-  > div {
+  > div:not(:first-child) {
     position: absolute;
     width: 100%;
     background: white;
-    left: 0;
     top: 0;
-    // 임시야 left,top
+    right: -100vw;
+    transition: right 0.5s ease-out;
   }
-}
-
-.slidein {
-  animation-duration: 0.5s;
-  animation-name: slidein;
-}
-.slideout {
-  animation-duration: 0.5s;
-  animation-name: slideout;
-}
-@keyframes slidein {
-  from {
-    margin-left: 100%;
-  }
-  to {
-    margin-left: 0%;
-  }
-}
-@keyframes slideout {
-  from {
-    margin-left: 0%;
-  }
-  to {
-    margin-left: 100%;
+  .slidein {
+    right: 0 !important;
   }
 }

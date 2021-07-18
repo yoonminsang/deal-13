@@ -60,6 +60,13 @@ const AUTO = 'auto';
 function App() {
   const app = document.querySelector('#app');
 
+  app.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const classList = target.classList;
+    if (classList.contains('js-back')) back();
+    else if (classList.contains('render')) go(classList[0].slice(3));
+  });
+
   const go = (next: string): void => {
     const nextDepth = [...this.state.depth, next];
     this.setState(actionObj.go, { ...this.state, depth: nextDepth });
@@ -163,7 +170,6 @@ function App() {
   });
   const signup = new Signup({
     app,
-    back,
     goMain,
   });
   const account = new Account({ app, back, authProcess });
@@ -172,7 +178,7 @@ function App() {
     setCategory,
     back,
   });
-  const menu = new Menu({ app, back });
+  const menu = new Menu({ app });
   const write = new Write({ app, back, goMain });
   const post = new Post({ app, go, back });
   const chatting = new Chatting({ app, go, back });
@@ -180,7 +186,7 @@ function App() {
     app,
     back,
   });
-  const region = new Region({ app, back, setPrimaryRegion, autoLogin });
+  const region = new Region({ app, setPrimaryRegion, autoLogin });
 
   this.state = {
     user: undefined,
@@ -274,6 +280,7 @@ function App() {
 
       case actionObj.user:
         main.setState(actionObj.user, this.state.user);
+        login.setState(actionObj.user, this.state.user);
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식

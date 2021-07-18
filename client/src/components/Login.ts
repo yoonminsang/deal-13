@@ -1,7 +1,14 @@
 import '../styles/Login.scss';
 function Login({ app, go, back, authProcess }) {
+  interface StateObj {
+    user: string;
+  }
+  const stateObj: StateObj = {
+    user: 'user',
+  };
+
   const $target = document.createElement('div');
-  $target.className = 'login slidein auth';
+  $target.className = 'login auth';
   $target.innerHTML = `
   <div class="top-bar off-white">
     <div>
@@ -36,16 +43,6 @@ function Login({ app, go, back, authProcess }) {
   const $id: HTMLInputElement = $form.querySelector('.js-id');
   const $password: HTMLInputElement = $form.querySelector('.js-password');
 
-  $target.addEventListener('click', (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const classList = target.classList;
-    if (classList.contains('js-back')) {
-      back();
-    } else if (classList.contains('render')) {
-      go(classList[0].slice(3));
-    }
-  });
-
   $form.addEventListener('submit', (e) => {
     e.preventDefault();
     const id = $id.value;
@@ -70,9 +67,9 @@ function Login({ app, go, back, authProcess }) {
           if (error) alert(error);
           else if (user) {
             authProcess(user);
-            back();
-            localStorage.setItem('user', 'true');
-            console.log('로그인 성공');
+            // back();
+            // localStorage.setItem('user', 'true');
+            // console.log('로그인 성공');
           }
         })
         .catch((e) => {
@@ -81,11 +78,33 @@ function Login({ app, go, back, authProcess }) {
   });
 
   this.state = { user: undefined };
+
+  this.setState = (nextStateName, nextState) => {
+    this.state = { ...this.state, [nextStateName]: nextState };
+    this.rerender(nextStateName);
+  };
+
   this.render = () => {
     $id.value = '';
     $password.value = '';
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
+    setTimeout(() => $target.classList.add('slidein'), 0);
+  };
+
+  this.rerender = (changeStateName) => {
+    switch (changeStateName) {
+      case stateObj.user:
+        if (this.state.user) {
+          if (app.querySelector('.login')) {
+            back();
+            localStorage.setItem('user', 'true');
+            console.log('로그인 성공');
+          }
+        }
+        return;
+      default:
+        console.log('state name is not found');
+    }
   };
 }
 export default Login;

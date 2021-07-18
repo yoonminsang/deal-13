@@ -115,12 +115,12 @@ const tmpChatList: IChat[] = [
   },
 ];
 
-const isBackButton = (e: MouseEvent) => {
-  const target = e.target as HTMLElement;
-  return target.classList.contains('js-back');
-};
+// const isBackButton = (e: MouseEvent) => {
+//   const target = e.target as HTMLElement;
+//   return target.classList.contains('js-back');
+// };
 
-function Menu({ app, back }) {
+function Menu({ app }) {
   this.state = {
     tap: 0,
     chatList: tmpChatList,
@@ -260,21 +260,21 @@ function Menu({ app, back }) {
   };
 
   this.render = () => {
-    $target.className = 'menu slidein';
+    $target.className = 'menu';
     $target.innerHTML = createHeader() + createGNB(this.state.tap);
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
     rerenderMenuBody();
     const gnbContainer: HTMLDivElement =
       document.querySelector('.gnb-container');
     gnbContainer?.addEventListener('click', (e) => handleTap(e));
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
 
   this.rerender = rerenderMenuBody;
   $target.addEventListener('click', (e) => {
-    if (isBackButton(e) && back()) {
-      return;
-    }
+    // if (isBackButton(e) && back()) {
+    //   return;
+    // }
     handleClickEvent(e);
     this.rerender();
   });

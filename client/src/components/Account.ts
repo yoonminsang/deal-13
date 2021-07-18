@@ -8,7 +8,7 @@ function Account({ app, back, authProcess }) {
   };
 
   const $target = document.createElement('div');
-  $target.className = 'account slidein auth';
+  $target.className = 'account auth';
   $target.innerHTML = `
   <div class="top-bar off-white">
     <div>
@@ -28,14 +28,6 @@ function Account({ app, back, authProcess }) {
   const $userId = $target.querySelector('.user-id');
   const $logout = $target.querySelector('.js-logout');
 
-  $target.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    const classList = target.classList;
-    if (classList.contains('js-back')) {
-      back();
-    }
-  });
-
   $logout.addEventListener('click', () => {
     fetch('/api/auth/logout', {
       method: 'GET',
@@ -46,9 +38,9 @@ function Account({ app, back, authProcess }) {
       .then((res) => {
         if (res.ok) {
           authProcess(null);
-          back();
-          localStorage.removeItem('user');
-          console.log('로그아웃');
+          // back();
+          // localStorage.removeItem('user');
+          // console.log('로그아웃');
         } else console.error('로그아웃 에러');
       })
       .catch((e) => {
@@ -59,19 +51,28 @@ function Account({ app, back, authProcess }) {
   this.state = {
     user: undefined,
   };
+
   this.setState = (nextStateName, nextState) => {
     this.state = { ...this.state, [nextStateName]: nextState };
     this.rerender(nextStateName);
   };
+
   this.render = () => {
-    $target.classList.replace('slideout', 'slidein');
     app.appendChild($target);
+    setTimeout(() => $target.classList.add('slidein'), 0);
   };
+
   this.rerender = (changeStateName) => {
     switch (changeStateName) {
       case stateObj.user:
         if (this.state.user) $userId.textContent = this.state.user.id;
-        else console.log('account rerender error');
+        else {
+          if (app.querySelector('.account')) {
+            back();
+            localStorage.removeItem('user');
+            console.log('로그아웃');
+          }
+        }
         return;
       default:
         console.log('state name is not found');
