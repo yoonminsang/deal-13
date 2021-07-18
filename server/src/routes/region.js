@@ -6,7 +6,7 @@ const router = express.Router();
 router.use((req, res, next) => {
   if (!req.user)
     return res.status(403).json({ error: '로그인 되어있지 않습니다.' });
-  else next();
+  next();
 });
 
 router.get('/', (req, res) => {
@@ -36,9 +36,12 @@ router.post('/create', async (req, res) => {
 });
 
 router.post('/delete', async (req, res) => {
-  if (!req.user)
-    return res.status(403).json({ error: '로그인 되어있지 않습니다.' });
   const { region } = req.body;
+  const [[regions]] = await db.query(
+    `SELECT id FROM regions WHERE region='${region}' LIMIT 1`,
+  );
+  await db.query(`DELETE FROM region_list WHERE region_id='${regions.id}'`);
+  return res.json({ text: '동네 삭제 완료' });
 });
 
 export default router;
