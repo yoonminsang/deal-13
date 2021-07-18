@@ -274,6 +274,7 @@ function App() {
 
       case actionObj.user:
         main.setState(actionObj.user, this.state.user);
+        login.setState(actionObj.user, this.state.user);
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식

@@ -202,7 +202,7 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
               .join('');
           }
           this.setState(stateObj.modal, false);
-        } else console.log('account user rerender error');
+        }
         return;
       case stateObj.primaryRegion:
         if (this.state.primaryRegion) {

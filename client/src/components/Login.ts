@@ -1,5 +1,12 @@
 import '../styles/Login.scss';
 function Login({ app, go, back, authProcess }) {
+  interface StateObj {
+    user: string;
+  }
+  const stateObj: StateObj = {
+    user: 'user',
+  };
+
   const $target = document.createElement('div');
   $target.className = 'login auth';
   $target.innerHTML = `
@@ -70,9 +77,9 @@ function Login({ app, go, back, authProcess }) {
           if (error) alert(error);
           else if (user) {
             authProcess(user);
-            back();
-            localStorage.setItem('user', 'true');
-            console.log('로그인 성공');
+            // back();
+            // localStorage.setItem('user', 'true');
+            // console.log('로그인 성공');
           }
         })
         .catch((e) => {
@@ -81,11 +88,33 @@ function Login({ app, go, back, authProcess }) {
   });
 
   this.state = { user: undefined };
+
+  this.setState = (nextStateName, nextState) => {
+    this.state = { ...this.state, [nextStateName]: nextState };
+    this.rerender(nextStateName);
+  };
+
   this.render = () => {
     $id.value = '';
     $password.value = '';
     app.appendChild($target);
     setTimeout(() => $target.classList.add('slidein'), 0);
+  };
+
+  this.rerender = (changeStateName) => {
+    switch (changeStateName) {
+      case stateObj.user:
+        if (this.state.user) {
+          if (app.querySelector('.login')) {
+            back();
+            localStorage.setItem('user', 'true');
+            console.log('로그인 성공');
+          }
+        }
+        return;
+      default:
+        console.log('state name is not found');
+    }
   };
 }
 export default Login;

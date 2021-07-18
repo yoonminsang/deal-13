@@ -46,9 +46,9 @@ function Account({ app, back, authProcess }) {
       .then((res) => {
         if (res.ok) {
           authProcess(null);
-          back();
-          localStorage.removeItem('user');
-          console.log('로그아웃');
+          // back();
+          // localStorage.removeItem('user');
+          // console.log('로그아웃');
         } else console.error('로그아웃 에러');
       })
       .catch((e) => {
@@ -59,19 +59,29 @@ function Account({ app, back, authProcess }) {
   this.state = {
     user: undefined,
   };
+
   this.setState = (nextStateName, nextState) => {
     this.state = { ...this.state, [nextStateName]: nextState };
     this.rerender(nextStateName);
   };
+
   this.render = () => {
     app.appendChild($target);
     setTimeout(() => $target.classList.add('slidein'), 0);
   };
+
   this.rerender = (changeStateName) => {
     switch (changeStateName) {
       case stateObj.user:
         if (this.state.user) $userId.textContent = this.state.user.id;
-        else console.log('account rerender error');
+        else {
+          // if (app.querySelector('.account')) {
+          if (app.querySelector('.account')) {
+            back();
+            localStorage.removeItem('user');
+            console.log('로그아웃');
+          }
+        }
         return;
       default:
         console.log('state name is not found');
