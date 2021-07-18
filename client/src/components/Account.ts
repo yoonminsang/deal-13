@@ -28,14 +28,6 @@ function Account({ app, back, authProcess }) {
   const $userId = $target.querySelector('.user-id');
   const $logout = $target.querySelector('.js-logout');
 
-  $target.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    const classList = target.classList;
-    if (classList.contains('js-back')) {
-      back();
-    }
-  });
-
   $logout.addEventListener('click', () => {
     fetch('/api/auth/logout', {
       method: 'GET',
@@ -75,7 +67,6 @@ function Account({ app, back, authProcess }) {
       case stateObj.user:
         if (this.state.user) $userId.textContent = this.state.user.id;
         else {
-          // if (app.querySelector('.account')) {
           if (app.querySelector('.account')) {
             back();
             localStorage.removeItem('user');

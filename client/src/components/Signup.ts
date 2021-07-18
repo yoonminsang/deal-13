@@ -1,4 +1,4 @@
-function Signup({ app, back, goMain }) {
+function Signup({ app, goMain }) {
   const $target = document.createElement('div');
   $target.className = 'signup auth';
   $target.innerHTML = `
@@ -53,14 +53,6 @@ function Signup({ app, back, goMain }) {
     '.js-password-confirm',
   );
   const $region: HTMLInputElement = $form.querySelector('.js-region');
-
-  $target.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    const classList = target.classList;
-    if (classList.contains('js-back')) {
-      back();
-    }
-  });
 
   $target.addEventListener('input', (e) => {
     const target = e.target as HTMLInputElement;

@@ -43,16 +43,6 @@ function Login({ app, go, back, authProcess }) {
   const $id: HTMLInputElement = $form.querySelector('.js-id');
   const $password: HTMLInputElement = $form.querySelector('.js-password');
 
-  $target.addEventListener('click', (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    const classList = target.classList;
-    if (classList.contains('js-back')) {
-      back();
-    } else if (classList.contains('render')) {
-      go(classList[0].slice(3));
-    }
-  });
-
   $form.addEventListener('submit', (e) => {
     e.preventDefault();
     const id = $id.value;

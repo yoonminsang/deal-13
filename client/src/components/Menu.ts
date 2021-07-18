@@ -115,12 +115,12 @@ const tmpChatList: IChat[] = [
   },
 ];
 
-const isBackButton = (e: MouseEvent) => {
-  const target = e.target as HTMLElement;
-  return target.classList.contains('js-back');
-};
+// const isBackButton = (e: MouseEvent) => {
+//   const target = e.target as HTMLElement;
+//   return target.classList.contains('js-back');
+// };
 
-function Menu({ app, back }) {
+function Menu({ app }) {
   this.state = {
     tap: 0,
     chatList: tmpChatList,
@@ -272,9 +272,9 @@ function Menu({ app, back }) {
 
   this.rerender = rerenderMenuBody;
   $target.addEventListener('click', (e) => {
-    if (isBackButton(e) && back()) {
-      return;
-    }
+    // if (isBackButton(e) && back()) {
+    //   return;
+    // }
     handleClickEvent(e);
     this.rerender();
   });

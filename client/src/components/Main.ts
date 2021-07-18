@@ -120,7 +120,6 @@ function Main({ app, go, setPrimaryRegion }) {
     const classList = target.classList;
     if (classList.contains('render')) {
       this.setState(stateObj.modal, false);
-      go(classList[0].slice(3));
     } else if (classList.contains('js-modal')) {
       this.setState(stateObj.modal, !this.state.modal);
     } else if (classList.contains('region')) {

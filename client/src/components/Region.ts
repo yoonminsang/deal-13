@@ -1,5 +1,5 @@
 import '../styles/Region.scss';
-function Region({ app, back, setPrimaryRegion, autoLogin }) {
+function Region({ app, setPrimaryRegion, autoLogin }) {
   interface StateObj {
     user: string;
     primaryRegion: string;
@@ -87,9 +87,7 @@ function Region({ app, back, setPrimaryRegion, autoLogin }) {
     const classList = target.classList;
     const regionClosest = target.closest('.js-region');
     const addClosest = target.closest('.js-add');
-    if (classList.contains('js-back')) {
-      back();
-    } else if (classList.contains('icon-close')) {
+    if (classList.contains('icon-close')) {
       if (regionClosest.classList.contains('active')) {
         alert('현재 이용중인 동네는 삭제할 수 없습니다');
       } else {
