@@ -92,7 +92,7 @@ function Region({ app, setPrimaryRegion, autoLogin }) {
         alert('현재 이용중인 동네는 삭제할 수 없습니다');
       } else {
         // 삭제
-        const region = $input.value;
+        const region = regionClosest.querySelector('span').textContent;
         fetch('/api/region/delete', {
           method: 'POST',
           headers: {
@@ -117,7 +117,7 @@ function Region({ app, setPrimaryRegion, autoLogin }) {
           });
       }
     } else if (regionClosest && !regionClosest.classList.contains('active')) {
-      const index = target.classList[0].slice(7);
+      const index = regionClosest.classList[0].slice(7);
       setPrimaryRegion(index);
     } else if (addClosest) {
       this.setState(stateObj.modal, true);
@@ -206,7 +206,11 @@ function Region({ app, setPrimaryRegion, autoLogin }) {
         if (this.state.primaryRegion) {
           const cls = `.region-${this.state.primaryRegion}`;
           const $primary = $target.querySelector(cls);
-          $primary.classList.add('active');
+          const $btn = $target.querySelectorAll('.js-region');
+          $btn.forEach((v) => {
+            if (v === $primary) v.classList.add('active');
+            else v.classList.remove('active');
+          });
         } else console.log('account primary rerender error');
         return;
       case stateObj.modal:
