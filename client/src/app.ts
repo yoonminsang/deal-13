@@ -93,6 +93,10 @@ function App() {
     // history.pushState('', '', nextUrl);
   };
 
+  const userReRender = () => {
+    this.setState(actionObj.user, { ...this.state });
+  };
+
   const setCategory = (
     category: string = 'all',
     auto: string = null,
@@ -123,9 +127,15 @@ function App() {
   };
 
   const autoGetPrimaryRegion = (): void => {
-    const primaryRegion =
+    let primaryRegion =
       localStorage.getItem(actionObj.primaryRegion) ||
       setPrimaryRegion('0', AUTO);
+    const num: number = +primaryRegion;
+    if (!this.state.user.region[num]) {
+      setPrimaryRegion('0');
+      userReRender();
+      return;
+    }
     this.setState(actionObj.primaryRegion, { ...this.state, primaryRegion });
   };
   // 지역 삭제할땐 무조건 setPrimaryRegion('0'),
