@@ -1,0 +1,86 @@
+.write {
+  .write-inner {
+    .inner {
+      padding: 24px 0;
+      margin: 0 16px;
+      border-bottom: 1px solid map.get($colors, 'grey-3');
+      &.img-inner {
+        white-space: nowrap;
+        overflow-x: scroll;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        .btn-img {
+          min-width: 76px;
+          min-height: 76px;
+          ~ div {
+            padding: 0;
+          }
+          &.thumbnail {
+            border: 1px solid map.get($colors, 'primary-3');
+          }
+          img {
+            width: 100%;
+            height: 100%;
+            outline: 0;
+          }
+        }
+        > div {
+          margin-left: 16px;
+        }
+      }
+      .input-text {
+        font-size: 16px;
+        line-height: 22px;
+        color: map.get($colors, 'title-active');
+        border: 0;
+        width: 100%;
+        ::placeholder {
+          color: map.get($colors, 'grey-1');
+        }
+      }
+      .caption {
+        color: map.get($colors, 'grey-3');
+        margin-top: 16px;
+        margin-bottom: 12px;
+      }
+      .category-inner {
+        white-space: nowrap;
+        overflow-x: scroll;
+        display: flex;
+        // .item {
+        //   display: flex;
+        //   flex-direction: row;
+        //   align-items: flex-start;
+        //   padding: 4px 16px;
+        //   border: 1px solid #d7d7d7;
+        //   box-sizing: border-box;
+        //   border-radius: 999px;
+        //   height: 28px;
+        //   background: transparent;
+        //   .text {
+        //     color: map.get($colors, 'grey-1');
+        //     flex: none;
+        //     order: 0;
+        //     flex-grow: 0;
+        //     margin: 0px 10px;
+        //     font-weight: 500;
+        //     font-size: 14px;
+        //     line-height: 20px;
+        //   }
+        // }
+      }
+      &:nth-child(4) {
+        padding-bottom: 43px;
+        border: 0;
+      }
+      .content {
+        resize: none;
+      }
+    }
+
+    .location-bar {
+      border-top: 1px solid map.get($colors, 'grey-3');
+    }
+  }
+}

@@ -63,8 +63,9 @@ function App() {
   app.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
+    const closest = target.closest('.render');
     if (classList.contains('js-back')) back();
-    else if (classList.contains('render')) go(classList[0].slice(3));
+    else if (closest) go(closest.classList[0].slice(3));
   });
 
   const go = (next: string): void => {
@@ -189,7 +190,7 @@ function App() {
     back,
   });
   const menu = new Menu({ app });
-  const write = new Write({ app, back, goMain });
+  const write = new Write({ app, goMain });
   const post = new Post({ app, go, back });
   const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
@@ -228,8 +229,8 @@ function App() {
     switch (action) {
       case actionObj.go:
         const lastDepth = this.state.depth[this.state.depth.length - 1];
-        const name =
-          lastDepth.search(/\#/g) === -1 ? lastDepth : renderObj.post;
+        const idx = lastDepth.search(/\#/g);
+        const name = idx === -1 ? lastDepth : lastDepth.slice(0, idx);
         // case문을 if문으로 바꿀까 고민중
         switch (name) {
           case renderObj.category:
@@ -268,7 +269,7 @@ function App() {
         }
       case actionObj.back:
         const lastChild = app.lastElementChild;
-        lastChild.classList.replace('slidein', 'slideout');
+        lastChild.classList.remove('slidein');
         setTimeout(() => {
           // app.removeChild(lastChild);
           lastChild.remove();
@@ -293,6 +294,7 @@ function App() {
         login.setState(actionObj.user, this.state.user);
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
+        write.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
@@ -302,11 +304,36 @@ function App() {
       case actionObj.primaryRegion:
         main.setState(actionObj.primaryRegion, this.state.primaryRegion);
         region.setState(actionObj.primaryRegion, this.state.primaryRegion);
+        write.setState(actionObj.primaryRegion, this.state.primaryRegion);
         return;
     }
   };
 
+  const getCategory = () => {
+    console.log('get cateogry');
+    fetch('/api/category', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+      })
+      .then(({ category, error }) => {
+        if (error) alert(error);
+        if (category) {
+          // category.setState(actionObj.category, category);
+          write.setState(actionObj.category, category);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const init = (): void => {
+    getCategory();
     autoLogin();
   };
   init();

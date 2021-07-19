@@ -228,20 +228,27 @@
     right: -12px;
     top: -12px;
     border-radius: 50%;
-    display: none;
+    // display: none;
     .icon {
       filter: map.get($filter_colors, 'white');
       width: 12px;
       height: 12px;
     }
   }
-  &.active {
-    .btn-img__close {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+
+  .btn-img__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
+  // &.active {
+  //   .btn-img__close {
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: center;
+  //   }
+  // }
 }
 
 .input-medium {
@@ -397,6 +404,7 @@
   grid-template-columns: 1fr 6fr 1fr;
   align-items: center;
   justify-content: space-around;
+  border-bottom: 1px solid #d7d7d7;
   & > div {
     display: flex;
     align-items: center;
@@ -644,3 +652,4 @@
 // }
 
 @import './menu.scss';
+@import './Write.scss';

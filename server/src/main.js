@@ -16,6 +16,7 @@ import passportConfig from './passport/index.js';
 // import indexRouter from './routes/index';
 import authRouter from './routes/auth.js';
 import regionRouter from './routes/region.js';
+import categoryRouter from './routes/category.js';
 
 dotenv.config();
 
@@ -58,6 +59,7 @@ app.use(passport.session());
 // app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/region', regionRouter);
+app.use('/api/category', categoryRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
