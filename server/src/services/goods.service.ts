@@ -1,13 +1,15 @@
+import { goods } from '../models/goods';
+
 export const goodsService = {
   createGoods: ({
-    title = '',
-    content = '',
-    categoryId = Infinity,
-    price = Infinity,
-    thumbnailId = Infinity,
-    regionId = Infinity,
+    title,
+    content,
+    categoryId,
+    price,
+    thumbnailId,
+    regionId,
     userId,
-  }) => `
+  }: goods) => `
     INSERT INTO goods(
       title,
       content,
@@ -26,7 +28,7 @@ export const goodsService = {
       ${price},
       ${userId}
   `,
-  findGoods: (regionId = Infinity, categoryId = Infinity) =>
+  findGoods: (regionId: number, categoryId: number) =>
     `SELECT * FROM goods WHERE 
       region_id = ${
         regionId === Infinity ? '0 or region_id > -1' : regionId
@@ -41,33 +43,28 @@ export const goodsService = {
   findGoodsDetailByGoodsId: (goodsId: number) =>
     `SELECT * FROM goods JOIN goods_photo ON goods_photo WHERE id = ${goodsId}`,
   updateGoods: ({
-    title = '',
-    content = '',
-    categoryId = Infinity,
-    price = Infinity,
-    thumbnailId = Infinity,
-    regionId = Infinity,
-    goodsId,
+    id,
+    title,
+    content,
+    categoryId,
+    price,
+    thumbnailId,
+    regionId,
     userId,
-  }) =>
+  }: goods) =>
     `
       UPDATE goods SET 
-       ${title.length ? `title = '${title}', ` : ''}
-       ${content.length ? `content = '${content}', ` : ''}
-       ${categoryId !== Infinity ? `category_id = ${categoryId}, ` : ''}
-       ${price !== Infinity ? `price = ${price}, ` : ''}
-       ${thumbnailId !== Infinity ? `thumbnail_id = '${thumbnailId}', ` : ''}
-       ${regionId !== Infinity ? `region_id = ${regionId}, ` : ''}
-      WHERE id = ${goodsId}
+       title = '${title}',
+       content = '${content}',
+       category_id = ${categoryId},
+       price = ${price},
+       thumbnail_id = ${thumbnailId}
+       region_id = ${regionId},
+      WHERE id = ${id},
       AND user_id = '${userId}'
     `,
-  updateGoodsSaleState: ({
-    goodsId,
-    state,
-  }: {
-    goodsId: number;
-    state: number;
-  }) => `UPDATE goods SET sale_state = ${state} WHERE id = ${goodsId}`,
-  updateGoodsViewState: (goodsId: number) =>
-    `UPDATE goods SET view_state = 1 WHERE id = ${goodsId}`,
+  updateGoodsSaleState: (goodsId: number, state: number) =>
+    `UPDATE goods SET sale_state = ${state} WHERE id = ${goodsId}`,
+  updateGoodsViewState: (goodsId: number, state: number) =>
+    `UPDATE goods SET view_state = ${state} WHERE id = ${goodsId}`,
 };
