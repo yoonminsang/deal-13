@@ -26,4 +26,14 @@ export const goodsService = {
       ${price},
       ${userId}
   `,
+  findGoods: (regionId = Infinity, categoryId = Infinity) =>
+    `SELECT * FROM goods WHERE 
+      region_id = ${
+        regionId === Infinity ? '0 or region_id > -1' : regionId
+      } AND 
+      category_id = ${
+        categoryId === Infinity ? '0 or category_id > -1' : categoryId
+      }
+      ORDER BY created DESC
+    `,
 };
