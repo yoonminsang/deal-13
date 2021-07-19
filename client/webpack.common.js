@@ -2,9 +2,6 @@ import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import OptimizeCSSAssetsPlugin from 'optimize-css-assets-webpack-plugin';
-import TerserPlugin from 'terser-webpack-plugin';
-
 const __dirname = path.resolve();
 const mode = process.env.NODE_ENV || 'development'; // 기본값을 development로 설정
 
@@ -70,36 +67,7 @@ export default () => {
         filename: '[name].css',
       }),
     ],
-    optimization: {
-      minimizer:
-        mode === 'production'
-          ? [
-              new OptimizeCSSAssetsPlugin(), // css 파일도 빈칸을 없애는 압축 (css-minimizer-webpack-plugin)도 유사
-              new TerserPlugin({
-                //  자바스크립트 코드를 난독화하고 debugger 구문을 제거
-                terserOptions: {
-                  compress: {
-                    drop_console: true, // 콘솔 로그를 제거한다
-                  },
-                },
-              }),
-            ]
-          : [],
-    },
-    devtool: mode === 'production' ? 'source-map' : 'inline-source-map',
-    devServer: {
-      contentBase: path.resolve(__dirname + '/dist'),
-      index: 'index.html',
-      port: 9000,
-      writeToDisk: true,
-      hot: true,
-      proxy: {
-        '/api/': {
-          // /api/로 시작하는 url은 아래의 전체 도메인을 추가하고, 옵션을 적용
-          target: 'http://localhost:3000', // 클라이언트에서 api로 보내는 요청은 주소를 3000으로 변경
-          changeOrigin: true, // cross origin 허용 설정
-        },
-      },
-    },
   };
 };
+// "start": "webpack serve --open --config webpack.dev.js",
+// "build": "webpack --config webpack.prod.js"
