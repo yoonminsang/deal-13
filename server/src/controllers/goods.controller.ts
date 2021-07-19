@@ -32,7 +32,35 @@ const findGoods = async (req: Request, res: Response) => {
   }
 };
 
+const findGoodsByUserId = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body;
+    const data = await goodsService.findGoodsByUserId(userId);
+    res.status(200).json({
+      result: '0',
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const findGoodsDetailByGoodsId = async (req: Request, res: Response) => {
+  try {
+    const { goodsId } = req.body;
+    const data = await goodsService.findGoodsDetailByGoodsId(Number(goodsId));
+    res.status(200).json({
+      result: '0',
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const goodsController = {
   createGoods,
   findGoods,
+  findGoodsByUserId,
+  findGoodsDetailByGoodsId,
 };
