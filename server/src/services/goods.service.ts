@@ -36,4 +36,6 @@ export const goodsService = {
       }
       ORDER BY created DESC
     `,
+  findGoodsByUserId: (userId: string) =>
+    `SELECT * FROM goods WHERE user_id = '${userId}' ORDER BY created DESC`,
 };
