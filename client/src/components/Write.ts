@@ -94,7 +94,8 @@ function Write({ app, goMain }) {
         target.value = target.value.replace(/[^0-9]/g, '');
         target.value = target.value.slice(0, 9);
         if (target.value.length > 0)
-          target.value = '₩ ' + parseInt(target.value).toLocaleString('ko-KR');
+          target.value =
+            '₩ ' + parseInt(target.value).toLocaleString('ko-KR') + '원';
         return;
     }
   };
