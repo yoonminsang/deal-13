@@ -40,4 +40,25 @@ export const goodsService = {
     `SELECT * FROM goods WHERE user_id = '${userId}' ORDER BY created DESC`,
   findGoodsDetailByGoodsId: (goodsId: number) =>
     `SELECT * FROM goods JOIN goods_photo ON goods_photo WHERE id = ${goodsId}`,
+  updateGoods: ({
+    title = '',
+    content = '',
+    categoryId = Infinity,
+    price = Infinity,
+    thumbnailId = Infinity,
+    regionId = Infinity,
+    goodsId,
+    userId,
+  }) =>
+    `
+      UPDATE goods SET 
+       ${title.length ? `title = '${title}', ` : ''}
+       ${content.length ? `content = '${content}', ` : ''}
+       ${categoryId !== Infinity ? `category_id = ${categoryId}, ` : ''}
+       ${price !== Infinity ? `price = ${price}, ` : ''}
+       ${thumbnailId !== Infinity ? `thumbnail_id = '${thumbnailId}', ` : ''}
+       ${regionId !== Infinity ? `region_id = ${regionId}, ` : ''}
+      WHERE id = ${goodsId}
+      AND user_id = '${userId}'
+    `,
 };
