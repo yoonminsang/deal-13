@@ -149,6 +149,28 @@ function App() {
     }
   };
 
+  const getCategory = () => {
+    fetch('/api/category', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (res.ok || res.status === 409) return res.json();
+      })
+      .then(({ category, error }) => {
+        if (error) alert(error);
+        if (category) {
+          category.setState(actionObj.category, category);
+          write.setState(actionObj.category, category);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   const autoLogin = (): void => {
     if (localStorage.getItem('user'))
       fetch('/api/auth', {
@@ -190,7 +212,7 @@ function App() {
     back,
   });
   const menu = new Menu({ app });
-  const write = new Write({ app, back, goMain });
+  const write = new Write({ app, goMain });
   const post = new Post({ app, go, back });
   const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
@@ -294,6 +316,7 @@ function App() {
         login.setState(actionObj.user, this.state.user);
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
+        write.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
@@ -303,11 +326,13 @@ function App() {
       case actionObj.primaryRegion:
         main.setState(actionObj.primaryRegion, this.state.primaryRegion);
         region.setState(actionObj.primaryRegion, this.state.primaryRegion);
+        write.setState(actionObj.primaryRegion, this.state.primaryRegion);
         return;
     }
   };
 
   const init = (): void => {
+    getCategory();
     autoLogin();
   };
   init();
