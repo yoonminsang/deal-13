@@ -15,23 +15,25 @@ const createGoods = async (body) => {
   return result;
 };
 
-const findGoods = async (regionId, categoryId) => {
+const findGoods = async (regionId, categoryId, lastIndex) => {
   if (!regionId && regionId !== 0) regionId = Infinity;
   if (!categoryId && categoryId !== 0) categoryId = Infinity;
-  const result = await goodsQuery.selectGoods(regionId, categoryId);
+  if (!lastIndex && lastIndex !== 0) lastIndex = 0;
+  const result = await goodsQuery.selectGoods(regionId, categoryId, lastIndex);
   return result;
 };
 
-const findGoodsByUserId = async (userId) => {
+const findGoodsByUserId = async (userId, lastIndex) => {
   if (!userId) return null;
-  const result = await goodsQuery.selectGoodsByUserId(userId);
+  if (!lastIndex && lastIndex !== 0) lastIndex = 0;
+  const result = await goodsQuery.selectGoodsByUserId(userId, lastIndex);
   return result;
 };
 
-const findGoodsDetailByGoodsId = async (goodsId) => {
+const findGoodsDetailByGoodsId = async (goodsId, userId) => {
   if (!goodsId) return null;
-  console.log(goodsId);
-  const result = await goodsQuery.selectGoodsDetailByGoodsId(goodsId);
+  if (!userId) return null;
+  const result = await goodsQuery.selectGoodsDetailByGoodsId(goodsId, userId);
   return result;
 };
 
@@ -39,13 +41,14 @@ const updateGoods = async (body) => {
   const data = {
     ...body,
   };
-  if (!data.title) return null;
-  if (!data.regionId && data.regionId !== 0) return null;
+  if (!data.id) return null;
   if (!data.userId) return null;
-  if (!data.categoryId && data.categoryId !== 0) return null;
+  if (!data.title) return null;
   if (!data.content) data.content = '';
   if (!data.price) data.price = 0;
-  if (!data.thumbnailId && data.thumbnailId !== 0) data.thumbnailId = null;
+  if (!data.categoryId && data.categoryId !== 0) return null;
+  if (!data.thumbnail || data.thumbnail.length === 0) return null;
+  if (!data.regionId && data.regionId !== 0) return null;
   const result = await goodsQuery.updateGoods(data);
   return result;
 };
@@ -57,10 +60,9 @@ const updateGoodsSaleState = async (goodsId, state) => {
   return result;
 };
 
-const updateGoodsViewState = async (goodsId, state) => {
+const deleteGoodsViewState = async (goodsId) => {
   if (!goodsId && goodsId !== 0) return null;
-  if (!state && state !== 0) return null;
-  const result = await goodsQuery.updateGoodsViewState(goodsId, state);
+  const result = await goodsQuery.deleteGoodsViewState(goodsId);
   return result;
 };
 
@@ -71,5 +73,5 @@ export const goodsService = {
   findGoodsDetailByGoodsId,
   updateGoods,
   updateGoodsSaleState,
-  updateGoodsViewState,
+  deleteGoodsViewState,
 };
