@@ -1,7 +1,6 @@
-import { Request, Response } from 'express';
-import { goodsPhotoService } from '../services/goods-photo.service';
+import { goodsPhotoService } from '../services/goods-photo.service.js';
 
-const createPhoto = async (req: Request, res: Response) => {
+const createPhoto = async (req, res) => {
   try {
     const { goodsId, url } = req.body;
     await goodsPhotoService.createGoodsPhoto(Number(goodsId), url);
@@ -17,7 +16,7 @@ const createPhoto = async (req: Request, res: Response) => {
   }
 };
 
-const deleteGoodsPhotos = async (req: Request, res: Response) => {
+const deleteGoodsPhotos = async (req, res) => {
   try {
     const { goodsId, photos } = req.body;
     const data = await goodsPhotoService.deleteGoodsPhotos(

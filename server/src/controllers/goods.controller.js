@@ -1,7 +1,6 @@
-import { Request, Response } from 'express';
-import { goodsService } from '../services/goods.service';
+import { goodsService } from '../services/goods.service.js';
 
-const createGoods = async (req: Request, res: Response) => {
+const createGoods = async (req, res) => {
   try {
     await goodsService.createGoods(req.body);
     res.status(200).json({
@@ -9,6 +8,8 @@ const createGoods = async (req: Request, res: Response) => {
       message: '상품 등록 성공',
     });
   } catch (err) {
+    console.log('에러에러');
+    console.log(err);
     res.status(500).json({
       result: '1',
       message: '상품 등록 실패',
@@ -16,9 +17,9 @@ const createGoods = async (req: Request, res: Response) => {
   }
 };
 
-const findGoods = async (req: Request, res: Response) => {
+const findGoods = async (req, res) => {
   try {
-    const { regionId, categoryId } = req.body;
+    const { regionId, categoryId } = req.params;
     const data = await goodsService.findGoods(
       Number(regionId),
       Number(categoryId),
@@ -32,10 +33,11 @@ const findGoods = async (req: Request, res: Response) => {
   }
 };
 
-const findGoodsByUserId = async (req: Request, res: Response) => {
+const findGoodsByUserId = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId } = req.params;
     const data = await goodsService.findGoodsByUserId(userId);
+    console.log(data);
     res.status(200).json({
       result: '0',
       data,
@@ -45,9 +47,9 @@ const findGoodsByUserId = async (req: Request, res: Response) => {
   }
 };
 
-const findGoodsDetailByGoodsId = async (req: Request, res: Response) => {
+const findGoodsDetailByGoodsId = async (req, res) => {
   try {
-    const { goodsId } = req.body;
+    const { goodsId } = req.params;
     const data = await goodsService.findGoodsDetailByGoodsId(Number(goodsId));
     res.status(200).json({
       result: '0',
@@ -58,7 +60,7 @@ const findGoodsDetailByGoodsId = async (req: Request, res: Response) => {
   }
 };
 
-const updateGoods = async (req: Request, res: Response) => {
+const updateGoods = async (req, res) => {
   try {
     await goodsService.updateGoods(req.body);
     res.status(200).json({
@@ -70,7 +72,7 @@ const updateGoods = async (req: Request, res: Response) => {
   }
 };
 
-const updateGoodsSaleState = async (req: Request, res: Response) => {
+const updateGoodsSaleState = async (req, res) => {
   try {
     const { goodsId, state } = req.body;
     await goodsService.updateGoodsSaleState(goodsId, state);
@@ -83,7 +85,7 @@ const updateGoodsSaleState = async (req: Request, res: Response) => {
   }
 };
 
-const updateGoodsViewState = async (req: Request, res: Response) => {
+const updateGoodsViewState = async (req, res) => {
   try {
     const { goodsId, state } = req.body;
     await goodsService.updateGoodsViewState(goodsId, state);

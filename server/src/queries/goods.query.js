@@ -1,5 +1,4 @@
 import db from '../db/index.js';
-import { goods } from '../models/goods';
 
 const insertGoods = async ({
   title,
@@ -9,15 +8,19 @@ const insertGoods = async ({
   thumbnailId,
   regionId,
   userId,
-}: goods) => {
+  urls,
+}) => {
   const result = await db.query(
-    `INSERT INTO goods(title, content, region_id, category_id, thumbnail_id, price, user_id) VALUES(${title}, ${content}, ${regionId}, ${categoryId}, ${thumbnailId}, ${price}, ${userId}`,
+    `INSERT INTO goods(title, content, region_id, category_id, thumbnail_id, price, user_id) VALUES('${title}', '${content}', ${regionId}, ${categoryId}, ${thumbnailId}, ${price}, '${userId}')`,
   );
-  if (result) return result;
-  else return null;
+  if (result) {
+    const insertId = result[0].insertId;
+
+    return result;
+  } else return null;
 };
 
-const selectGoods = async (regionId: number, categoryId: number) => {
+const selectGoods = async (regionId, categoryId) => {
   const result = await db.query(
     `SELECT * FROM goods WHERE 
     region_id = ${regionId}
@@ -28,24 +31,25 @@ const selectGoods = async (regionId: number, categoryId: number) => {
     ORDER BY created DESC
   `,
   );
-  if (result?.length) return result;
+  if (result.length) return result;
   else return null;
 };
 
-const selectGoodsByUserId = async (userId: string) => {
+const selectGoodsByUserId = async (userId) => {
   const result = await db.query(
     `SELECT * FROM goods WHERE user_id = '${userId}' ORDER BY created DESC`,
   );
 
-  if (result?.length) return result;
+  if (result.length) return result;
   else return null;
 };
 
-const selectGoodsDetailByGoodsId = async (goodsId: number) => {
+const selectGoodsDetailByGoodsId = async (goodsId) => {
   const result = await db.query(
-    `SELECT * FROM goods JOIN goods_photo ON goods_photo WHERE id = ${goodsId}`,
+    `SELECT g.*, CONCAT('[', GROUP_CONCAT(p.url), ']') AS urls, r.region, c.name as category FROM goods g, goods_photo p, regions r, category c WHERE g.id = ${goodsId} AND g.id = p.goods_id AND g.region_id = r.id AND g.category_id = c.id`,
   );
-  if (result?.length) return result;
+  console.log(result[0]);
+  if (result.length) return result[0];
   else return null;
 };
 
@@ -58,27 +62,27 @@ const updateGoods = async ({
   thumbnailId,
   regionId,
   userId,
-}: goods) => {
+}) => {
   const result = await db.query(
     `UPDATE goods SET title = '${title}', content = '${content}', category_id = ${categoryId}, price = ${price}, thumbnail_id = ${thumbnailId}, region_id = ${regionId}, WHERE id = ${id}, AND user_id = '${userId}'`,
   );
-  if (result?.length) return result;
+  if (result.length) return result;
   else return null;
 };
 
-const updateGoodsSaleState = async (goodsId: number, state: number) => {
+const updateGoodsSaleState = async (goodsId, state) => {
   const result = await db.query(
     `UPDATE goods SET sale_state = ${state} WHERE id = ${goodsId}`,
   );
-  if (result?.length) return result;
+  if (result.length) return result;
   else return null;
 };
 
-const updateGoodsViewState = async (goodsId: number, state: number) => {
+const updateGoodsViewState = async (goodsId, state) => {
   const result = await db.query(
     `UPDATE goods SET view_state = ${state} WHERE id = ${goodsId}`,
   );
-  if (result?.length) return result;
+  if (result.length) return result;
   else return null;
 };
 

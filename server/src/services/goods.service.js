@@ -1,7 +1,6 @@
-import { goods } from '../models/goods';
-import { goodsQuery } from '../queries/goods.query';
+import { goodsQuery } from '../queries/goods.query.js';
 
-const createGoods = async (body: goods) => {
+const createGoods = async (body) => {
   const data = {
     ...body,
   };
@@ -16,26 +15,27 @@ const createGoods = async (body: goods) => {
   return result;
 };
 
-const findGoods = async (regionId: number, categoryId: number) => {
+const findGoods = async (regionId, categoryId) => {
   if (!regionId && regionId !== 0) regionId = Infinity;
   if (!categoryId && categoryId !== 0) categoryId = Infinity;
   const result = await goodsQuery.selectGoods(regionId, categoryId);
   return result;
 };
 
-const findGoodsByUserId = async (userId: string) => {
+const findGoodsByUserId = async (userId) => {
   if (!userId) return null;
   const result = await goodsQuery.selectGoodsByUserId(userId);
   return result;
 };
 
-const findGoodsDetailByGoodsId = async (goodsId: number) => {
+const findGoodsDetailByGoodsId = async (goodsId) => {
   if (!goodsId) return null;
+  console.log(goodsId);
   const result = await goodsQuery.selectGoodsDetailByGoodsId(goodsId);
   return result;
 };
 
-const updateGoods = async (body: goods) => {
+const updateGoods = async (body) => {
   const data = {
     ...body,
   };
@@ -50,14 +50,14 @@ const updateGoods = async (body: goods) => {
   return result;
 };
 
-const updateGoodsSaleState = async (goodsId: number, state: number) => {
+const updateGoodsSaleState = async (goodsId, state) => {
   if (!goodsId && goodsId !== 0) return null;
   if (!state && state !== 0) return null;
   const result = await goodsQuery.updateGoodsSaleState(goodsId, state);
   return result;
 };
 
-const updateGoodsViewState = async (goodsId: number, state: number) => {
+const updateGoodsViewState = async (goodsId, state) => {
   if (!goodsId && goodsId !== 0) return null;
   if (!state && state !== 0) return null;
   const result = await goodsQuery.updateGoodsViewState(goodsId, state);
