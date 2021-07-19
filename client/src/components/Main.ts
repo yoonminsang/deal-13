@@ -1,4 +1,4 @@
-function Main({ app, go, setPrimaryRegion }) {
+function Main({ app, setPrimaryRegion }) {
   interface Goods {
     id: number;
     url: string;
