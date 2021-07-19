@@ -61,4 +61,13 @@ export const goodsService = {
       WHERE id = ${goodsId}
       AND user_id = '${userId}'
     `,
+  updateGoodsSaleState: ({
+    goodsId,
+    state,
+  }: {
+    goodsId: number;
+    state: number;
+  }) => `UPDATE goods SET sale_state = ${state} WHERE id = ${goodsId}`,
+  updateGoodsViewState: (goodsId: number) =>
+    `UPDATE goods SET view_state = 1 WHERE id = ${goodsId}`,
 };
