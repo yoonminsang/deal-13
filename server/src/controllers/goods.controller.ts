@@ -58,9 +58,50 @@ const findGoodsDetailByGoodsId = async (req: Request, res: Response) => {
   }
 };
 
+const updateGoods = async (req: Request, res: Response) => {
+  try {
+    await goodsService.updateGoods(req.body);
+    res.status(200).json({
+      result: '0',
+      message: '상품 수정 성공',
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateGoodsSaleState = async (req: Request, res: Response) => {
+  try {
+    const { goodsId, state } = req.body;
+    await goodsService.updateGoodsSaleState(goodsId, state);
+    res.status(200).json({
+      result: '0',
+      message: '상태 변경 완료',
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateGoodsViewState = async (req: Request, res: Response) => {
+  try {
+    const { goodsId, state } = req.body;
+    await goodsService.updateGoodsViewState(goodsId, state);
+    res.status(200).json({
+      result: '0',
+      message: '상태 변경 완료',
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const goodsController = {
   createGoods,
   findGoods,
   findGoodsByUserId,
   findGoodsDetailByGoodsId,
+  updateGoods,
+  updateGoodsSaleState,
+  updateGoodsViewState,
 };
