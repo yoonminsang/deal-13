@@ -10,27 +10,15 @@ const passportConfig = () => {
     done(null, user.uuid);
   });
   passport.deserializeUser(async (uuid, done) => {
-    const [[user]] = await db.query(
-      `SELECT uuid, id FROM users WHERE uuid='${uuid}' LIMIT 1`,
+    const [user] = await db.query(
+      `select distinct users.uuid, users.id, r.region from region_list list, regions r, users where users.uuid = '${uuid}' and users.uuid = list.user_id and list.region_id = r.id`,
     );
-    // console.log(user);
-    const [region_list] = await db.query(
-      `SELECT region_id FROM region_list WHERE user_id='${user.uuid}'`,
-    );
-    // console.log(region_list);
-    const regionList = region_list.map((v) => v.region_id + '').join(',');
-    // console.log(regionList);
-    const [regions] = await db.query(
-      `SELECT region FROM regions WHERE id IN ('${regionList}')`,
-    );
-    // console.log(regions);
-    user.region = regions.map((v) => v.region);
-    // console.log(user);
-    // 일단 임시방편...방법 주말에 알아볼것 join
-    // const [[user]] = await db.query(
-    //   `SELECT uuid, id FROM users WHERE uuid='${uuid}' LIMIT 1`,
-    // );
-    done(null, user);
+    if (user.length <= 2) {
+      const region = user.map((v) => v.region);
+      user[0].region = region;
+      console.log('deserialize', user[0]);
+    } else console.error('deserialize error! too many regions');
+    done(null, user[0]);
   });
 
   passport.use(
