@@ -38,4 +38,6 @@ export const goodsService = {
     `,
   findGoodsByUserId: (userId: string) =>
     `SELECT * FROM goods WHERE user_id = '${userId}' ORDER BY created DESC`,
+  findGoodsDetailByGoodsId: (goodsId: number) =>
+    `SELECT * FROM goods JOIN goods_photo ON goods_photo WHERE id = ${goodsId}`,
 };
