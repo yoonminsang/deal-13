@@ -8,7 +8,6 @@ const createGoods = async (req, res) => {
       message: '상품 등록 성공',
     });
   } catch (err) {
-    console.log('에러에러');
     console.log(err);
     res.status(500).json({
       result: '1',
@@ -19,10 +18,11 @@ const createGoods = async (req, res) => {
 
 const findGoods = async (req, res) => {
   try {
-    const { regionId, categoryId } = req.params;
+    const { regionId, categoryId, lastIndex } = req.params;
     const data = await goodsService.findGoods(
       Number(regionId),
       Number(categoryId),
+      Number(lastIndex),
     );
     res.status(200).json({
       result: '0',
@@ -35,9 +35,11 @@ const findGoods = async (req, res) => {
 
 const findGoodsByUserId = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const data = await goodsService.findGoodsByUserId(userId);
-    console.log(data);
+    const { userId, lastIndex } = req.params;
+    const data = await goodsService.findGoodsByUserId(
+      userId,
+      Number(lastIndex),
+    );
     res.status(200).json({
       result: '0',
       data,
@@ -49,8 +51,12 @@ const findGoodsByUserId = async (req, res) => {
 
 const findGoodsDetailByGoodsId = async (req, res) => {
   try {
-    const { goodsId } = req.params;
-    const data = await goodsService.findGoodsDetailByGoodsId(Number(goodsId));
+    // **임시**
+    const { goodsId, userId = 'qa' } = req.params;
+    const data = await goodsService.findGoodsDetailByGoodsId(
+      Number(goodsId),
+      userId,
+    );
     res.status(200).json({
       result: '0',
       data,
@@ -74,7 +80,7 @@ const updateGoods = async (req, res) => {
 
 const updateGoodsSaleState = async (req, res) => {
   try {
-    const { goodsId, state } = req.body;
+    const { goodsId, state } = req.params;
     await goodsService.updateGoodsSaleState(goodsId, state);
     res.status(200).json({
       result: '0',
@@ -85,13 +91,13 @@ const updateGoodsSaleState = async (req, res) => {
   }
 };
 
-const updateGoodsViewState = async (req, res) => {
+const deleteGoodsViewState = async (req, res) => {
   try {
-    const { goodsId, state } = req.body;
-    await goodsService.updateGoodsViewState(goodsId, state);
+    const { goodsId } = req.params;
+    await goodsService.deleteGoodsViewState(goodsId);
     res.status(200).json({
       result: '0',
-      message: '상태 변경 완료',
+      message: '삭제 완료',
     });
   } catch (err) {
     console.log(err);
@@ -105,5 +111,5 @@ export const goodsController = {
   findGoodsDetailByGoodsId,
   updateGoods,
   updateGoodsSaleState,
-  updateGoodsViewState,
+  deleteGoodsViewState,
 };
