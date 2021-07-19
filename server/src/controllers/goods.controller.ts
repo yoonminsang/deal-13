@@ -16,6 +16,23 @@ const createGoods = async (req: Request, res: Response) => {
   }
 };
 
+const findGoods = async (req: Request, res: Response) => {
+  try {
+    const { regionId, categoryId } = req.body;
+    const data = await goodsService.findGoods(
+      Number(regionId),
+      Number(categoryId),
+    );
+    res.status(200).json({
+      result: '0',
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const goodsController = {
   createGoods,
+  findGoods,
 };
