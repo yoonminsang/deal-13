@@ -397,6 +397,7 @@
   grid-template-columns: 1fr 6fr 1fr;
   align-items: center;
   justify-content: space-around;
+  border-bottom: 1px solid #d7d7d7;
   & > div {
     display: flex;
     align-items: center;
@@ -644,3 +645,4 @@
 // }
 
 @import './menu.scss';
+@import './Write.scss';
