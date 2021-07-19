@@ -149,28 +149,6 @@ function App() {
     }
   };
 
-  const getCategory = () => {
-    fetch('/api/category', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
-      .then(({ category, error }) => {
-        if (error) alert(error);
-        if (category) {
-          category.setState(actionObj.category, category);
-          write.setState(actionObj.category, category);
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
-
   const autoLogin = (): void => {
     if (localStorage.getItem('user'))
       fetch('/api/auth', {
@@ -329,6 +307,29 @@ function App() {
         write.setState(actionObj.primaryRegion, this.state.primaryRegion);
         return;
     }
+  };
+
+  const getCategory = () => {
+    console.log('get cateogry');
+    fetch('/api/category', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+      })
+      .then(({ category, error }) => {
+        if (error) alert(error);
+        if (category) {
+          // category.setState(actionObj.category, category);
+          write.setState(actionObj.category, category);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const init = (): void => {
