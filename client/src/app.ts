@@ -63,8 +63,9 @@ function App() {
   app.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
+    const closest = target.closest('.render');
     if (classList.contains('js-back')) back();
-    else if (classList.contains('render')) go(classList[0].slice(3));
+    else if (closest) go(closest.classList[0].slice(3));
   });
 
   const go = (next: string): void => {
@@ -228,8 +229,8 @@ function App() {
     switch (action) {
       case actionObj.go:
         const lastDepth = this.state.depth[this.state.depth.length - 1];
-        const name =
-          lastDepth.search(/\#/g) === -1 ? lastDepth : renderObj.post;
+        const idx = lastDepth.search(/\#/g);
+        const name = idx === -1 ? lastDepth : lastDepth.slice(0, idx);
         // case문을 if문으로 바꿀까 고민중
         switch (name) {
           case renderObj.category:
@@ -268,7 +269,7 @@ function App() {
         }
       case actionObj.back:
         const lastChild = app.lastElementChild;
-        lastChild.classList.replace('slidein', 'slideout');
+        lastChild.classList.remove('slidein');
         setTimeout(() => {
           // app.removeChild(lastChild);
           lastChild.remove();

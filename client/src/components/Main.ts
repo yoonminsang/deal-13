@@ -33,7 +33,10 @@ function Main({ app, go, setPrimaryRegion }) {
       <div class="js-menu render icon icon-menu"></div>
     </div>
   </div>
-  <div class="product-list"></div>`;
+  <div class="product-list"></div>
+  <button class="js-write render btn-fab">
+    <div class="icon icon-add"></div>
+  </button>`;
 
   const $listItems = $target.querySelector('.product-list');
   const $auth = $target.querySelector('.auth');
