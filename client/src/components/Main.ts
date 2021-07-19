@@ -1,4 +1,15 @@
 function Main({ app, go, setPrimaryRegion }) {
+  interface Goods {
+    id: number;
+    url: string;
+    title: string;
+    region: string;
+    time: string;
+    price: number;
+    chat: number;
+    wish: number;
+    myWish: boolean;
+  }
   interface StateObj {
     user: string;
     category: string;
@@ -46,28 +57,35 @@ function Main({ app, go, setPrimaryRegion }) {
   const makeListItem = (
     id,
     url,
-    name,
+    title,
     region,
     time,
     price,
     chat,
-    love,
-  ): string => {
+    wish,
+    myWish,
+  ) => {
+    price = price.toLocaleString('ko-KR') + '원';
+    const chatElm = chat
+      ? `<div class="icon icon-message"></div><p>${chat}</p>`
+      : '';
+    const wishElm = wish
+      ? `<div class="icon icon-heart"></div><p>${wish}</p>`
+      : '';
     return `
-    <div class="js-post#${id} product-list-item">
+    <div class="js-post#${id} render product-list-item">
       <div class="img-box-large">
         <img src="${url}" alt="이미지">
       </div>
       <div class="product-list-item__content">
-        <div class="icon icon-heart product-list-item__heart"></div>
-        <p class="product-list-item__title">${name}</p>
+        <div class="icon icon-heart product-list-item__heart ${
+          myWish && 'active'
+        }"></div>
+        <p class="product-list-item__title">${title}</p>
         <p class="product-list-item__info">${region} - ${time}</p>
         <p class="product-list-item__price">${price}</p>
         <div class="product-list-item__bottom">
-          <div class="icon icon-message"></div>
-          <p>${chat}</p>
-          <div class="icon icon-heart"></div>
-          <p>${love}</p>
+          ${chatElm}${wishElm}
         </div>
       </div>
     </div>
@@ -110,7 +128,53 @@ function Main({ app, go, setPrimaryRegion }) {
       //     console.error(e);
       //   });
       // fake
-      const post = [['1', '', '반팔', '석수동', '1일전', '10,000', '1', '2']];
+      const post: Goods[] = [
+        {
+          id: 1,
+          url: '/',
+          title: '제목',
+          region: '석수동',
+          time: '1일전',
+          price: 10000,
+          chat: 1,
+          wish: 2,
+          myWish: false,
+        },
+        {
+          id: 2,
+          url: '/',
+          title: '제목',
+          region: '석수동',
+          time: '1일전',
+          price: 10000,
+          chat: 1,
+          wish: 2,
+          myWish: true,
+        },
+        {
+          id: 3,
+          url: '/',
+          title: '제목',
+          region: '석수동',
+          time: '2일전',
+          price: 10000,
+          chat: 0,
+          wish: 2,
+          myWish: true,
+        },
+        {
+          id: 3,
+          url: '/',
+          title: '제목',
+          region: '석수동',
+          time: '2일전',
+          price: 10000,
+          chat: 0,
+          wish: 0,
+          myWish: true,
+        },
+      ];
+      // const post = [['1', '', '반팔', '석수동', '1일전', '10,000', '1', '2']];
       this.setState(stateObj.post, post);
     } else if (this.state.user === null) {
       $listItems.innerHTML =
@@ -173,8 +237,18 @@ function Main({ app, go, setPrimaryRegion }) {
         return;
       case stateObj.post:
         $listItems.innerHTML = this.state.post
-          .map(([id, url, name, region, time, price, chat, love]: string[7]) =>
-            makeListItem(id, url, name, region, time, price, chat, love),
+          .map(({ id, url, title, region, time, price, chat, wish, myWish }) =>
+            makeListItem(
+              id,
+              url,
+              title,
+              region,
+              time,
+              price,
+              chat,
+              wish,
+              myWish,
+            ),
           )
           .join('');
         return;
