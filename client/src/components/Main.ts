@@ -121,7 +121,8 @@ function Main({ app, go, setPrimaryRegion }) {
   $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
-    if (classList.contains('render')) {
+    const renderClosest = target.closest('.render');
+    if (renderClosest && renderClosest.classList.contains('render')) {
       this.setState(stateObj.modal, false);
     } else if (classList.contains('js-modal')) {
       this.setState(stateObj.modal, !this.state.modal);
