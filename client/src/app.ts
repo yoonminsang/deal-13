@@ -20,6 +20,7 @@ interface ActionObj {
   user: string;
   category: string;
   primaryRegion: string;
+  dbId: string;
 }
 interface RenderObj {
   login: string;
@@ -42,6 +43,7 @@ const actionObj: ActionObj = {
   user: 'user',
   category: 'category',
   primaryRegion: 'primaryRegion',
+  dbId: 'dbId',
 };
 const renderObj: RenderObj = {
   login: 'login',
@@ -190,7 +192,7 @@ function App() {
   });
   const menu = new Menu({ app });
   const write = new Write({ app, goMain });
-  const post = new Post({ app, go, back });
+  const post = new Post({ app });
   const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
     app,
@@ -252,7 +254,8 @@ function App() {
             return write.render();
           case renderObj.post:
             if (!this.state.user) return goLogin();
-            return post.render();
+            const dbId = this.state.depth[0].slice(5);
+            return post.render(dbId);
           case renderObj.chatting:
             if (!this.state.user) return goLogin();
             return chatting.render();
@@ -294,6 +297,7 @@ function App() {
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         write.setState(actionObj.user, this.state.user);
+        post.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
