@@ -1,70 +1,75 @@
 import { goods } from '../models/goods';
+import { goodsQuery } from '../queries/goods.query';
+
+const createGoods = async (body: goods) => {
+  const data = {
+    ...body,
+  };
+  if (!data.title) return null;
+  if (!data.regionId && data.regionId !== 0) return null;
+  if (!data.userId) return null;
+  if (!data.categoryId && data.categoryId !== 0) return null;
+  if (!data.content) data.content = '';
+  if (!data.price) data.price = 0;
+  if (!data.thumbnailId && data.thumbnailId !== 0) data.thumbnailId = null;
+  const result = await goodsQuery.insertGoods(data);
+  return result;
+};
+
+const findGoods = async (regionId: number, categoryId: number) => {
+  if (!regionId && regionId !== 0) regionId = Infinity;
+  if (!categoryId && categoryId !== 0) categoryId = Infinity;
+  const result = await goodsQuery.selectGoods(regionId, categoryId);
+  return result;
+};
+
+const findGoodsByUserId = async (userId: string) => {
+  if (!userId) return null;
+  const result = await goodsQuery.selectGoodsByUserId(userId);
+  return result;
+};
+
+const findGoodsDetailByGoodsId = async (goodsId: number) => {
+  if (!goodsId) return null;
+  const result = await goodsQuery.selectGoodsDetailByGoodsId(goodsId);
+  return result;
+};
+
+const updateGoods = async (body: goods) => {
+  const data = {
+    ...body,
+  };
+  if (!data.title) return null;
+  if (!data.regionId && data.regionId !== 0) return null;
+  if (!data.userId) return null;
+  if (!data.categoryId && data.categoryId !== 0) return null;
+  if (!data.content) data.content = '';
+  if (!data.price) data.price = 0;
+  if (!data.thumbnailId && data.thumbnailId !== 0) data.thumbnailId = null;
+  const result = await goodsQuery.updateGoods(data);
+  return result;
+};
+
+const updateGoodsSaleState = async (goodsId: number, state: number) => {
+  if (!goodsId && goodsId !== 0) return null;
+  if (!state && state !== 0) return null;
+  const result = await goodsQuery.updateGoodsSaleState(goodsId, state);
+  return result;
+};
+
+const updateGoodsViewState = async (goodsId: number, state: number) => {
+  if (!goodsId && goodsId !== 0) return null;
+  if (!state && state !== 0) return null;
+  const result = await goodsQuery.updateGoodsViewState(goodsId, state);
+  return result;
+};
 
 export const goodsService = {
-  createGoods: ({
-    title,
-    content,
-    categoryId,
-    price,
-    thumbnailId,
-    regionId,
-    userId,
-  }: goods) => `
-    INSERT INTO goods(
-      title,
-      content,
-      region_id,
-      category_id,
-      thumbnail_id,
-      price, 
-      user_id
-    ) 
-    VALUES(
-      ${title}, 
-      ${content}, 
-      ${regionId},
-      ${categoryId},
-      ${thumbnailId},
-      ${price},
-      ${userId}
-  `,
-  findGoods: (regionId: number, categoryId: number) =>
-    `SELECT * FROM goods WHERE 
-      region_id = ${
-        regionId === Infinity ? '0 or region_id > -1' : regionId
-      } AND 
-      category_id = ${
-        categoryId === Infinity ? '0 or category_id > -1' : categoryId
-      }
-      ORDER BY created DESC
-    `,
-  findGoodsByUserId: (userId: string) =>
-    `SELECT * FROM goods WHERE user_id = '${userId}' ORDER BY created DESC`,
-  findGoodsDetailByGoodsId: (goodsId: number) =>
-    `SELECT * FROM goods JOIN goods_photo ON goods_photo WHERE id = ${goodsId}`,
-  updateGoods: ({
-    id,
-    title,
-    content,
-    categoryId,
-    price,
-    thumbnailId,
-    regionId,
-    userId,
-  }: goods) =>
-    `
-      UPDATE goods SET 
-       title = '${title}',
-       content = '${content}',
-       category_id = ${categoryId},
-       price = ${price},
-       thumbnail_id = ${thumbnailId}
-       region_id = ${regionId},
-      WHERE id = ${id},
-      AND user_id = '${userId}'
-    `,
-  updateGoodsSaleState: (goodsId: number, state: number) =>
-    `UPDATE goods SET sale_state = ${state} WHERE id = ${goodsId}`,
-  updateGoodsViewState: (goodsId: number, state: number) =>
-    `UPDATE goods SET view_state = ${state} WHERE id = ${goodsId}`,
+  createGoods,
+  findGoods,
+  findGoodsByUserId,
+  findGoodsDetailByGoodsId,
+  updateGoods,
+  updateGoodsSaleState,
+  updateGoodsViewState,
 };
