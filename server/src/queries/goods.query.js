@@ -34,6 +34,7 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
     SELECT g.id, g.title, g.content, g.price, 
     g.thumbnail, g.view_count, g.view_state, 
     g.sale_state, g.user_id, g.region_id, g.category_id, 
+    r.region as region_name, 
     DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
     DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
       (SELECT count(distinct w.id) FROM goods_wish w WHERE w.id = g.id) as wish_count
@@ -75,6 +76,7 @@ const selectGoodsByUserId = async (userId) => {
     g.sale_state, g.user_id, g.region_id, g.category_id, 
     DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
     DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
+    r.region as region_name, 
     count(w.id) as wish_count 
     FROM goods g 
     LEFT JOIN goods_wish w ON w.goods_id = g.id
@@ -99,6 +101,7 @@ const selectGoodsByWish = async (userId) => {
       g.sale_state, g.user_id, g.region_id, g.category_id, 
       DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
       DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
+      r.region as region_name,
       count(w.id) as wish_count
     FROM goods g
     LEFT JOIN goods_wish w ON w.goods_id = g.id
@@ -118,7 +121,7 @@ const selectGoodsByWish = async (userId) => {
 
 const selectGoodsDetail = async (goodsId, userId) => {
   const [result] = await db.query(
-    `SELECT     g.id, g.title, g.content, g.price, 
+    `SELECT g.id, g.title, g.content, g.price, 
     g.thumbnail, g.view_count, g.view_state, 
     g.sale_state, g.user_id, g.region_id, g.category_id, 
     r.region as region_name, 

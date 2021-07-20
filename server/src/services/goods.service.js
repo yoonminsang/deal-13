@@ -19,7 +19,7 @@ const findGoods = async (regionId, categoryId, userId, lastIndex) => {
   if (!regionId && regionId !== 0) regionId = Infinity;
   if (!categoryId && categoryId !== 0) categoryId = Infinity;
   if (!userId) userId = '';
-  if (!lastIndex && lastIndex !== 0) lastIndex = 0;
+  if (!lastIndex && lastIndex !== 0) lastIndex = 1;
   const result = await goodsQuery.selectGoods(
     regionId,
     categoryId,
