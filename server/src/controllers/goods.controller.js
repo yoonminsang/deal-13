@@ -18,15 +18,18 @@ const createGoods = async (req, res) => {
 
 const findGoods = async (req, res) => {
   try {
-    const { regionId, categoryId, lastIndex } = req.params;
-    const data = await goodsService.findGoods(
+    const { regionId, categoryId, userId, lastIndex } = req.query;
+    let data = null;
+    data = await goodsService.findGoods(
       Number(regionId),
       Number(categoryId),
+      userId,
       Number(lastIndex),
     );
     res.status(200).json({
       result: '0',
       data,
+      isLast: data.length < 20,
     });
   } catch (err) {
     console.log(err);
@@ -43,20 +46,17 @@ const findGoodsByUserId = async (req, res) => {
     res.status(200).json({
       result: '0',
       data,
+      isLast: data.length < 20,
     });
   } catch (err) {
     console.log(err);
   }
 };
 
-const findGoodsDetailByGoodsId = async (req, res) => {
+const findGoodsDetail = async (req, res) => {
   try {
-    // **임시**
-    const { goodsId, userId = 'qa' } = req.params;
-    const data = await goodsService.findGoodsDetailByGoodsId(
-      Number(goodsId),
-      userId,
-    );
+    const { goodsId, userId } = req.query;
+    const data = await goodsService.findGoodsDetail(Number(goodsId), userId);
     res.status(200).json({
       result: '0',
       data,
@@ -80,8 +80,8 @@ const updateGoods = async (req, res) => {
 
 const updateGoodsSaleState = async (req, res) => {
   try {
-    const { goodsId, state } = req.params;
-    await goodsService.updateGoodsSaleState(goodsId, state);
+    const { goodsId, userId, state } = req.body;
+    await goodsService.updateGoodsSaleState(goodsId, userId, state);
     res.status(200).json({
       result: '0',
       message: '상태 변경 완료',
@@ -93,8 +93,8 @@ const updateGoodsSaleState = async (req, res) => {
 
 const deleteGoodsViewState = async (req, res) => {
   try {
-    const { goodsId } = req.params;
-    await goodsService.deleteGoodsViewState(goodsId);
+    const { goodsId, userId } = req.body;
+    await goodsService.deleteGoodsViewState(goodsId, userId);
     res.status(200).json({
       result: '0',
       message: '삭제 완료',
@@ -108,7 +108,7 @@ export const goodsController = {
   createGoods,
   findGoods,
   findGoodsByUserId,
-  findGoodsDetailByGoodsId,
+  findGoodsDetail,
   updateGoods,
   updateGoodsSaleState,
   deleteGoodsViewState,

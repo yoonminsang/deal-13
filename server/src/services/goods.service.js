@@ -10,30 +10,36 @@ const createGoods = async (body) => {
   if (!data.categoryId && data.categoryId !== 0) return null;
   if (!data.content) data.content = '';
   if (!data.price) data.price = 0;
-  if (!data.thumbnailId && data.thumbnailId !== 0) data.thumbnailId = null;
+  if (!data.thumbnail) return null;
   const result = await goodsQuery.insertGoods(data);
   return result;
 };
 
-const findGoods = async (regionId, categoryId, lastIndex) => {
+const findGoods = async (regionId, categoryId, userId, lastIndex) => {
   if (!regionId && regionId !== 0) regionId = Infinity;
   if (!categoryId && categoryId !== 0) categoryId = Infinity;
+  if (!userId) userId = '';
   if (!lastIndex && lastIndex !== 0) lastIndex = 0;
-  const result = await goodsQuery.selectGoods(regionId, categoryId, lastIndex);
+  const result = await goodsQuery.selectGoods(
+    regionId,
+    categoryId,
+    userId,
+    lastIndex,
+  );
   return result;
 };
 
-const findGoodsByUserId = async (userId, lastIndex) => {
-  if (!userId) return null;
-  if (!lastIndex && lastIndex !== 0) lastIndex = 0;
-  const result = await goodsQuery.selectGoodsByUserId(userId, lastIndex);
+const findGoodsByWish = async (wishUserId) => {
+  if (!wishUserId) return null;
+  const result = await goodsQuery.selectGoodsByWish(wishUserId);
   return result;
 };
 
-const findGoodsDetailByGoodsId = async (goodsId, userId) => {
+const findGoodsDetail = async (goodsId, userId) => {
+  console.log(goodsId, userId);
   if (!goodsId) return null;
   if (!userId) return null;
-  const result = await goodsQuery.selectGoodsDetailByGoodsId(goodsId, userId);
+  const result = await goodsQuery.selectGoodsDetail(goodsId, userId);
   return result;
 };
 
@@ -53,24 +59,26 @@ const updateGoods = async (body) => {
   return result;
 };
 
-const updateGoodsSaleState = async (goodsId, state) => {
+const updateGoodsSaleState = async (goodsId, userId, state) => {
   if (!goodsId && goodsId !== 0) return null;
   if (!state && state !== 0) return null;
-  const result = await goodsQuery.updateGoodsSaleState(goodsId, state);
+  if (!userId) return null;
+  const result = await goodsQuery.updateGoodsSaleState(goodsId, userId, state);
   return result;
 };
 
-const deleteGoodsViewState = async (goodsId) => {
+const deleteGoodsViewState = async (goodsId, userId) => {
   if (!goodsId && goodsId !== 0) return null;
-  const result = await goodsQuery.deleteGoodsViewState(goodsId);
+  if (!userId) return null;
+  const result = await goodsQuery.deleteGoodsViewState(goodsId, userId);
   return result;
 };
 
 export const goodsService = {
   createGoods,
   findGoods,
-  findGoodsByUserId,
-  findGoodsDetailByGoodsId,
+  findGoodsByWish,
+  findGoodsDetail,
   updateGoods,
   updateGoodsSaleState,
   deleteGoodsViewState,
