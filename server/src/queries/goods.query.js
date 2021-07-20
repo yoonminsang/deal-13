@@ -1,5 +1,4 @@
 import db from '../db/index.js';
-
 const insertGoods = async ({
   title,
   regionId,
@@ -27,7 +26,6 @@ const insertGoods = async ({
   }
   return null;
 };
-
 const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
   const result = await db.query(
     `
@@ -67,7 +65,6 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
   }
   return null;
 };
-
 const selectGoodsByUserId = async (userId) => {
   const result = await db.query(
     `
@@ -93,7 +90,6 @@ const selectGoodsByUserId = async (userId) => {
   }
   return null;
 };
-
 const selectGoodsByWish = async (userId) => {
   const [result] = await db.query(
     `
@@ -115,13 +111,11 @@ const selectGoodsByWish = async (userId) => {
     ORDER BY updated DESC
   `,
   );
-
   if (result.length) {
     return result[0];
   }
   return null;
 };
-
 const selectGoodsDetail = async (goodsId, userId) => {
   const [result] = await db.query(
     `SELECT distinct g.id, g.title, g.content, g.price, 
@@ -151,7 +145,6 @@ const selectGoodsDetail = async (goodsId, userId) => {
   }
   return null;
 };
-
 const updateGoods = async ({
   id,
   userId,
@@ -168,7 +161,6 @@ const updateGoods = async ({
   if (result.length) return result;
   else return null;
 };
-
 const updateGoodsSaleState = async (goodsId, userId, state) => {
   const result = await db.query(
     `UPDATE goods SET sale_state = ${state} WHERE id = ${goodsId} AND user_id = '${userId}'`,
@@ -176,7 +168,6 @@ const updateGoodsSaleState = async (goodsId, userId, state) => {
   if (result.length) return result;
   else return null;
 };
-
 const deleteGoodsViewState = async (goodsId, userId) => {
   const result = await db.query(
     `UPDATE goods SET view_state = 1 WHERE id = ${goodsId} AND user_id = '${userId}'`,
@@ -184,7 +175,6 @@ const deleteGoodsViewState = async (goodsId, userId) => {
   if (result.length) return result;
   else return null;
 };
-
 export const goodsQuery = {
   insertGoods,
   selectGoods,

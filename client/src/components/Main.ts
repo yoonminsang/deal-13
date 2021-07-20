@@ -66,6 +66,17 @@ function Main({ app, setPrimaryRegion }) {
     created,
   }) => {
     price = price.toLocaleString('ko-KR') + '원';
+    // console.log(created);
+    // const [year, month, date] = created.slice(0, 10).split('-');
+    // const [hour, minute] = created.slice(11).split(':');
+    // console.log(year, month, date, hour, minute);
+    // const now = new Date();
+    // const year2 = now.getFullYear();
+    // const month2 = now.getMonth();
+    // const date2 = now.getDate();
+    // const hour2 = now.getHours();
+    // if(year==year2)
+
     const chatElm = chat_count
       ? `<div class="icon icon-message"></div><p>${chat_count}</p>`
       : '';
@@ -104,7 +115,6 @@ function Main({ app, setPrimaryRegion }) {
     if (this.state.user && this.state.category && this.state.primaryRegion) {
       // /api/goods/list?regionId=3&lastIndex=13
       // 카테고리 추가하기
-      console.log('getapi', this.state);
       fetch(
         `/api/goods/list?regionId=${
           this.state.user.region_id[this.state.primaryRegion]
@@ -118,61 +128,13 @@ function Main({ app, setPrimaryRegion }) {
       )
         .then((res) => res.json())
         .then(({ data, text }) => {
+          console.log('main get api', data);
           this.setState(stateObj.post, data);
           if (text) console.log(text);
         })
         .catch((e) => {
           console.error(e);
         });
-      // fake
-      // const post: Goods[] = [
-      //   {
-      //     id: 1,
-      //     url: '/',
-      //     title: '제목',
-      //     region: '석수동',
-      //     time: '1일전',
-      //     price: 10000,
-      //     chat: 1,
-      //     wish: 2,
-      //     myWish: false,
-      //   },
-      //   {
-      //     id: 2,
-      //     url: '/',
-      //     title: '제목',
-      //     region: '석수동',
-      //     time: '1일전',
-      //     price: 10000,
-      //     chat: 1,
-      //     wish: 2,
-      //     myWish: true,
-      //   },
-      //   {
-      //     id: 3,
-      //     url: '/',
-      //     title: '제목',
-      //     region: '석수동',
-      //     time: '2일전',
-      //     price: 10000,
-      //     chat: 0,
-      //     wish: 2,
-      //     myWish: true,
-      //   },
-      //   {
-      //     id: 3,
-      //     url: '/',
-      //     title: '제목',
-      //     region: '석수동',
-      //     time: '2일전',
-      //     price: 10000,
-      //     chat: 0,
-      //     wish: 0,
-      //     myWish: true,
-      //   },
-      // ];
-      // const post = [['1', '', '반팔', '석수동', '1일전', '10,000', '1', '2']];
-      // this.setState(stateObj.post, post);
     } else if (this.state.user === null) {
       $listItems.innerHTML =
         '<div class="need-login"><div>로그인해주세요!!!</div></div>';
