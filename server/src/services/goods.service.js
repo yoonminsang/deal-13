@@ -29,14 +29,19 @@ const findGoods = async (regionId, categoryId, userId, lastIndex) => {
   return result;
 };
 
-const findGoodsByWish = async (wishUserId) => {
-  if (!wishUserId) return null;
-  const result = await goodsQuery.selectGoodsByWish(wishUserId);
+const findGoodsByUserId = async (userId) => {
+  if (!userId) return null;
+  const result = await goodsQuery.selectGoodsByUserId(userId);
+  return result;
+};
+
+const findGoodsByUserWish = async (userId) => {
+  if (!userId) return null;
+  const result = await goodsQuery.selectGoodsByWish(userId);
   return result;
 };
 
 const findGoodsDetail = async (goodsId, userId) => {
-  console.log(goodsId, userId);
   if (!goodsId) return null;
   if (!userId) return null;
   const result = await goodsQuery.selectGoodsDetail(goodsId, userId);
@@ -77,7 +82,8 @@ const deleteGoodsViewState = async (goodsId, userId) => {
 export const goodsService = {
   createGoods,
   findGoods,
-  findGoodsByWish,
+  findGoodsByUserId,
+  findGoodsByUserWish,
   findGoodsDetail,
   updateGoods,
   updateGoodsSaleState,

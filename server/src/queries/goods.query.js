@@ -32,7 +32,7 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
   const result = await db.query(
     `
     SELECT g.*,
-      (SELECT count(w.id) FROM goods_wish w WHERE w.id = g.id) as wish_count
+      (SELECT count(distinct w.id) FROM goods_wish w WHERE w.id = g.id) as wish_count
       ${
         userId.length > 0
           ? `, (SELECT count(distinct w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}' AND w2.goods_id = g.id) as isWish `
@@ -62,19 +62,18 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
   return null;
 };
 
-const selectGoodsByUserId = async (userId, lastIndex) => {
+const selectGoodsByUserId = async (userId) => {
   const result = await db.query(
     `
-    SELECT g.*, count(w.id) as wish_count FROM goods g
-    JOIN goods g2
+    SELECT 
+      g.*, 
+      count(w.id) as wish_count, 
+    FROM goods g
     LEFT JOIN goods_wish w ON w.goods_id = g.id
     WHERE g.view_state = 0
     AND g.user_id = '${userId}'
-    AND g2.id = ${lastIndex} 
-    AND g2.updated < g.updated
     GROUP BY g.id
     ORDER BY updated DESC
-    LIMIT 20;
   `,
   );
   if (result.length) {
@@ -83,21 +82,22 @@ const selectGoodsByUserId = async (userId, lastIndex) => {
   return null;
 };
 
-const selectGoodsByWish = async (userId, lastIndex) => {
+const selectGoodsByWish = async (userId) => {
   const [result] = await db.query(
     `
-    SELECT g.*, count(distinct w.id) as wish_count FROM goods g
-    JOIN goods g2
+    SELECT 
+      g.*, 
+      count(w.id) as wish_count
+    FROM goods g
     LEFT JOIN goods_wish w ON w.goods_id = g.id
     WHERE g.view_state = 0
-    AND g.user_id = '${userId}'
-    AND g2.id = ${lastIndex} 
-    AND g2.updated < g.updated
+    AND w.user_id = '${userId}'
+    AND g.id = w.goods_id
     GROUP BY g.id
     ORDER BY updated DESC
-    LIMIT 20;
   `,
   );
+
   if (result.length) {
     return result[0];
   }

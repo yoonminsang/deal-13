@@ -38,15 +38,24 @@ const findGoods = async (req, res) => {
 
 const findGoodsByUserId = async (req, res) => {
   try {
-    const { userId, lastIndex } = req.params;
-    const data = await goodsService.findGoodsByUserId(
-      userId,
-      Number(lastIndex),
-    );
+    const { userId } = req.params;
+    const data = await goodsService.findGoodsByUserId(userId);
     res.status(200).json({
       result: '0',
       data,
-      isLast: data.length < 20,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const findGoodsByUserWish = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const data = await goodsService.findGoodsByUserWish(userId);
+    res.status(200).json({
+      result: '0',
+      data,
     });
   } catch (err) {
     console.log(err);
@@ -108,6 +117,7 @@ export const goodsController = {
   createGoods,
   findGoods,
   findGoodsByUserId,
+  findGoodsByUserWish,
   findGoodsDetail,
   updateGoods,
   updateGoodsSaleState,
