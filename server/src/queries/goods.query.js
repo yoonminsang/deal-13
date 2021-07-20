@@ -45,6 +45,7 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
       }
     FROM goods g
     JOIN goods g2
+    JOIN region r
     WHERE g.view_state = 0
     AND g.region_id = ${
       regionId === Infinity ? '0 or g.region_id > -1' : regionId
@@ -79,6 +80,7 @@ const selectGoodsByUserId = async (userId) => {
     r.region as region_name, 
     count(w.id) as wish_count 
     FROM goods g 
+    JOIN region r
     LEFT JOIN goods_wish w ON w.goods_id = g.id
     WHERE g.view_state = 0
     AND g.user_id = '${userId}'
@@ -104,6 +106,7 @@ const selectGoodsByWish = async (userId) => {
       r.region as region_name,
       count(w.id) as wish_count
     FROM goods g
+    JOIN region r
     LEFT JOIN goods_wish w ON w.goods_id = g.id
     WHERE g.view_state = 0
     AND w.user_id = '${userId}'
