@@ -1,5 +1,5 @@
 import '../styles/Login.scss';
-function Login({ app, go, back, authProcess }) {
+function Login({ app, back, authProcess }) {
   interface StateObj {
     user: string;
   }

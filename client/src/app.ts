@@ -172,10 +172,9 @@ function App() {
     }
   };
 
-  const main = new Main({ app, go, setPrimaryRegion });
+  const main = new Main({ app, setPrimaryRegion });
   const login = new Login({
     app,
-    go,
     back,
     authProcess,
   });

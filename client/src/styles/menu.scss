@@ -1,5 +1,14 @@
-.gnb-container {
-  background-color: map.get($colors, 'off-white');
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.menu {
+  .top-bar {
+    border: 0;
+  }
+  .gnb-container {
+    background-color: map.get($colors, 'off-white');
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    .btn-tap {
+      padding-top: 16px;
+      padding-bottom: 18px;
+    }
+  }
 }
