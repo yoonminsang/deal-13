@@ -17,17 +17,17 @@ router.get('/', (req, res) => {
 
 router.post('/create', async (req, res) => {
   const { region } = req.body;
-  const [[regions]] = await db.query(
-    `SELECT id FROM regions WHERE region='${region}' LIMIT 1`,
+  const [[regionData]] = await db.query(
+    `SELECT id FROM region WHERE region='${region}' LIMIT 1`,
   );
   let regionId;
-  if (regions) {
-    regionId = regions.id;
+  if (regionData) {
+    regionId = regionData.id;
   } else {
-    const [regionsInsert] = await db.query(
-      `INSERT INTO regions(region) VALUES('${region}')`,
+    const [regionInsert] = await db.query(
+      `INSERT INTO region(region) VALUES('${region}')`,
     );
-    regionId = regionsInsert.insertId;
+    regionId = regionInsert.insertId;
   }
   await db.query(
     `INSERT INTO region_list(region_id, user_id) VALUES('${regionId}', '${req.user.uuid}')`,
@@ -37,10 +37,10 @@ router.post('/create', async (req, res) => {
 
 router.post('/delete', async (req, res) => {
   const { region } = req.body;
-  const [[regions]] = await db.query(
-    `SELECT id FROM regions WHERE region='${region}' LIMIT 1`,
+  const [[regionData]] = await db.query(
+    `SELECT id FROM region WHERE region='${region}' LIMIT 1`,
   );
-  await db.query(`DELETE FROM region_list WHERE region_id='${regions.id}'`);
+  await db.query(`DELETE FROM region_list WHERE region_id='${regionData.id}'`);
   return res.json({ text: '동네 삭제 완료' });
 });
 
