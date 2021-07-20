@@ -2,6 +2,7 @@ import { goodsService } from '../services/goods.service.js';
 
 const createGoods = async (req, res) => {
   try {
+    req.user_id = req.uest.id;
     await goodsService.createGoods(req.body);
     res.status(200).json({
       result: '0',
@@ -18,12 +19,12 @@ const createGoods = async (req, res) => {
 
 const findGoods = async (req, res) => {
   try {
-    const { regionId, categoryId, userId, lastIndex } = req.query;
+    const { regionId, categoryId, lastIndex } = req.query;
     let data = null;
     data = await goodsService.findGoods(
       Number(regionId),
       Number(categoryId),
-      userId,
+      req.user.id,
       Number(lastIndex),
     );
     res.status(200).json({
@@ -38,8 +39,7 @@ const findGoods = async (req, res) => {
 
 const findGoodsByUserId = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const data = await goodsService.findGoodsByUserId(userId);
+    const data = await goodsService.findGoodsByUserId(req.user.id);
     res.status(200).json({
       result: '0',
       data,
@@ -51,8 +51,7 @@ const findGoodsByUserId = async (req, res) => {
 
 const findGoodsByUserWish = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const data = await goodsService.findGoodsByUserWish(userId);
+    const data = await goodsService.findGoodsByUserWish(req.user.id);
     res.status(200).json({
       result: '0',
       data,
@@ -64,8 +63,11 @@ const findGoodsByUserWish = async (req, res) => {
 
 const findGoodsDetail = async (req, res) => {
   try {
-    const { goodsId, userId } = req.query;
-    const data = await goodsService.findGoodsDetail(Number(goodsId), userId);
+    const { goodsId } = req.query;
+    const data = await goodsService.findGoodsDetail(
+      Number(goodsId),
+      req.user.id,
+    );
     res.status(200).json({
       result: '0',
       data,
@@ -89,8 +91,8 @@ const updateGoods = async (req, res) => {
 
 const updateGoodsSaleState = async (req, res) => {
   try {
-    const { goodsId, userId, state } = req.body;
-    await goodsService.updateGoodsSaleState(goodsId, userId, state);
+    const { goodsId, state } = req.body;
+    await goodsService.updateGoodsSaleState(goodsId, req.user.id, state);
     res.status(200).json({
       result: '0',
       message: '상태 변경 완료',
@@ -102,8 +104,8 @@ const updateGoodsSaleState = async (req, res) => {
 
 const deleteGoodsViewState = async (req, res) => {
   try {
-    const { goodsId, userId } = req.body;
-    await goodsService.deleteGoodsViewState(goodsId, userId);
+    const { goodsId } = req.body;
+    await goodsService.deleteGoodsViewState(goodsId, req.user.id);
     res.status(200).json({
       result: '0',
       message: '삭제 완료',
