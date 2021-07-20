@@ -126,7 +126,7 @@ const selectGoodsDetail = async (goodsId, userId) => {
     DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created, (SELECT count(distinct w.id) FROM goods_wish w WHERE w.goods_id = g.id) as wish_count, r.region, c.name as category, instr(g.user_id, '${userId}') as isAuthor, (SELECT count(w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}') as isWish FROM goods g, goods_photo p, region r, category c, goods_wish w WHERE g.id = ${goodsId} AND g.view_state = 0 AND g.id = p.goods_id AND g.region_id = r.id AND g.category_id = c.id`,
   );
   const [urlsRow] = await db.query(
-    `SELECT url FROM goods_photo WHERE goods_id = ${goodsId}`,
+    `SELECT url FROM goods_photo WHERE goods_id = ${goodsId}`
   );
   if (result.length) {
     if (result[0].isAuthor !== 0) {
@@ -136,11 +136,11 @@ const selectGoodsDetail = async (goodsId, userId) => {
       result[0].view_count += 1;
       await db.query(
         `UPDATE goods SET view_count = view_count + 1 WHERE id = ${result[0].id}`,
-      );
-    }
+        );
+      }
     if (result[0].isWish) result[0].isWish = true;
     else result[0].isWish = false;
-    result[0].urls = urlsRow.map((row) => row.url);
+    result[0].urls = urlsRow.map(row => row.url);
     return result[0];
   }
   return null;
