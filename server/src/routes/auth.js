@@ -16,32 +16,32 @@ router.post('/signup', async (req, res, next) => {
   const register = async (regionId, uuid, id, password) => {
     const hash = await bcrypt.hash(password + '', 10);
     await db.query(
-      `INSERT INTO users(uuid, id, password) VALUES('${uuid}', '${id}', '${hash}')`,
+      `INSERT INTO user(uuid, id, password) VALUES('${uuid}', '${id}', '${hash}')`,
     );
     await db.query(
-      `INSERT INTO region_list(region_id, user_id) VALUES('${regionId}', '${uuid}')`,
+      `INSERT INTO region_list(region_id, user_id) VALUES('${regionId}', '${id}')`,
     );
     return res.json({ text: '회원가입 완료' });
   };
 
   const { id, password, region } = req.body;
   const [[existId]] = await db.query(
-    `SELECT EXISTS (SELECT * FROM users WHERE id='${id}') as exist`,
+    `SELECT EXISTS (SELECT * FROM user WHERE id='${id}') as exist`,
   );
   if (existId.exist)
     return res.status(409).json({ error: '아이디가 존재합니다' });
-  const [[regions]] = await db.query(
-    `SELECT id FROM regions WHERE region='${region}' LIMIT 1`,
+  const [[sRegion]] = await db.query(
+    `SELECT id FROM region WHERE region='${region}' LIMIT 1`,
   );
   const uuid = uuidv4();
   let regionId;
-  if (regions) {
-    regionId = regions.id;
+  if (sRegion) {
+    regionId = sRegion.id;
   } else {
-    const [regionsInsert] = await db.query(
-      `INSERT INTO regions(region) VALUES('${region}')`,
+    const [regionInsert] = await db.query(
+      `INSERT INTO region(region) VALUES('${region}')`,
     );
-    regionId = regionsInsert.insertId;
+    regionId = regionInsert.insertId;
   }
   register(regionId, uuid, id, password);
 });
