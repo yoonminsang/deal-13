@@ -20,6 +20,7 @@ interface ActionObj {
   user: string;
   category: string;
   primaryRegion: string;
+  dbId: string;
 }
 interface RenderObj {
   login: string;
@@ -32,6 +33,7 @@ interface RenderObj {
   chatting: string;
   chattingDetail: string;
   region: string;
+  modify: string;
 }
 
 const actionObj: ActionObj = {
@@ -42,6 +44,7 @@ const actionObj: ActionObj = {
   user: 'user',
   category: 'category',
   primaryRegion: 'primaryRegion',
+  dbId: 'dbId',
 };
 const renderObj: RenderObj = {
   login: 'login',
@@ -54,6 +57,7 @@ const renderObj: RenderObj = {
   chatting: 'chatting',
   chattingDetail: 'chattingDetail',
   region: 'region',
+  modify: 'modify',
 };
 const AUTO = 'auto';
 
@@ -190,7 +194,7 @@ function App() {
   });
   const menu = new Menu({ app });
   const write = new Write({ app, goMain });
-  const post = new Post({ app, go, back });
+  const post = new Post({ app });
   const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
     app,
@@ -230,6 +234,7 @@ function App() {
         const lastDepth = this.state.depth[this.state.depth.length - 1];
         const idx = lastDepth.search(/\#/g);
         const name = idx === -1 ? lastDepth : lastDepth.slice(0, idx);
+        console.log(name);
         // case문을 if문으로 바꿀까 고민중
         switch (name) {
           case renderObj.category:
@@ -250,9 +255,13 @@ function App() {
           case renderObj.write:
             if (!this.state.user) return goLogin();
             return write.render();
+          case renderObj.modify:
+            if (!this.state.user) return goLogin();
+            return write.render(renderObj.modify);
           case renderObj.post:
             if (!this.state.user) return goLogin();
-            return post.render();
+            const dbId = this.state.depth[0].slice(5);
+            return post.render(dbId);
           case renderObj.chatting:
             if (!this.state.user) return goLogin();
             return chatting.render();
@@ -294,6 +303,7 @@ function App() {
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         write.setState(actionObj.user, this.state.user);
+        post.setState(actionObj.user, this.state.user);
         // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
