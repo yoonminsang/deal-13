@@ -112,7 +112,7 @@ function Write({ app, goMain }) {
       price,
       content,
       region,
-      this.state.url,
+      this.state.url, // [{id,url}] 보낼때 id만
       this.state.thumbnail,
     );
     // 서버 받으면 fetch
@@ -137,8 +137,8 @@ function Write({ app, goMain }) {
     if (!title) alert('제목을 입력하세요');
     else if (!content) alert('내용을 입력하세요');
     else if (!this.state.selectCategory) alert('카테고리를 선택하세요');
-    else if (this.state.url.length === 0 && !this.state.thumbnail)
-      alert('썸네일을 선택하세요');
+    else if (this.state.url.length === 0) alert('사진을 올려주세요');
+    else if (!this.state.thumbnail) alert('썸네일을 선택하세요');
     else {
       onSumbit(title, price, content, region);
     }
@@ -196,6 +196,7 @@ function Write({ app, goMain }) {
   };
 
   this.render = () => {
+    $imgInner.innerHTML = makeImgBtn(this.state.url.length);
     app.appendChild($target);
     setTimeout(() => $target.classList.add('slidein'), 0);
   };
