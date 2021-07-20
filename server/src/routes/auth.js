@@ -3,15 +3,12 @@ import db from '../db/index.js';
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import passport from 'passport';
-
 const router = express.Router();
-
 router.get('/', (req, res) => {
   const { user } = req;
   if (user) return res.json({ user });
   return res.status(401).json({ user: null, error: '자동 로그인 실패' });
 });
-
 router.post('/signup', async (req, res, next) => {
   const register = async (regionId, uuid, id, password) => {
     const hash = await bcrypt.hash(password + '', 10);
@@ -23,7 +20,6 @@ router.post('/signup', async (req, res, next) => {
     );
     return res.json({ text: '회원가입 완료' });
   };
-
   const { id, password, region } = req.body;
   const [[existId]] = await db.query(
     `SELECT EXISTS (SELECT * FROM user WHERE id='${id}') as exist`,
@@ -45,7 +41,6 @@ router.post('/signup', async (req, res, next) => {
   }
   register(regionId, uuid, id, password);
 });
-
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
@@ -57,11 +52,9 @@ router.post('/login', (req, res, next) => {
     });
   })(req, res, next);
 });
-
 router.get('/logout', (req, res) => {
   req.logout();
   req.session.destroy();
   return res.json({ text: '로그아웃' });
 });
-
 export default router;
