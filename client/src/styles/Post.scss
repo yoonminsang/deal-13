@@ -1,11 +1,25 @@
 .post {
+  .blind {
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+  }
   .top-bar.invisible {
     position: fixed;
     width: 100%;
-    z-index: 100;
+    // z-index: 10;
     border: 0;
     .icon-left {
       filter: map.get($filter_colors, 'white');
+    }
+    .drop-down-list {
+      position: fixed;
+      top: 48px;
+      right: 16px;
+      transition: all 0.5s;
+      .js-delete {
+        color: map.get($colors, 'error');
+      }
     }
   }
   .img-box-large {
@@ -63,6 +77,10 @@
     .product-bar {
       margin-top: 24px;
       border-top: 1px solid map.get($colors, 'grey-3');
+      .btn-medium,
+      .btn-location {
+        width: 136px;
+      }
     }
   }
 }
