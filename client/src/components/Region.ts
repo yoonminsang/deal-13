@@ -67,7 +67,9 @@ function Region({ app, setPrimaryRegion, autoLogin }) {
 
   const makeRegion = (region: string, index: number) => {
     return `
-    <button class="region-${index} js-region btn-location">
+    <button class="region-${index} js-region btn-location ${
+      index == this.state.primaryRegion && 'active'
+    }">
       <span>${region}</span>
       <div class="icon icon-close"></div>
     </button> 
