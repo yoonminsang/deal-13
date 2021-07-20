@@ -13,7 +13,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 import passportConfig from './passport/index.js';
-// import indexRouter from './routes/index';
 import authRouter from './routes/auth.js';
 import regionRouter from './routes/region.js';
 import categoryRouter from './routes/category.js';
@@ -59,7 +58,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/region', regionRouter);
 app.use('/api/category', categoryRouter);

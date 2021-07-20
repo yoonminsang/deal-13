@@ -1,6 +1,6 @@
 import { goodsPhotoService } from '../services/goods-photo.service.js';
 
-const createPhoto = async (req, res) => {
+const createGoodsPhoto = async (req, res) => {
   try {
     const { goodsId, url } = req.body;
     await goodsPhotoService.createGoodsPhoto(Number(goodsId), url);
@@ -33,6 +33,6 @@ const deleteGoodsPhotos = async (req, res) => {
 };
 
 export const goodsPhotoController = {
-  createPhoto,
+  createGoodsPhoto,
   deleteGoodsPhotos,
 };

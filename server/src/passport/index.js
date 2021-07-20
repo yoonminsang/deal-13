@@ -3,7 +3,6 @@ import db from '../db/index.js';
 import Strategy from 'passport-local';
 import bcrypt from 'bcrypt';
 const LocalStrategy = Strategy.Strategy;
-
 const passportConfig = () => {
   passport.serializeUser((user, done) => {
     console.log('serialize', user.id);
@@ -20,7 +19,6 @@ const passportConfig = () => {
     } else console.error('deserialize error! too many region');
     done(null, user[0]);
   });
-
   passport.use(
     new LocalStrategy(
       {
