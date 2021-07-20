@@ -107,75 +107,75 @@ function Main({ app, setPrimaryRegion }) {
       this.state.user.region[0] &&
       this.state.category
     ) {
-      // this.state.user
-      // fetch(
-      //   `/api/post/${this.state.user.region[getPrimaryRegion()]}/${
-      //     this.state.category
-      //   }`,
-      //   {
-      //     method: 'GET',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //   },
-      // )
-      //   .then((res) => res.json())
-      //   .then(({ post, text }) => {
-      //     this.setState(stateObj.post, post);
-      //     if (text) console.log(text);
-      //   })
-      //   .catch((e) => {
-      //     console.error(e);
-      //   });
+      // /api/goods/list?regionId=3&lastIndex=13
+      fetch(
+        `/api/goods/list?regionId=${
+          this.state.user.region_id[this.state.primaryRegion]
+        }&category=${this.state.category}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+        .then((res) => res.json())
+        .then(({ data, text }) => {
+          this.setState(stateObj.post, data);
+          if (text) console.log(text);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
       // fake
-      const post: Goods[] = [
-        {
-          id: 1,
-          url: '/',
-          title: '제목',
-          region: '석수동',
-          time: '1일전',
-          price: 10000,
-          chat: 1,
-          wish: 2,
-          myWish: false,
-        },
-        {
-          id: 2,
-          url: '/',
-          title: '제목',
-          region: '석수동',
-          time: '1일전',
-          price: 10000,
-          chat: 1,
-          wish: 2,
-          myWish: true,
-        },
-        {
-          id: 3,
-          url: '/',
-          title: '제목',
-          region: '석수동',
-          time: '2일전',
-          price: 10000,
-          chat: 0,
-          wish: 2,
-          myWish: true,
-        },
-        {
-          id: 3,
-          url: '/',
-          title: '제목',
-          region: '석수동',
-          time: '2일전',
-          price: 10000,
-          chat: 0,
-          wish: 0,
-          myWish: true,
-        },
-      ];
+      // const post: Goods[] = [
+      //   {
+      //     id: 1,
+      //     url: '/',
+      //     title: '제목',
+      //     region: '석수동',
+      //     time: '1일전',
+      //     price: 10000,
+      //     chat: 1,
+      //     wish: 2,
+      //     myWish: false,
+      //   },
+      //   {
+      //     id: 2,
+      //     url: '/',
+      //     title: '제목',
+      //     region: '석수동',
+      //     time: '1일전',
+      //     price: 10000,
+      //     chat: 1,
+      //     wish: 2,
+      //     myWish: true,
+      //   },
+      //   {
+      //     id: 3,
+      //     url: '/',
+      //     title: '제목',
+      //     region: '석수동',
+      //     time: '2일전',
+      //     price: 10000,
+      //     chat: 0,
+      //     wish: 2,
+      //     myWish: true,
+      //   },
+      //   {
+      //     id: 3,
+      //     url: '/',
+      //     title: '제목',
+      //     region: '석수동',
+      //     time: '2일전',
+      //     price: 10000,
+      //     chat: 0,
+      //     wish: 0,
+      //     myWish: true,
+      //   },
+      // ];
       // const post = [['1', '', '반팔', '석수동', '1일전', '10,000', '1', '2']];
-      this.setState(stateObj.post, post);
+      // this.setState(stateObj.post, post);
     } else if (this.state.user === null) {
       $listItems.innerHTML =
         '<div class="need-login"><div>로그인해주세요!!!</div></div>';
