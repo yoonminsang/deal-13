@@ -31,7 +31,11 @@ const insertGoods = async ({
 const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
   const result = await db.query(
     `
-    SELECT g.*,
+    SELECT g.id, g.title, g.content, g.price, 
+    g.thumbnail, g.view_count, g.view_state, 
+    g.sale_state, g.user_id, g.region_id, g.category_id, 
+    DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
+    DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
       (SELECT count(distinct w.id) FROM goods_wish w WHERE w.id = g.id) as wish_count
       ${
         userId.length > 0
@@ -66,9 +70,13 @@ const selectGoodsByUserId = async (userId) => {
   const result = await db.query(
     `
     SELECT 
-      g.*, 
-      count(w.id) as wish_count, 
-    FROM goods g
+    g.id, g.title, g.content, g.price, 
+    g.thumbnail, g.view_count, g.view_state, 
+    g.sale_state, g.user_id, g.region_id, g.category_id, 
+    DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
+    DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
+    count(w.id) as wish_count 
+    FROM goods g 
     LEFT JOIN goods_wish w ON w.goods_id = g.id
     WHERE g.view_state = 0
     AND g.user_id = '${userId}'
@@ -86,7 +94,11 @@ const selectGoodsByWish = async (userId) => {
   const [result] = await db.query(
     `
     SELECT 
-      g.*, 
+      g.id, g.title, g.content, g.price, 
+      g.thumbnail, g.view_count, g.view_state, 
+      g.sale_state, g.user_id, g.region_id, g.category_id, 
+      DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
+      DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
       count(w.id) as wish_count
     FROM goods g
     LEFT JOIN goods_wish w ON w.goods_id = g.id
@@ -106,7 +118,11 @@ const selectGoodsByWish = async (userId) => {
 
 const selectGoodsDetail = async (goodsId, userId) => {
   const [result] = await db.query(
-    `SELECT g.*, count(distinct w.id) as wish_count, CONCAT('[', GROUP_CONCAT(p.url), ']') AS urls, r.region, c.name as category, instr(g.user_id, '${userId}') as isAuthor, (SELECT count(w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}') as isWish FROM goods g, goods_photo p, region r, category c, goods_wish w WHERE g.id = ${goodsId} AND g.view_state = 0 AND g.id = p.goods_id AND g.region_id = r.id AND g.category_id = c.id AND w.goods_id = g.id`,
+    `SELECT     g.id, g.title, g.content, g.price, 
+    g.thumbnail, g.view_count, g.view_state, 
+    g.sale_state, g.user_id, g.region_id, g.category_id, 
+    DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
+    DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created, count(distinct w.id) as wish_count, CONCAT('[', GROUP_CONCAT(p.url), ']') AS urls, r.region, c.name as category, instr(g.user_id, '${userId}') as isAuthor, (SELECT count(w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}') as isWish FROM goods g, goods_photo p, region r, category c, goods_wish w WHERE g.id = ${goodsId} AND g.view_state = 0 AND g.id = p.goods_id AND g.region_id = r.id AND g.category_id = c.id AND w.goods_id = g.id`,
   );
   if (result.length) {
     if (result[0].isAuthor !== 0) {
