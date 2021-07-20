@@ -6,6 +6,8 @@ function Write({ app, goMain }) {
     category: string;
     selectCategory: string;
     thumbnail: string;
+    mode: string;
+    id: string;
   }
   const stateObj: StateObj = {
     user: 'user',
@@ -14,6 +16,12 @@ function Write({ app, goMain }) {
     category: 'category',
     selectCategory: 'selectCategory',
     thumbnail: 'thumbnail',
+    mode: 'mode',
+    id: 'id',
+  };
+  const mode = {
+    write: 'write',
+    modify: 'modify',
   };
 
   const $target = document.createElement('div');
@@ -24,7 +32,7 @@ function Write({ app, goMain }) {
       <div class="js-back icon icon-left"></div>
     </div>
     <div>
-      <div class="top-bar__text">글쓰기</div>
+      <div class="mode top-bar__text"></div>
     </div>
     <div>
       <div class="js-btn-complete icon icon-check"></div>
@@ -57,6 +65,7 @@ function Write({ app, goMain }) {
   const $categoryInner = $target.querySelector('.category-inner');
   const $location: HTMLDivElement = $target.querySelector('.location');
   const $imgInner: HTMLDivElement = $target.querySelector('.img-inner');
+  const $mode = $target.querySelector('.mode');
 
   const makeCategoryItem = (id, name) => {
     return `
@@ -84,6 +93,14 @@ function Write({ app, goMain }) {
     `;
   };
 
+  const priceValidation = (value) => {
+    value = value.replace(/[^0-9]/g, '');
+    value = value.slice(0, 9);
+    if (value.length > 0)
+      value = '₩ ' + parseInt(value).toLocaleString('ko-KR');
+    return value;
+  };
+
   const validation = (e) => {
     const target = e.target as HTMLInputElement;
     switch (target) {
@@ -91,11 +108,7 @@ function Write({ app, goMain }) {
         target.value = target.value.slice(0, 60);
         return;
       case $price:
-        target.value = target.value.replace(/[^0-9]/g, '');
-        target.value = target.value.slice(0, 9);
-        if (target.value.length > 0)
-          target.value =
-            '₩ ' + parseInt(target.value).toLocaleString('ko-KR') + '원';
+        target.value = priceValidation(target.value);
         return;
     }
   };
@@ -116,6 +129,10 @@ function Write({ app, goMain }) {
       this.state.thumbnail,
     );
     // 서버 받으면 fetch
+    if (this.state.mode === mode.write) {
+    } else {
+      // this.state.id로 fetch보내기
+    }
   };
 
   $target.addEventListener('input', validation);
@@ -188,15 +205,41 @@ function Write({ app, goMain }) {
     category: undefined,
     selectCategory: null,
     thumbnail: null,
+    mode: undefined,
+    id: undefined,
   };
 
   this.setState = (nextStateName, nextState) => {
     this.state = { ...this.state, [nextStateName]: nextState };
+    console.log(this.state);
     this.rerender(nextStateName);
   };
 
-  this.render = () => {
-    $imgInner.innerHTML = makeImgBtn(this.state.url.length);
+  this.render = (modify) => {
+    if (modify) {
+      // fetch로 정보 뿔러오고
+      // id도 정보넣기
+      // id로 요청을 보내. modify에서는
+      console.log('modify', modify);
+      const url = ['/'],
+        selectCategory = 1,
+        thumbnail = 0,
+        id = 1;
+      this.setState(stateObj.id, id);
+      this.setState(stateObj.url, url);
+      this.setState(stateObj.selectCategory, selectCategory);
+      this.setState(stateObj.thumbnail, thumbnail);
+      this.setState(stateObj.mode, mode.modify);
+      $title.value = '타이틀';
+      $price.value = priceValidation('10000');
+      $content.value = '내요용';
+    } else {
+      $title.value = '';
+      $price.value = '';
+      $content.value = '';
+      $imgInner.innerHTML = makeImgBtn(this.state.url.length);
+      this.setState(stateObj.mode, mode.write);
+    }
     app.appendChild($target);
     setTimeout(() => $target.classList.add('slidein'), 0);
   };
@@ -204,6 +247,7 @@ function Write({ app, goMain }) {
   // user랑 primaryRegion을 rerender를 계속하면 낭비인듯
   // 그냥 render될때만 불러오면 되는데
   this.rerender = (changeStateName) => {
+    console.log(changeStateName, stateObj.mode === changeStateName);
     switch (changeStateName) {
       case stateObj.user:
       case stateObj.primaryRegion:
@@ -230,13 +274,18 @@ function Write({ app, goMain }) {
         });
         return;
       case stateObj.selectCategory:
-        console.log('select render');
         [...$categoryInner.children].forEach((v) => {
           const target = v as HTMLElement;
           if (target.dataset.id == this.state.selectCategory)
             target.classList.add('active');
           else target.classList.remove('active');
         });
+        return;
+      case stateObj.mode:
+        if (this.state.mode === mode.write) $mode.textContent = '글쓰기';
+        else $mode.textContent = '업데이트';
+        return;
+      case stateObj.id:
         return;
       default:
         console.log('state name is not found');
