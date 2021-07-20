@@ -2,8 +2,8 @@ import { goodsWishService } from '../services/goods-wish.service.js';
 
 const createGoodsWish = async (req, res) => {
   try {
-    const { goodsId, userId } = req.body;
-    await goodsWishService.createGoodsWish(Number(goodsId), userId);
+    const { goodsId } = req.body;
+    await goodsWishService.createGoodsWish(Number(goodsId), req.user.id);
     res.status(200).json({
       result: '0',
       message: '관심 상품 등록 성공',
@@ -18,10 +18,10 @@ const createGoodsWish = async (req, res) => {
 
 const deleteGoodsWish = async (req, res) => {
   try {
-    const { goodsId, userId } = req.body;
+    const { goodsId } = req.body;
     const data = await goodsWishService.deleteGoodsWish(
       Number(goodsId),
-      userId,
+      req.user.id,
     );
     res.status(200).json({
       result: '0',
