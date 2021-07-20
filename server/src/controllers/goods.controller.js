@@ -2,7 +2,7 @@ import { goodsService } from '../services/goods.service.js';
 
 const createGoods = async (req, res) => {
   try {
-    req.user_id = req.uest.id;
+    req.body.userId = req.user.id;
     await goodsService.createGoods(req.body);
     res.status(200).json({
       result: '0',
@@ -79,6 +79,7 @@ const findGoodsDetail = async (req, res) => {
 
 const updateGoods = async (req, res) => {
   try {
+    req.body.userId = req.user.id;
     await goodsService.updateGoods(req.body);
     res.status(200).json({
       result: '0',
