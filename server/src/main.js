@@ -19,6 +19,7 @@ import regionRouter from './routes/region.js';
 import categoryRouter from './routes/category.js';
 import goodsRouter from './routes/goods.js';
 import goodsPhotoRouter from './routes/goods-photo.js';
+import goodsWishRouter from './routes/goods-wish.js';
 
 dotenv.config();
 
@@ -64,6 +65,7 @@ app.use('/api/region', regionRouter);
 app.use('/api/category', categoryRouter);
 app.use('/api/goods', goodsRouter);
 app.use('/api/goods-photo', goodsPhotoRouter);
+app.use('/api/goods-wish', goodsWishRouter);
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
