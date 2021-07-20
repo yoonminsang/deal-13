@@ -2,7 +2,7 @@ function Write({ app, goMain }) {
   interface StateObj {
     user: string;
     primaryRegion: string;
-    url: string;
+    urls: string;
     category: string;
     selectCategory: string;
     thumbnail: string;
@@ -12,7 +12,7 @@ function Write({ app, goMain }) {
   const stateObj: StateObj = {
     user: 'user',
     primaryRegion: 'primaryRegion',
-    url: 'url',
+    urls: 'urls',
     category: 'category',
     selectCategory: 'selectCategory',
     thumbnail: 'thumbnail',
@@ -78,6 +78,7 @@ function Write({ app, goMain }) {
     <button class="js-insert-img btn-img">
       <div class="icon icon-image"></div>
       <p>${count}/10</p>
+      <input class="input-file" type="file" multiple accept=".jpg, .png, .jpeg" name="file"/>
     </button>
     `;
   };
@@ -118,24 +119,125 @@ function Write({ app, goMain }) {
     obj.style.height = 12 + obj.scrollHeight + 'px';
   };
 
-  const onSumbit = (title, price, content, region) => {
-    console.log(
-      title,
-      this.state.selectCategory,
-      price,
-      content,
-      region,
-      this.state.url, // [{id,url}] 보낼때 id만
-      this.state.thumbnail,
-    );
-    // 서버 받으면 fetch
+  const fetchSubmit = (
+    type,
+    regionId,
+    categoryId,
+    thumbnail,
+    title,
+    price,
+    content,
+    urls,
+  ) => {
+    fetch(`/api/goods`, {
+      method: `${type}`,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        regionId,
+        categoryId,
+        thumbnail,
+        title,
+        price,
+        content,
+        urls,
+      }),
+    })
+      .then((res) => res.json())
+      .then(({ result, message }) => {
+        if (message) console.log(message);
+        if (result == 0) goMain();
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  const onSumbit = (title, price, content) => {
+    const thumbnail = this.state.urls[this.state.thumbnail];
+    const regionId = this.state.user.region_id[this.state.primaryRegion];
+    const { selectCategory: categoryId, urls } = this.state;
     if (this.state.mode === mode.write) {
+      fetchSubmit(
+        'POST',
+        regionId,
+        categoryId,
+        thumbnail,
+        title,
+        price,
+        content,
+        urls,
+      );
     } else {
-      // this.state.id로 fetch보내기
+      fetchSubmit(
+        'PUT',
+        regionId,
+        categoryId,
+        thumbnail,
+        title,
+        price,
+        content,
+        urls,
+      );
     }
   };
 
   $target.addEventListener('input', validation);
+
+  $imgInner.addEventListener('change', (e) => {
+    const target = e.target as HTMLElement;
+    const $inputFile: HTMLInputElement = $target.querySelector('.input-file');
+    if (target.classList.contains('input-file')) {
+      if ($inputFile.files.length + this.state.urls.length > 10) {
+        alert('이미지를 10개 초과 등록할 수 없습니다');
+        return;
+      }
+      const data = new FormData();
+      for (const file of $inputFile.files) {
+        data.append('file', file, file.name);
+      }
+      fetch('http://localhost:3000/api/goods-photo', {
+        method: 'POST',
+        headers: {},
+        body: data,
+      })
+        .then((res) => res.json())
+        .then(({ data }) => {
+          console.log(data);
+          this.setState(stateObj.urls, [...this.state.urls, ...data]);
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  });
+
+  $imgInner.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const insertClosest = target.closest('.js-insert-img');
+    const deleteClosest = target.closest('.js-delete');
+    const btnImg: HTMLElement | null = target.closest('.btn-img');
+    const $inputFile: HTMLInputElement = $target.querySelector('.input-file');
+
+    if (insertClosest) {
+      $inputFile.click();
+    } else if (deleteClosest) {
+      const deleteIndex = deleteClosest.parentElement.dataset.index;
+      const nextUrls = this.state.urls.slice();
+      nextUrls.splice(deleteIndex, 1);
+      this.setState(stateObj.urls, nextUrls);
+      if (this.state.thumbnail == deleteIndex) {
+        this.setState(stateObj.thumbnail, null);
+      } else if (this.state.thumbnail > deleteIndex) {
+        this.setState(stateObj.thumbnail, this.state.thumbnail - 1);
+      }
+    } else if (btnImg) {
+      const index = btnImg.dataset.index;
+      if (index != this.state.thumbnail)
+        this.setState(stateObj.thumbnail, index);
+    }
+  });
 
   $content.addEventListener('keyup', function () {
     resize(this);
@@ -149,51 +251,19 @@ function Write({ app, goMain }) {
     const title = $title.value;
     const price = $price.value.replace(/[^0-9]/g, '');
     const content = $content.value;
-    const region = this.state.user.region[this.state.primaryRegion];
-    console.log(title, price, content, region);
     if (!title) alert('제목을 입력하세요');
     else if (!content) alert('내용을 입력하세요');
     else if (!this.state.selectCategory) alert('카테고리를 선택하세요');
-    else if (this.state.url.length === 0) alert('사진을 올려주세요');
+    else if (this.state.urls.length === 0) alert('사진을 올려주세요');
     else if (!this.state.thumbnail) alert('썸네일을 선택하세요');
     else {
-      onSumbit(title, price, content, region);
-    }
-  });
-
-  $imgInner.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-    const insertClosest = target.closest('.js-insert-img');
-    const deleteClosest = target.closest('.js-delete');
-    const btnImg: HTMLElement | null = target.closest('.btn-img');
-    if (insertClosest) {
-      console.log('파일 올리기 작업');
-      // 그다음 setstae url
-    } else if (deleteClosest) {
-      const deleteIndex = deleteClosest.parentElement.dataset.index;
-      console.log('fetfh 보내서 삭제');
-      //
-      // 그다음 state 변경
-      const nextUrl = this.state.url.slice();
-      nextUrl.splice(deleteIndex, 1);
-      this.setState(stateObj.url, nextUrl);
-      if (this.state.thumbnail == deleteIndex) {
-        this.setState(stateObj.thumbnail, null);
-      } else if (this.state.thumbnail > deleteIndex) {
-        this.setState(stateObj.thumbnail, this.state.thumbnail - 1);
-      }
-    } else if (btnImg) {
-      console.log(btnImg.dataset.index);
-      const index = btnImg.dataset.index;
-      if (index != this.state.thumbnail)
-        this.setState(stateObj.thumbnail, index);
+      onSumbit(title, price, content);
     }
   });
 
   $categoryInner.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const id = target.dataset.id;
-    console.log(id);
     if (id != this.state.selectCategory)
       this.setState(stateObj.selectCategory, id);
   });
@@ -201,7 +271,7 @@ function Write({ app, goMain }) {
   this.state = {
     user: undefined,
     primaryRegion: undefined,
-    url: [],
+    urls: [],
     category: undefined,
     selectCategory: null,
     thumbnail: null,
@@ -220,24 +290,25 @@ function Write({ app, goMain }) {
       // fetch로 정보 뿔러오고
       // id도 정보넣기
       // id로 요청을 보내. modify에서는
-      console.log('modify', modify);
-      const url = ['/'],
-        selectCategory = 1,
-        thumbnail = 0,
-        id = 1;
-      this.setState(stateObj.id, id);
-      this.setState(stateObj.url, url);
-      this.setState(stateObj.selectCategory, selectCategory);
-      this.setState(stateObj.thumbnail, thumbnail);
-      this.setState(stateObj.mode, mode.modify);
-      $title.value = '타이틀';
-      $price.value = priceValidation('10000');
-      $content.value = '내요용';
+      // console.log('modify', modify);
+      // const url = ['/'],
+      //   selectCategory = 1,
+      //   thumbnail = 0,
+      //   id = 1;
+      // this.setState(stateObj.id, id);
+      // this.setState(stateObj.urls, urls);
+      // this.setState(stateObj.selectCategory, selectCategory);
+      // this.setState(stateObj.thumbnail, thumbnail);
+      // this.setState(stateObj.mode, mode.modify);
+      // $title.value = '타이틀';
+      // $price.value = priceValidation('10000');
+      // $content.value = '내요용';
+      // $imgInner.innerHTML = makeImgBtn(this.state.url.length);
     } else {
       $title.value = '';
       $price.value = '';
       $content.value = '';
-      $imgInner.innerHTML = makeImgBtn(this.state.url.length);
+      $imgInner.innerHTML = makeImgBtn(0);
       this.setState(stateObj.mode, mode.write);
     }
     app.appendChild($target);
@@ -255,10 +326,10 @@ function Write({ app, goMain }) {
           $location.textContent =
             this.state.user.region[this.state.primaryRegion];
         return;
-      case stateObj.url:
+      case stateObj.urls:
         $imgInner.innerHTML =
-          makeImgBtn(this.state.url.length) +
-          this.state.url.map((v, i) => makeImgItem(i, v)).join('');
+          makeImgBtn(this.state.urls.length) +
+          this.state.urls.map((v, i) => makeImgItem(i, v)).join('');
         return;
       case stateObj.category:
         $categoryInner.innerHTML = this.state.category
@@ -293,6 +364,6 @@ function Write({ app, goMain }) {
   };
   // test
   // const testImg = ['/', '/', '/', '/'];
-  // this.setState(stateObj.url, testImg);
+  // this.setState(stateObj.urls, testImg);
 }
 export default Write;
