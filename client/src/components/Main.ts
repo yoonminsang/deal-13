@@ -54,35 +54,35 @@ function Main({ app, setPrimaryRegion }) {
   const $region = $target.querySelector('.top-bar__text');
   const $dropDwon = $target.querySelector('.drop-down-list');
 
-  const makeListItem = (
+  const makeListItem = ({
     id,
-    url,
+    thumbnail,
     title,
-    region,
-    time,
+    region_name,
     price,
-    chat,
-    wish,
-    myWish,
-  ) => {
+    chat_count,
+    wish_count,
+    isWish,
+    created,
+  }) => {
     price = price.toLocaleString('ko-KR') + '원';
-    const chatElm = chat
-      ? `<div class="icon icon-message"></div><p>${chat}</p>`
+    const chatElm = chat_count
+      ? `<div class="icon icon-message"></div><p>${chat_count}</p>`
       : '';
-    const wishElm = wish
-      ? `<div class="icon icon-heart"></div><p>${wish}</p>`
+    const wishElm = wish_count
+      ? `<div class="icon icon-heart"></div><p>${wish_count}</p>`
       : '';
     return `
     <div class="js-post#${id} render product-list-item">
       <div class="img-box-large">
-        <img src="${url}" alt="이미지">
+        <img src="${thumbnail}" alt="이미지">
       </div>
       <div class="product-list-item__content">
         <div class="icon icon-heart product-list-item__heart ${
-          myWish && 'active'
+          isWish && 'active'
         }"></div>
         <p class="product-list-item__title">${title}</p>
-        <p class="product-list-item__info">${region} - ${time}</p>
+        <p class="product-list-item__info">${region_name} - ${created}</p>
         <p class="product-list-item__price">${price}</p>
         <div class="product-list-item__bottom">
           ${chatElm}${wishElm}
@@ -101,17 +101,14 @@ function Main({ app, setPrimaryRegion }) {
   };
 
   const getApi = (): void => {
-    if (
-      this.state.user &&
-      this.state.user.region &&
-      this.state.user.region[0] &&
-      this.state.category
-    ) {
+    if (this.state.user && this.state.category && this.state.primaryRegion) {
       // /api/goods/list?regionId=3&lastIndex=13
+      // 카테고리 추가하기
+      console.log('getapi', this.state);
       fetch(
         `/api/goods/list?regionId=${
           this.state.user.region_id[this.state.primaryRegion]
-        }&category=${this.state.category}`,
+        }`,
         {
           method: 'GET',
           headers: {
@@ -237,23 +234,35 @@ function Main({ app, setPrimaryRegion }) {
         return;
       case stateObj.post:
         $listItems.innerHTML = this.state.post
-          .map(({ id, url, title, region, time, price, chat, wish, myWish }) =>
-            makeListItem(
+          .map(
+            ({
               id,
-              url,
+              thumbnail,
               title,
-              region,
-              time,
+              region_name,
               price,
-              chat,
-              wish,
-              myWish,
-            ),
+              chat_count,
+              wish_count,
+              isWish,
+              created,
+            }) =>
+              makeListItem({
+                id,
+                thumbnail,
+                title,
+                region_name,
+                price,
+                chat_count,
+                wish_count,
+                isWish,
+                created,
+              }),
           )
           .join('');
         return;
       case stateObj.primaryRegion:
         $region.textContent = this.state.user.region[this.state.primaryRegion];
+        getApi();
         return;
       case stateObj.modal:
         if (this.state.modal) $dropDwon.classList.remove('blind');
