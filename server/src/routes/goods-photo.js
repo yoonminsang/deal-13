@@ -25,17 +25,16 @@ const upload = multer({
           .pop()}`,
       );
     },
-    acl: 'bucket-owner-full-control',
+    acl: 'public-read',
   }),
 });
 
 router.post(
   '/',
-  upload.fields([{ name: 'file', maxCount: 1 }]),
+  upload.fields([{ name: 'file', maxCount: 10 }]),
   function (req, res, next) {
-    console.log(req.file);
     res.json({
-      result: 1,
+      data: req.files.file.map((file) => file.location),
     });
   },
 );
