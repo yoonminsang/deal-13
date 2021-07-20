@@ -41,6 +41,12 @@
   .goods-inner {
     .goods-margin {
       margin: 24px 16px 32px;
+      .btn-status {
+        width: 103px;
+        span {
+          margin-right: 5px;
+        }
+      }
       .title {
         font-size: 18px;
         line-height: 24px;

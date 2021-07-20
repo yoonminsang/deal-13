@@ -112,7 +112,6 @@ function App() {
       ...this.state,
       category,
     });
-    // return localStorage.getItem(actionObj.category);
   };
 
   const autoGetCategory = (): void => {
@@ -128,7 +127,6 @@ function App() {
     localStorage.setItem(actionObj.primaryRegion, primaryRegion);
     if (auto) return primaryRegion;
     this.setState(actionObj.primaryRegion, { ...this.state, primaryRegion });
-    // return localStorage.getItem(actionObj.primaryRegion);
   };
 
   const autoGetPrimaryRegion = (): void => {
@@ -143,7 +141,6 @@ function App() {
     }
     this.setState(actionObj.primaryRegion, { ...this.state, primaryRegion });
   };
-  // 지역 삭제할땐 무조건 setPrimaryRegion('0'),
 
   const authProcess = (user: string) => {
     this.setState(actionObj.user, { ...this.state, user });
@@ -279,19 +276,16 @@ function App() {
         const lastChild = app.lastElementChild;
         lastChild.classList.remove('slidein');
         setTimeout(() => {
-          // app.removeChild(lastChild);
           lastChild.remove();
         }, 500);
         return;
       case actionObj.goMain:
         while (app.children.length !== 1) {
-          // app.removeChild(app.children[1]);
           app.children[1].remove();
         }
         return;
       case actionObj.goLogin:
         while (app.children.length !== 1) {
-          // app.removeChild(app.children[1]);
           app.children[1].remove();
         }
         login.render();

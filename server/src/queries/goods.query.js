@@ -1,5 +1,4 @@
 import db from '../db/index.js';
-
 const insertGoods = async ({
   title,
   regionId,
@@ -27,7 +26,6 @@ const insertGoods = async ({
   }
   return null;
 };
-
 const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
   const result = await db.query(
     `
@@ -67,7 +65,6 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
   }
   return null;
 };
-
 const selectGoodsByUserId = async (userId) => {
   const result = await db.query(
     `
@@ -93,7 +90,6 @@ const selectGoodsByUserId = async (userId) => {
   }
   return null;
 };
-
 const selectGoodsByWish = async (userId) => {
   const [result] = await db.query(
     `
@@ -115,21 +111,22 @@ const selectGoodsByWish = async (userId) => {
     ORDER BY updated DESC
   `,
   );
-
   if (result.length) {
     return result[0];
   }
   return null;
 };
-
 const selectGoodsDetail = async (goodsId, userId) => {
   const [result] = await db.query(
-    `SELECT g.id, g.title, g.content, g.price, 
+    `SELECT distinct g.id, g.title, g.content, g.price, 
     g.thumbnail, g.view_count, g.view_state, 
     g.sale_state, g.user_id, g.region_id, g.category_id, 
     r.region as region_name, 
     DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
-    DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created, count(distinct w.id) as wish_count, CONCAT('[', GROUP_CONCAT(p.url), ']') AS urls, r.region, c.name as category, instr(g.user_id, '${userId}') as isAuthor, (SELECT count(w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}') as isWish FROM goods g, goods_photo p, region r, category c, goods_wish w WHERE g.id = ${goodsId} AND g.view_state = 0 AND g.id = p.goods_id AND g.region_id = r.id AND g.category_id = c.id AND w.goods_id = g.id`,
+    DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created, (SELECT count(distinct w.id) FROM goods_wish w WHERE w.goods_id = g.id) as wish_count, r.region, c.name as category, instr(g.user_id, '${userId}') as isAuthor, (SELECT count(w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}') as isWish FROM goods g, goods_photo p, region r, category c, goods_wish w WHERE g.id = ${goodsId} AND g.view_state = 0 AND g.id = p.goods_id AND g.region_id = r.id AND g.category_id = c.id`,
+  );
+  const [urlsRow] = await db.query(
+    `SELECT url FROM goods_photo WHERE goods_id = ${goodsId}`,
   );
   if (result.length) {
     if (result[0].isAuthor !== 0) {
@@ -143,11 +140,11 @@ const selectGoodsDetail = async (goodsId, userId) => {
     }
     if (result[0].isWish) result[0].isWish = true;
     else result[0].isWish = false;
+    result[0].urls = urlsRow.map((row) => row.url);
     return result[0];
   }
   return null;
 };
-
 const updateGoods = async ({
   id,
   userId,
@@ -164,7 +161,6 @@ const updateGoods = async ({
   if (result.length) return result;
   else return null;
 };
-
 const updateGoodsSaleState = async (goodsId, userId, state) => {
   const result = await db.query(
     `UPDATE goods SET sale_state = ${state} WHERE id = ${goodsId} AND user_id = '${userId}'`,
@@ -172,7 +168,6 @@ const updateGoodsSaleState = async (goodsId, userId, state) => {
   if (result.length) return result;
   else return null;
 };
-
 const deleteGoodsViewState = async (goodsId, userId) => {
   const result = await db.query(
     `UPDATE goods SET view_state = 1 WHERE id = ${goodsId} AND user_id = '${userId}'`,
@@ -180,7 +175,6 @@ const deleteGoodsViewState = async (goodsId, userId) => {
   if (result.length) return result;
   else return null;
 };
-
 export const goodsQuery = {
   insertGoods,
   selectGoods,
