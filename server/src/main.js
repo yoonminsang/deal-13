@@ -23,7 +23,7 @@ import goodsWishRouter from './routes/goods-wish.js';
 dotenv.config();
 
 const corsOption = {
-  origin: 'http://localhost:9000/',
+  // origin: 'http://localhost:9000/',
 };
 
 const app = express();
