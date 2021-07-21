@@ -11,8 +11,12 @@ const insertGoods = async ({
 }) => {
   try {
     const result = await db.query(
-      `INSERT INTO goods(title, content, region_id, category_id, thumbnail, price, user_id) 
-      VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${price}, '${userId}');`,
+      `INSERT INTO goods(title, content, region_id, category_id, thumbnail, ${
+        price ? 'price,' : ''
+      } user_id) 
+      VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${
+        price ? `${price},` : ''
+      } '${userId}');`,
     );
     if (result) {
       const insertId = result[0].insertId;
@@ -159,7 +163,15 @@ const updateGoods = async ({
   urls = [],
 }) => {
   const result = await db.query(
-    `UPDATE goods SET title = '${title}', content = '${content}', category_id = ${categoryId}, price = ${price}, thumbnail = '${thumbnail}', region_id = ${regionId}, updated = CURRENT_TIMESTAMP WHERE id = ${id} AND user_id = '${userId}'`,
+    `UPDATE goods SET 
+    title = '${title}', 
+    content = '${content}', 
+    category_id = ${categoryId}, 
+    ${price ? `price=${price},` : ''}
+    thumbnail = '${thumbnail}', 
+    region_id = ${regionId}, 
+    updated = CURRENT_TIMESTAMP 
+    WHERE id = ${id} AND user_id = '${userId}'`,
   );
   if (result) {
     const urlQuery = urls.map((url) => `('${url}', ${id})`);

@@ -162,12 +162,13 @@ function Main({ app, setPrimaryRegion }) {
         if (res.ok || res.status === 409) return res.json();
       })
       .then(({ result, message, data }) => {
-        console.log(message);
+        console.log(message, data);
         if (result == 0) {
           const index = this.state.post.findIndex((post) => post.id == id);
           const changePost = Object.assign({}, this.state.post[index]);
           changePost.isWish = !changePost.isWish;
-          // changePost.wish_count = data.wish_count;
+          changePost.wish_count = data.wish_count;
+          console.log(data, data.wish_count);
           const nextPost = [
             ...this.state.post.slice(0, index),
             changePost,

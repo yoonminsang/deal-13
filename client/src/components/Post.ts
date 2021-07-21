@@ -45,12 +45,11 @@ function Post({ app, goMain }) {
         if (res.ok || res.status === 409) return res.json();
       })
       .then(({ result, message, data }) => {
-        console.log(message);
         if (result == 0) {
-          // this.setState(stateObj.goods, {
-          //   ...this.state.goods,
-          //   wish_count: data.wish_count,
-          // });
+          this.setState(stateObj.goods, {
+            ...this.state.goods,
+            wish_count: data.wish_count,
+          });
           this.setState(stateObj.isWish, !this.state.isWish);
         }
       });
