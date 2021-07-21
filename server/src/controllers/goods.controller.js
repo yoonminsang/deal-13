@@ -78,7 +78,6 @@ const findGoodsDetail = async (req, res) => {
 };
 
 const updateGoods = async (req, res) => {
-  req.body.userId = req.user.id;
   try {
     req.body.userId = req.user.id;
     await goodsService.updateGoods(req.body);

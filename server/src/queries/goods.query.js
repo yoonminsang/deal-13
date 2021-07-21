@@ -161,6 +161,9 @@ const updateGoods = async ({
   regionId,
   urls = [],
 }) => {
+  console.log(
+    `UPDATE goods SET title = '${title}', content = '${content}', category_id = ${categoryId}, price = ${price}, thumbnail = '${thumbnail}', region_id = ${regionId}, updated = CURRENT_TIMESTAMP WHERE id = ${id} AND user_id = '${userId}'`,
+  );
   const result = await db.query(
     `UPDATE goods SET title = '${title}', content = '${content}', category_id = ${categoryId}, price = ${price}, thumbnail = '${thumbnail}', region_id = ${regionId}, updated = CURRENT_TIMESTAMP WHERE id = ${id} AND user_id = '${userId}'`,
   );
