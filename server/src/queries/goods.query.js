@@ -5,12 +5,16 @@ const insertGoods = async ({
   categoryId,
   userId,
   thumbnail,
-  price,
+  price = null,
   content,
   urls = [],
 }) => {
   const result = await db.query(
-    `INSERT INTO goods(title, content, region_id, category_id, thumbnail, price, user_id) VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${price}, '${userId}')`,
+    `INSERT INTO goods(title, content, region_id, category_id, thumbnail, ${
+      price ? 'price,' : ''
+    } user_id) VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${
+      price ? 'price,' : ''
+    } '${userId}')`,
   );
   if (result) {
     const insertId = result[0].insertId;
@@ -147,7 +151,7 @@ const updateGoods = async ({
   userId,
   title,
   content,
-  price,
+  price = null,
   categoryId,
   thumbnail,
   regionId,
