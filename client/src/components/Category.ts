@@ -1,75 +1,10 @@
+import '../styles/Category.scss';
+
 interface ICategory {
   id: number;
   name: string;
-  image?: string;
+  url: string;
 }
-
-const tmpList: ICategory[] = [
-  {
-    id: 1,
-    name: '디지털기기',
-    image: '',
-  },
-  {
-    id: 2,
-    name: '생활가전',
-    image: '',
-  },
-  {
-    id: 3,
-    name: '가구/인테리어',
-    image: '',
-  },
-  {
-    id: 4,
-    name: '게임/취미',
-    image: '',
-  },
-  {
-    id: 5,
-    name: '생활/가공식품',
-    image: '',
-  },
-  {
-    id: 6,
-    name: '스포츠/레저',
-    image: '',
-  },
-  {
-    id: 7,
-    name: '여성패션/잡화',
-    image: '',
-  },
-  {
-    id: 8,
-    name: '남성패션/잡화',
-    image: '',
-  },
-  {
-    id: 9,
-    name: '유아동',
-    image: '',
-  },
-  {
-    id: 10,
-    name: '뷰티/미용',
-    image: '',
-  },
-  {
-    id: 11,
-    name: '반려동물/음반',
-    image: '',
-  },
-  {
-    id: 12,
-    name: '도서/티켓/음반',
-    image: '',
-  },
-];
-
-const getCategoryList = (category: string): string => {
-  return createCategoryList(tmpList, category);
-};
 
 const createCategoryList = (
   categoryList: Array<ICategory>,
@@ -77,21 +12,21 @@ const createCategoryList = (
 ): string => {
   return (
     categoryList.reduce(
-      (acc, cur) => acc + createCategoryItem(cur, category === cur.name),
+      (acc, cur) => acc + createCategoryItem(cur, category.name === cur.name),
       '<div class="category-list">',
     ) + '</div>'
   );
 };
 
 const createCategoryItem = (
-  { id, name, image }: ICategory,
+  { id, name, url }: ICategory,
   active: boolean,
 ): string => {
   return `
     <div class="category-list-item ${
       active ? 'active' : ''
-    }" data-name="${name}">
-      <div></div>
+    }" data-id="${id}" data-name="${name}">
+      <div style="background-image: url(${url})"></div>
       <p>${name}</p>
     </div>
     `;
@@ -116,8 +51,12 @@ const handleClickEvent = ({ e, category, setCategory, back }) => {
   const target = e.target as HTMLElement;
   const categoryItem: HTMLElement = target.closest('.category-list-item');
   if (categoryItem) {
-    const name = categoryItem.dataset.name;
-    setCategory(category === name ? 'all' : name);
+    const { id, name } = categoryItem.dataset;
+    setCategory(
+      category.name === name
+        ? { id: 0, category: '' }
+        : { id: Number(id), name },
+    );
     back();
   }
 };
@@ -137,17 +76,20 @@ function Category({ app, setCategory, back }) {
 
   const $target = document.createElement('div');
   $target.className = 'category';
-  this.state = {
-    category: 'all',
-  };
+  const category = localStorage.getItem('category');
+  this.state = {};
+  this.state.category = category ? category : { id: 0, category: '' };
+  this.state.categoryList = [];
 
   this.setState = (nextStateName, nextState) => {
     this.state = { ...this.state, [nextStateName]: nextState };
     this.rerender(nextStateName);
   };
 
-  this.render = (category: string) => {
-    $target.innerHTML = createHeader() + getCategoryList(this.state.category);
+  this.render = () => {
+    $target.innerHTML =
+      createHeader() +
+      createCategoryList(this.state.categoryList, this.state.category);
     app.appendChild($target);
     setTimeout(() => $target.classList.add('slidein'), 0);
   };
@@ -157,7 +99,8 @@ function Category({ app, setCategory, back }) {
       case stateObj.category:
         if (this.state.category)
           $target.innerHTML =
-            createHeader() + getCategoryList(this.state.category);
+            createHeader() +
+            createCategoryList(this.state.categoryList, this.state.category);
         else console.log('category rerender error');
         return;
       default:

@@ -19,6 +19,7 @@ interface ActionObj {
   goLogin: string;
   user: string;
   category: string;
+  categoryList: string;
   primaryRegion: string;
   dbId: string;
 }
@@ -43,6 +44,7 @@ const actionObj: ActionObj = {
   goLogin: 'goLogin',
   user: 'user',
   category: 'category',
+  categoryList: 'categoryList',
   primaryRegion: 'primaryRegion',
   dbId: 'dbId',
 };
@@ -104,10 +106,10 @@ function App() {
   };
 
   const setCategory = (
-    category: string = 'all',
+    category: object,
     auto: string = null,
-  ): string | void => {
-    localStorage.setItem(actionObj.category, category);
+  ): object | void => {
+    localStorage.setItem(actionObj.category, JSON.stringify(category));
     if (auto) return category;
     this.setState(actionObj.category, {
       ...this.state,
@@ -116,8 +118,10 @@ function App() {
   };
 
   const autoGetCategory = (): void => {
-    const category =
-      localStorage.getItem(actionObj.category) || setCategory('all', AUTO);
+    const storageCategory = localStorage.getItem(actionObj.category);
+    const category = storageCategory
+      ? JSON.parse(storageCategory)
+      : setCategory({ id: 0, category: '' }, AUTO);
     this.setState(actionObj.category, { ...this.state, category });
   };
 
@@ -314,7 +318,6 @@ function App() {
   };
 
   const getCategory = () => {
-    console.log('get cateogry');
     fetch('/api/category', {
       method: 'GET',
       headers: {
@@ -324,11 +327,11 @@ function App() {
       .then((res) => {
         if (res.ok) return res.json();
       })
-      .then(({ category, error }) => {
+      .then(({ data, error }) => {
         if (error) alert(error);
-        if (category) {
-          // category.setState(actionObj.category, category);
-          write.setState(actionObj.category, category);
+        if (data) {
+          category.setState(actionObj.categoryList, data);
+          write.setState(actionObj.category, data);
         }
       })
       .catch((e) => {

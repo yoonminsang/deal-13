@@ -9,7 +9,6 @@ const createGoods = async (body) => {
   if (!data.userId) return null;
   if (!data.categoryId && data.categoryId !== 0) return null;
   if (!data.content) data.content = '';
-  if (!data.price) data.price = 0;
   if (!data.thumbnail) return null;
   const result = await goodsQuery.insertGoods(data);
   return result;
@@ -56,7 +55,6 @@ const updateGoods = async (body) => {
   if (!data.userId) return null;
   if (!data.title) return null;
   if (!data.content) data.content = '';
-  if (!data.price) data.price = 0;
   if (!data.categoryId && data.categoryId !== 0) return null;
   if (!data.thumbnail || data.thumbnail.length === 0) return null;
   if (!data.regionId && data.regionId !== 0) return null;

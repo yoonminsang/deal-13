@@ -121,7 +121,7 @@ function Main({ app, setPrimaryRegion }) {
       fetch(
         `/api/goods/list?regionId=${
           this.state.user.region_id[this.state.primaryRegion]
-        }`,
+        }&categoryId=${this.state.category.id}`,
         {
           method: 'GET',
           headers: {
