@@ -4,6 +4,13 @@
     user-select: none;
     pointer-events: none;
   }
+  .for-status {
+    position: relative;
+    .drop-down-sale {
+      position: absolute;
+      top: 56px;
+    }
+  }
   .top-bar.invisible {
     position: fixed;
     width: 100%;
@@ -12,7 +19,7 @@
     .icon-left {
       filter: map.get($filter_colors, 'white');
     }
-    .drop-down-list {
+    .drop-down-modal {
       position: fixed;
       top: 48px;
       right: 16px;

@@ -67,9 +67,6 @@ function Login({ app, back, authProcess }) {
           if (error) alert(error);
           else if (user) {
             authProcess(user);
-            // back();
-            // localStorage.setItem('user', 'true');
-            // console.log('로그인 성공');
           }
         })
         .catch((e) => {
