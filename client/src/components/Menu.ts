@@ -134,7 +134,6 @@ function Menu({ app }) {
     const target = e.target as HTMLButtonElement;
     if (target.classList.contains('active')) return;
     const btns = document.querySelectorAll('.gnb-container .btn-tap');
-    console.log(btns);
     btns.forEach((btn, index) => {
       if (btn !== target) return btn.classList.remove('active');
       btn.classList.add('active');
@@ -143,7 +142,7 @@ function Menu({ app }) {
   };
 
   const rerenderMenuBody = () => {
-    document.querySelector('.product-list, .chat-list')?.remove();
+    $target.querySelector('.product-list, .chat-list')?.remove();
     $target.insertAdjacentHTML('beforeend', createMenuBodyHandler());
   };
 

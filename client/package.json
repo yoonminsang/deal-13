@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "우아한테크캠프 4기 2~3주차 팀 13 - 윤민상, 고우혁",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --progress",
