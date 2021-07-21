@@ -95,6 +95,7 @@ function Write({ app, goMain }) {
   };
 
   const priceValidation = (value) => {
+    if (value === null) return value;
     value = value.replace(/[^0-9]/g, '');
     value = value.slice(0, 9);
     if (value.length > 0)
@@ -129,20 +130,23 @@ function Write({ app, goMain }) {
     content,
     urls,
   ) => {
+    const obj = {
+      regionId,
+      categoryId,
+      thumbnail,
+      title,
+      price,
+      content,
+      urls,
+    };
+    if (type === 'PUT') obj['id'] = this.state.id;
+    console.log(obj);
     fetch(`/api/goods`, {
       method: `${type}`,
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        regionId,
-        categoryId,
-        thumbnail,
-        title,
-        price,
-        content,
-        urls,
-      }),
+      body: JSON.stringify(obj),
     })
       .then((res) => res.json())
       .then(({ result, message }) => {
@@ -151,6 +155,37 @@ function Write({ app, goMain }) {
       })
       .catch((e) => {
         console.error(e);
+      });
+  };
+
+  const getApi = (dbId) => {
+    fetch(`/api/goods/detail?goodsId=${dbId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (res.ok || res.status === 409) return res.json();
+      })
+      .then(({ data, error }) => {
+        console.log('update get api', data);
+        if (error) alert(error);
+        else if (data) {
+          this.setState(stateObj.id, data.id);
+          this.setState(stateObj.urls, data.urls);
+          this.setState(stateObj.selectCategory, data.category_id);
+          const thumbnailIndex = data.urls.indexOf(data.thumbnail) + '';
+          this.setState(stateObj.thumbnail, thumbnailIndex);
+          this.setState(stateObj.mode, mode.modify);
+          $title.value = data.title;
+          $price.value = priceValidation(data.price);
+          $content.value = data.content;
+          // $imgInner.innerHTML = makeImgBtn(data.urls.length);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
       });
   };
 
@@ -285,25 +320,9 @@ function Write({ app, goMain }) {
     this.rerender(nextStateName);
   };
 
-  this.render = (modify) => {
+  this.render = (dbId, modify) => {
     if (modify) {
-      // fetch로 정보 뿔러오고
-      // id도 정보넣기
-      // id로 요청을 보내. modify에서는
-      // console.log('modify', modify);
-      // const url = ['/'],
-      //   selectCategory = 1,
-      //   thumbnail = 0,
-      //   id = 1;
-      // this.setState(stateObj.id, id);
-      // this.setState(stateObj.urls, urls);
-      // this.setState(stateObj.selectCategory, selectCategory);
-      // this.setState(stateObj.thumbnail, thumbnail);
-      // this.setState(stateObj.mode, mode.modify);
-      // $title.value = '타이틀';
-      // $price.value = priceValidation('10000');
-      // $content.value = '내요용';
-      // $imgInner.innerHTML = makeImgBtn(this.state.url.length);
+      getApi(dbId);
     } else {
       $title.value = '';
       $price.value = '';
@@ -362,8 +381,5 @@ function Write({ app, goMain }) {
         console.log('state name is not found');
     }
   };
-  // test
-  // const testImg = ['/', '/', '/', '/'];
-  // this.setState(stateObj.urls, testImg);
 }
 export default Write;

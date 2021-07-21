@@ -236,6 +236,9 @@ function App() {
         const lastDepth = this.state.depth[this.state.depth.length - 1];
         const idx = lastDepth.search(/\#/g);
         const name = idx === -1 ? lastDepth : lastDepth.slice(0, idx);
+        const dbId = this.state.depth[this.state.depth.length - 1].slice(
+          idx + 1,
+        );
         console.log(name);
         // case문을 if문으로 바꿀까 고민중
         switch (name) {
@@ -259,17 +262,16 @@ function App() {
             return write.render();
           case renderObj.modify:
             if (!this.state.user) return goLogin();
-            return write.render(renderObj.modify);
+            return write.render(dbId, renderObj.modify);
           case renderObj.post:
             if (!this.state.user) return goLogin();
-            const dbId = this.state.depth[0].slice(5);
             return post.render(dbId);
           case renderObj.chatting:
             if (!this.state.user) return goLogin();
             return chatting.render();
           case renderObj.chattingDetail:
             if (!this.state.user) return goLogin();
-            return chattingDetail.render();
+            return chattingDetail.render(dbId);
           case renderObj.region:
             if (!this.state.user) return goLogin();
             return region.render();

@@ -56,9 +56,33 @@ function Post({ app, goMain }) {
       });
   };
 
+  const changeState = (state) => {
+    fetch('/api/goods/state', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goodsId: this.state.goods.id,
+        state,
+      }),
+    })
+      .then((res) => {
+        if (res.ok || res.status === 409) return res.json();
+      })
+      .then(({ result, message, data }) => {
+        console.log(message);
+        if (result == 0) {
+          this.setState(stateObj.saleState, state);
+          this.setState(stateObj.saleModal, false);
+        }
+      });
+  };
+
   $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
+    const btnCls = target.closest('.btn-status');
     if (!classList.contains('js-modal') && this.state.modal)
       this.setState(stateObj.modal, false);
     if (classList.contains('js-tab')) {
@@ -95,6 +119,10 @@ function Post({ app, goMain }) {
         .catch((e) => {
           console.error(e);
         });
+    } else if (btnCls) {
+      this.setState(stateObj.saleModal, !this.state.saleModal);
+    } else if (classList.contains('js-status-item')) {
+      changeState(target.dataset.state);
     }
   });
 
@@ -194,7 +222,7 @@ function Post({ app, goMain }) {
         <div class="product-bar__price">${price}</div>
         ${
           this.state.isAuthor
-            ? '<button class="js-chatting#${id} render btn-medium">채팅 목록보기</button>'
+            ? `<button class="js-chatting#${this.state.goods.id} render btn-medium">채팅 목록보기</button>`
             : '<button class="js-chattingDetail#${id} render btn-medium">문의하기</button>'
         }
       </div>
@@ -203,7 +231,7 @@ function Post({ app, goMain }) {
   };
 
   const makeSaleList = (num) => {
-    return `<li class="drop-down-item">${saleState[num]}</li>`;
+    return `<li class="drop-down-item js-status-item" data-state=${num}>${saleState[num]}</li>`;
   };
 
   this.state = {
@@ -213,6 +241,7 @@ function Post({ app, goMain }) {
     isAuthor: undefined,
     isWish: undefined,
     saleState: undefined,
+    slaeModal: false,
   };
 
   this.setState = (nextStateName, nextState) => {
@@ -227,6 +256,7 @@ function Post({ app, goMain }) {
   };
 
   this.rerender = (changeStateName) => {
+    console.log(changeStateName);
     switch (changeStateName) {
       case stateObj.isAuthor:
         const $forAuthor = $target.querySelector('.for-author');
@@ -272,12 +302,26 @@ function Post({ app, goMain }) {
         $img.src = this.state.goods.urls[this.state.tab];
       case stateObj.saleState:
         const $dropDownSale = $target.querySelector('.drop-down-sale');
-        if (this.state.isAuthor)
+        if (this.state.isAuthor) {
+          const $btnStatus = $target.querySelector('.btn-status');
+          const $span = $btnStatus.firstElementChild;
+          console.log($btnStatus, $span, saleState[this.state.sale_state]);
+          $span.textContent = saleState[this.state.saleState];
           $dropDownSale.innerHTML = [0, 1, 2]
             .map((v) => {
               if (v != this.state.saleState) return makeSaleList(v);
             })
             .join('');
+        }
+        return;
+      case stateObj.saleModal:
+        const $btnStatus = $target.querySelector('.btn-status');
+        const $iconDown = $target.querySelector('.drop-down-sale');
+        if ($btnStatus) {
+          const cls = $iconDown.classList;
+          if (this.state.saleModal) cls.remove('blind');
+          else cls.add('blind');
+        }
         return;
       default:
         console.log('state name is not found');

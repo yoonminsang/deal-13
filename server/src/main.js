@@ -70,13 +70,13 @@ app.use('/api/goods', goodsRouter);
 app.use('/api/goods-photo', goodsPhotoRouter);
 app.use('/api/goods-wish', goodsWishRouter);
 
-app.use(
-  '/',
-  express.static(path.join(__dirname, '../', '../', 'client', '/dist')),
-);
-app.get('*', (req, res) => {
-  res.render('index.html');
-});
+// app.use(
+//   '/',
+//   express.static(path.join(__dirname, '../', '../', 'client', '/dist')),
+// );
+// app.get('*', (req, res) => {
+//   res.render('index.html');
+// });
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
