@@ -20,13 +20,18 @@ import goodsRouter from './routes/goods.js';
 import goodsPhotoRouter from './routes/goods-photo.js';
 import goodsWishRouter from './routes/goods-wish.js';
 
+import ejs from 'ejs';
+
 dotenv.config();
 
 const corsOption = {
-  // origin: 'http://localhost:9000/',
+  origin: 'https://s3.console.aws.amazon.com/',
 };
-
 const app = express();
+
+app.set('views', path.join(__dirname, '../', '../', 'client', '/dist'));
+app.set('view engine', 'ejs');
+app.engine('html', ejs.renderFile);
 
 app.set('port', process.env.PORT || 3000);
 
@@ -64,6 +69,14 @@ app.use('/api/category', categoryRouter);
 app.use('/api/goods', goodsRouter);
 app.use('/api/goods-photo', goodsPhotoRouter);
 app.use('/api/goods-wish', goodsWishRouter);
+
+app.use(
+  '/',
+  express.static(path.join(__dirname, '../', '../', 'client', '/dist')),
+);
+app.get('*', (req, res) => {
+  res.render('index.html');
+});
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
