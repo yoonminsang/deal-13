@@ -54,7 +54,7 @@ const handleClickEvent = ({ e, category, setCategory, back }) => {
     const { id, name } = categoryItem.dataset;
     setCategory(
       category.name === name
-        ? { id: 0, category: '' }
+        ? { id: -1, category: '' }
         : { id: Number(id), name },
     );
     back();
@@ -78,7 +78,7 @@ function Category({ app, setCategory, back }) {
   $target.className = 'category';
   const category = localStorage.getItem('category');
   this.state = {};
-  this.state.category = category ? category : { id: 0, category: '' };
+  this.state.category = category ? category : { id: -1, category: '' };
   this.state.categoryList = [];
 
   this.setState = (nextStateName, nextState) => {
