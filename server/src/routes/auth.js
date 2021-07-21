@@ -15,7 +15,7 @@ router.post('/signup', async (req, res, next) => {
   let regionId;
   const register = async (uuid, id, password) => {
     const hash = await bcrypt.hash(password + '', 10);
-    await db.queyr(
+    await db.query(
       `INSERT INTO user(uuid, id, password) VALUES('${uuid}', '${id}', '${hash}');`,
     );
     await db.query(

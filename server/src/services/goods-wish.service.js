@@ -1,7 +1,6 @@
 import { goodsWishQuery } from '../queries/goods-wish.query.js';
 
 const createGoodsWish = async (goodsId, userId) => {
-  console.log(goodsId, userId);
   if (!goodsId && goodsId !== 0) return null;
   if (!userId) return null;
   const result = await goodsWishQuery.insertGoodsWish(goodsId, userId);
@@ -9,7 +8,6 @@ const createGoodsWish = async (goodsId, userId) => {
 };
 
 const deleteGoodsWish = async (goodsId, userId) => {
-  console.log(goodsId, userId);
   if (!goodsId && goodsId !== 0) return null;
   if (!userId) return null;
   const result = await goodsWishQuery.deleteGoodsWish(goodsId, userId);

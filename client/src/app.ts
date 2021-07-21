@@ -121,7 +121,7 @@ function App() {
     const storageCategory = localStorage.getItem(actionObj.category);
     const category = storageCategory
       ? JSON.parse(storageCategory)
-      : setCategory({ id: 0, category: '' }, AUTO);
+      : setCategory({ id: -1, category: '' }, AUTO);
     this.setState(actionObj.category, { ...this.state, category });
   };
 
