@@ -40,7 +40,7 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
     r.region as region_name, 
     DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
     DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
-      (SELECT count(distinct w.id) FROM goods_wish w WHERE w.id = g.id) as wish_count
+      (SELECT count(distinct w.id) FROM goods_wish w WHERE w.goods_id = g.id) as wish_count
       ${
         userId.length > 0
           ? `, (SELECT count(distinct w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}' AND w2.goods_id = g.id) as isWish `
