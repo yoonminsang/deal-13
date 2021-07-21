@@ -65,7 +65,10 @@ function Main({ app, setPrimaryRegion }) {
     isWish,
     created,
   }) => {
-    price = price.toLocaleString('ko-KR') + '원';
+    price =
+      typeof price === 'number'
+        ? price.toLocaleString('ko-KR') + '원'
+        : '가격미정';
     // console.log(created);
     // const [year, month, date] = created.slice(0, 10).split('-');
     // const [hour, minute] = created.slice(11).split(':');
@@ -118,7 +121,7 @@ function Main({ app, setPrimaryRegion }) {
       fetch(
         `/api/goods/list?regionId=${
           this.state.user.region_id[this.state.primaryRegion]
-        }`,
+        }&categoryId=${this.state.category.id}`,
         {
           method: 'GET',
           headers: {
