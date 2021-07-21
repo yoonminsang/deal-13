@@ -65,7 +65,10 @@ function Main({ app, setPrimaryRegion }) {
     isWish,
     created,
   }) => {
-    price = price.toLocaleString('ko-KR') + '원';
+    price =
+      typeof price === 'number'
+        ? price.toLocaleString('ko-KR') + '원'
+        : '가격미정';
     // console.log(created);
     // const [year, month, date] = created.slice(0, 10).split('-');
     // const [hour, minute] = created.slice(11).split(':');
@@ -89,7 +92,7 @@ function Main({ app, setPrimaryRegion }) {
         <img src="${thumbnail}" alt="이미지">
       </div>
       <div class="product-list-item__content">
-        <div class="icon icon-heart product-list-item__heart ${
+        <div class="js-wish  icon icon-heart product-list-item__heart ${
           isWish && 'active'
         }"></div>
         <p class="product-list-item__title">${title}</p>
@@ -111,7 +114,7 @@ function Main({ app, setPrimaryRegion }) {
     return '<li class="js-region render drop-down-item">내 동네 설정하기</li>';
   };
 
-  const getApi = (): void => {
+  this.getApi = (): void => {
     if (this.state.user && this.state.category && this.state.primaryRegion) {
       // /api/goods/list?regionId=3&lastIndex=13
       // 카테고리 추가하기
@@ -141,11 +144,58 @@ function Main({ app, setPrimaryRegion }) {
     }
   };
 
+  const postIsWish = (type, id) => {
+    fetch('/api/goods-wish', {
+      method: type,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goodsId: id,
+      }),
+    })
+      .then((res) => {
+        if (res.ok || res.status === 409) return res.json();
+      })
+      .then(({ result, message, data }) => {
+        console.log(message);
+        if (result == 0) {
+          const index = this.state.post.findIndex((post) => post.id == id);
+          const changePost = Object.assign({}, this.state.post[index]);
+          changePost.isWish = !changePost.isWish;
+          // changePost.wish_count = data.wish_count;
+          const nextPost = [
+            ...this.state.post.slice(0, index),
+            changePost,
+            ...this.state.post.slice(index + 1),
+          ];
+          console.log(nextPost);
+          this.setState(stateObj.post, nextPost);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
   $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
     const renderClosest = target.closest('.render');
-    if (renderClosest && renderClosest.classList.contains('render')) {
+    if (classList.contains('js-wish')) {
+      const closest = target.closest('.render');
+      const id = closest.classList[0].slice(8);
+      if (classList.contains('active')) {
+        postIsWish('DELETE', id);
+        // this.getApi();
+        // classList.remove('active');
+      } else {
+        postIsWish('POST', id);
+        // this.getApi();
+        // classList.add('active');
+      }
+      e.stopPropagation();
+    } else if (renderClosest && renderClosest.classList.contains('render')) {
       this.setState(stateObj.modal, false);
     } else if (classList.contains('js-modal')) {
       this.setState(stateObj.modal, !this.state.modal);
@@ -188,10 +238,10 @@ function Main({ app, setPrimaryRegion }) {
           $region.textContent = '장소';
           $dropDwon.innerHTML = makeMyRegion();
         }
-        getApi();
+        this.getApi();
         return;
       case stateObj.category:
-        if (this.state.category) getApi();
+        if (this.state.category) this.getApi();
         else console.log('localstorage category error or main state error');
         return;
       case stateObj.post:
@@ -224,7 +274,7 @@ function Main({ app, setPrimaryRegion }) {
         return;
       case stateObj.primaryRegion:
         $region.textContent = this.state.user.region[this.state.primaryRegion];
-        getApi();
+        this.getApi();
         return;
       case stateObj.modal:
         if (this.state.modal) $dropDwon.classList.remove('blind');

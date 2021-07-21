@@ -7,6 +7,10 @@
     right: -100vw;
     transition: right 0.5s ease-out;
   }
+  > div:not(:last-child) {
+    max-height: 100vh;
+    overflow-y: hidden;
+  }
   .slidein {
     right: 0 !important;
   }

@@ -85,6 +85,7 @@ function App() {
   const goMain = (): void => {
     const nextDepth = [];
     this.setState(actionObj.goMain, { ...this.state, depth: nextDepth });
+    main.getApi();
   };
 
   const goLogin = (): void => {
@@ -191,7 +192,7 @@ function App() {
   });
   const menu = new Menu({ app });
   const write = new Write({ app, goMain });
-  const post = new Post({ app });
+  const post = new Post({ app, goMain });
   const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
     app,
