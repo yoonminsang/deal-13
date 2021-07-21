@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   const [category] = await db.query(`SELECT * from category`);
-  return res.json({ category });
+  return res.json({ data: category });
 });
 
 export default router;
