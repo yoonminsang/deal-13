@@ -30,7 +30,7 @@ router.post('/create', async (req, res) => {
     regionId = regionInsert.insertId;
   }
   await db.query(
-    `INSERT INTO region_list(region_id, user_id) VALUES('${regionId}', '${req.user.uuid}')`,
+    `INSERT INTO region_list(region_id, user_id) VALUES('${regionId}', '${req.user.id}')`,
   );
   return res.json({ text: '동네 추가 완료' });
 });
