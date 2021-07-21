@@ -9,24 +9,28 @@ const insertGoods = async ({
   content,
   urls = [],
 }) => {
-  const result = await db.query(
-    `INSERT INTO goods(title, content, region_id, category_id, thumbnail, ${
-      price ? 'price,' : ''
-    } user_id) VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${
-      price ? 'price,' : ''
-    } '${userId}')`,
-  );
-  if (result) {
-    const insertId = result[0].insertId;
-    const urlQuery = urls.map((url) => `('${url}', ${insertId})`);
-    if (urlQuery.length > 0) {
-      const photoInsertResult = await db.query(
-        `INSERT INTO goods_photo(url, goods_id) VALUES${urlQuery.join(',')}`,
-      );
-      if (photoInsertResult) {
-        return true;
+  try {
+    const result = await db.query(
+      `INSERT INTO goods(title, content, region_id, category_id, thumbnail, ${
+        price ? 'price,' : ''
+      } user_id) VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${
+        price ? 'price,' : ''
+      } '${userId}')`,
+    );
+    if (result) {
+      const insertId = result[0].insertId;
+      const urlQuery = urls.map((url) => `('${url}', ${insertId})`);
+      if (urlQuery.length > 0) {
+        const photoInsertResult = await db.query(
+          `INSERT INTO goods_photo(url, goods_id) VALUES${urlQuery.join(',')}`,
+        );
+        if (photoInsertResult) {
+          return true;
+        }
       }
     }
+  } catch (e) {
+    console.log(e);
   }
   return null;
 };

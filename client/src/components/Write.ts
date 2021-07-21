@@ -197,7 +197,7 @@ function Write({ app, goMain }) {
       for (const file of $inputFile.files) {
         data.append('file', file, file.name);
       }
-      fetch('http://localhost:3000/api/goods-photo', {
+      fetch('/api/goods-photo', {
         method: 'POST',
         headers: {},
         body: data,

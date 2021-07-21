@@ -25,7 +25,7 @@ import ejs from 'ejs';
 dotenv.config();
 
 const corsOption = {
-  origin: 'https://s3.console.aws.amazon.com/',
+  origin: 'https://s3.console.aws.amazon.com:3000/',
 };
 const app = express();
 
@@ -37,7 +37,7 @@ app.set('port', process.env.PORT || 3000);
 
 passportConfig();
 
-app.use(cors(corsOption));
+app.use(cors());
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
 } else {
@@ -92,3 +92,5 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기 중');
 });
+
+// "start": "nodemon --experimental-json-modules src/main.js"
