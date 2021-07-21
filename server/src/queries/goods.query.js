@@ -13,9 +13,10 @@ const insertGoods = async ({
     const result = await db.query(
       `INSERT INTO goods(title, content, region_id, category_id, thumbnail, ${
         price ? 'price,' : ''
-      } user_id) VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${
-        price ? 'price,' : ''
-      } '${userId}')`,
+      } user_id) 
+      VALUES('${title}', '${content}', ${regionId}, ${categoryId}, '${thumbnail}', ${
+        price ? `${price},` : ''
+      } '${userId}');`,
     );
     if (result) {
       const insertId = result[0].insertId;
@@ -43,7 +44,7 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
     r.region as region_name, 
     DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
     DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
-      (SELECT count(distinct w.id) FROM goods_wish w WHERE w.id = g.id) as wish_count
+      (SELECT count(distinct w.id) FROM goods_wish w WHERE w.goods_id = g.id) as wish_count
       ${
         userId.length > 0
           ? `, (SELECT count(distinct w2.id) FROM goods_wish w2 WHERE w2.user_id = '${userId}' AND w2.goods_id = g.id) as isWish `
@@ -161,11 +162,16 @@ const updateGoods = async ({
   regionId,
   urls = [],
 }) => {
-  console.log(
-    `UPDATE goods SET title = '${title}', content = '${content}', category_id = ${categoryId}, price = ${price}, thumbnail = '${thumbnail}', region_id = ${regionId}, updated = CURRENT_TIMESTAMP WHERE id = ${id} AND user_id = '${userId}'`,
-  );
   const result = await db.query(
-    `UPDATE goods SET title = '${title}', content = '${content}', category_id = ${categoryId}, price = ${price}, thumbnail = '${thumbnail}', region_id = ${regionId}, updated = CURRENT_TIMESTAMP WHERE id = ${id} AND user_id = '${userId}'`,
+    `UPDATE goods SET 
+    title = '${title}', 
+    content = '${content}', 
+    category_id = ${categoryId}, 
+    ${price ? `price=${price},` : ''}
+    thumbnail = '${thumbnail}', 
+    region_id = ${regionId}, 
+    updated = CURRENT_TIMESTAMP 
+    WHERE id = ${id} AND user_id = '${userId}'`,
   );
   if (result) {
     const urlQuery = urls.map((url) => `('${url}', ${id})`);
