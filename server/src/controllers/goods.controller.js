@@ -20,8 +20,7 @@ const createGoods = async (req, res) => {
 const findGoods = async (req, res) => {
   try {
     const { regionId, categoryId, lastIndex } = req.query;
-    let data = null;
-    data = await goodsService.findGoods(
+    const data = await goodsService.findGoods(
       Number(regionId),
       Number(categoryId),
       req.user.id,
