@@ -66,6 +66,58 @@ const selectChattingRoomByGoodsId = async (goodsId) => {
   return null;
 };
 
+// 채팅방 목록 조회, 유저 id (메뉴에서 채팅 목록 보기)
+const selectChattingRoomByUserId = async (userId) => {
+  const result = await db.query(
+    `
+    SELECT
+      r.id, 
+      g.thumbnail, 
+      (
+        SELECT IF(r2.buyer_id = '${userId}', r2.seller_id, r2.buyer_id)
+        FROM chatting_room r2
+        WHERE r2.id = r.id
+      ) AS partner_id,
+      (
+    SELECT count(distinct m2.id)
+        FROM chatting_message m2
+        WHERE m2.id > IF(r.seller_id = '${userId}', r.seller_read, r.buyer_read)
+        AND r.id = m2.room_id
+        GROUP by r.id
+      ) AS chat_count,
+      (
+        SELECT m.content
+        FROM chatting_message m
+        WHERE m.room_id = r.id
+        ORDER BY m.id DESC
+        LIMIT 1
+      ) AS last_content,
+      (
+        SELECT DATE_FORMAT(m.created,'%Y-%m-%d %H:%i:%S')
+        FROM chatting_message m
+        WHERE m.room_id = r.id
+        ORDER BY m.id DESC
+        LIMIT 1
+      ) AS last_created
+    FROM 
+      chatting_room r, 
+      goods g
+    WHERE
+      (
+        r.buyer_id = '${userId}'
+        OR
+        r.seller_id = '${userId}'
+      )
+    GROUP BY r.id
+    ORDER BY created DESC;
+    `,
+  );
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
 // 채팅방 나가기
 const deleteChattingRoom = async (roomId, userId) => {
   const result = await db.query(
@@ -107,6 +159,7 @@ export const WishQuery = {
   insertChattingRoom,
   insertChattingMessage,
   selectChattingRoomByGoodsId,
+  selectChattingRoomByUserId,
   deleteChattingRoom,
   updateChattingMessage,
 };
