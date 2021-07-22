@@ -1,3 +1,4 @@
+import { parseTime } from '../lib/parseTime';
 function Main({ app, setPrimaryRegion }) {
   interface Goods {
     id: number;
@@ -69,16 +70,7 @@ function Main({ app, setPrimaryRegion }) {
       typeof price === 'number'
         ? price.toLocaleString('ko-KR') + '원'
         : '가격미정';
-    // console.log(created);
-    // const [year, month, date] = created.slice(0, 10).split('-');
-    // const [hour, minute] = created.slice(11).split(':');
-    // console.log(year, month, date, hour, minute);
-    // const now = new Date();
-    // const year2 = now.getFullYear();
-    // const month2 = now.getMonth();
-    // const date2 = now.getDate();
-    // const hour2 = now.getHours();
-    // if(year==year2)
+    created = parseTime(created);
 
     const chatElm = chat_count
       ? `<div class="icon icon-message"></div><p>${chat_count}</p>`
