@@ -3,7 +3,7 @@ import db from '../db/index.js';
 // 채팅방 생성
 const insertChattingRoom = async (Id, sellerId, buyerId) => {
   const result = await db.query(
-    `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_entrance, buyer_entrance) VALUES(${Id}, '${sellerId}', '${buyerId}', 0, 0);`,
+    `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_read, buyer_read, seller_entrance, buyer_entrance) VALUES(${Id}, '${sellerId}', '${buyerId}', 1, 1, 0, 0);`,
   );
   if (result) {
     return result;
@@ -57,10 +57,47 @@ const selectChattingRoomByGoodsId = async (goodsId) => {
       g.id = ${goodsId}
     AND
       r.goods_id = g.id
+    AND
+      r.seller_entrance = 0
     ORDER BY created DESC;
     `,
   );
   if (result) {
+    return result;
+  }
+  return null;
+};
+
+// 채팅방 상세
+const selectChaatingRoomDetail = async (roomId, userId) => {
+  const [result] = await db.query(`
+    SELECT 
+      r.id as room_id, 
+      g.id as goods_id, 
+      r.buyer_id, 
+      r.seller_id, 
+      g.thumbnail, 
+      g.title, 
+      g.sale_state, 
+      g.price 
+    FROM 
+      chatting_room r, 
+      goods g
+    WHERE
+      r.id = ${roomId}
+    AND
+      g.id = r.goods_id;
+  `);
+  if (result) {
+    result[0].isSeller = userId === result[0].seller_id;
+    const [chattingList] = await db.query(`
+      SELECT id, user_id, content
+      FROM 
+        chatting_message
+      WHERE
+        room_id = ${roomId}
+    `);
+    result[0].chattingList = chattingList;
     return result;
   }
   return null;
@@ -103,11 +140,9 @@ const selectChattingRoomByUserId = async (userId) => {
       chatting_room r, 
       goods g
     WHERE
-      (
-        r.buyer_id = '${userId}'
-        OR
-        r.seller_id = '${userId}'
-      )
+      (r.buyer_id = '${userId}' AND r.buyer_entrance = 0)
+      OR
+      (r.seller_id = '${userId}' AND r.seller_entrance = 0)
     GROUP BY r.id
     ORDER BY created DESC;
     `,
@@ -162,4 +197,5 @@ export const WishQuery = {
   selectChattingRoomByUserId,
   deleteChattingRoom,
   updateChattingMessage,
+  selectChaatingRoomDetail,
 };
