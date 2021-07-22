@@ -74,21 +74,19 @@ const selectGoods = async (regionId, categoryId, userId, lastIndex) => {
 const selectGoodsByUserId = async (userId) => {
   const result = await db.query(
     `
-    SELECT 
-    g.id, g.title, g.content, g.price, 
+    SELECT distinct g.id, g.title, g.content, g.price, 
     g.thumbnail, g.view_count, g.view_state, 
     g.sale_state, g.user_id, g.region_id, g.category_id, 
+    r.region as region_name, 
     DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
     DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
-    r.region as region_name, 
-    count(w.id) as wish_count 
-    FROM goods g 
+      (SELECT count(distinct w.id) FROM goods_wish w WHERE w.goods_id = g.id) as wish_count
+    FROM goods g
     JOIN region r
-    LEFT JOIN goods_wish w ON w.goods_id = g.id
-    WHERE g.view_state = 0
-    AND g.user_id = '${userId}'
-    GROUP BY g.id
-    ORDER BY updated DESC
+    WHERE g.user_id = '${userId}'
+    AND g.view_state = 0
+    AND r.id = g.region_id
+    ORDER BY updated DESC;
   `,
   );
   if (result.length) {
@@ -97,24 +95,22 @@ const selectGoodsByUserId = async (userId) => {
   return null;
 };
 const selectGoodsByWish = async (userId) => {
-  const [result] = await db.query(
+  const result = await db.query(
     `
-    SELECT 
-      g.id, g.title, g.content, g.price, 
+      SELECT distinct g.id, g.title, g.content, g.price, 
       g.thumbnail, g.view_count, g.view_state, 
       g.sale_state, g.user_id, g.region_id, g.category_id, 
+      r.region as region_name, 
       DATE_FORMAT(g.updated,'%Y-%m-%d %H:%i:%S') as updated,
-      DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created,
-      r.region as region_name,
-      count(w.id) as wish_count
-    FROM goods g
-    JOIN region r
-    LEFT JOIN goods_wish w ON w.goods_id = g.id
-    WHERE g.view_state = 0
-    AND w.user_id = '${userId}'
-    AND g.id = w.goods_id
-    GROUP BY g.id
-    ORDER BY updated DESC
+      DATE_FORMAT(g.created,'%Y-%m-%d %H:%i:%S') as created
+      FROM goods g
+      JOIN region r
+      JOIN goods_wish w
+      WHERE w.user_id = '${userId}'
+      AND g.view_state = 0
+      AND r.id = g.region_id
+      AND w.goods_id = g.id
+      ORDER BY g.updated DESC;
   `,
   );
   if (result.length) {

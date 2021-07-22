@@ -77,6 +77,20 @@ const findGoodsDetail = async (req, res) => {
   }
 };
 
+const findGoodsForMenu = async (req, res) => {
+  try {
+    const data = {};
+    data.sellList = await goodsService.findGoodsByUserId(req.user.id);
+    data.wishList = await goodsService.findGoodsByUserWish(req.user.id);
+    res.status(200).json({
+      result: '0',
+      data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const updateGoods = async (req, res) => {
   try {
     req.body.userId = req.user.id;
@@ -122,6 +136,7 @@ export const goodsController = {
   findGoodsByUserId,
   findGoodsByUserWish,
   findGoodsDetail,
+  findGoodsForMenu,
   updateGoods,
   updateGoodsSaleState,
   deleteGoodsViewState,
