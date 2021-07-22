@@ -1,3 +1,5 @@
+import { parsePrice } from '../lib/parsePrice';
+
 // goods안에 isWish, isAuthor
 function Post({ app, goMain, go }) {
   interface StateObj {
@@ -198,10 +200,7 @@ function Post({ app, goMain, go }) {
       view_count,
       wish_count,
     } = this.state.goods;
-    const price =
-      typeof this.state.goods.price === 'number'
-        ? this.state.goods.price.toLocaleString('ko-KR') + '원'
-        : '가격미정';
+    const price = parsePrice(this.state.goods.price);
     const chatting_count = 0; // 임시
 
     return `
@@ -262,6 +261,9 @@ function Post({ app, goMain, go }) {
   };
 
   this.render = (dbId) => {
+    // this.setState(stateObj.tab, 0);
+    // this.setState(stateObj.isAuthor, undefined);
+    // this.setState(stateObj.saleState, undefined);
     getApi(dbId, () => setTimeout(() => $target.classList.add('slidein'), 0));
   };
 

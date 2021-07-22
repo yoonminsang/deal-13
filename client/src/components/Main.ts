@@ -1,3 +1,4 @@
+import { parsePrice } from '../lib/parsePrice';
 import { parseTime } from '../lib/parseTime';
 function Main({ app, setPrimaryRegion }) {
   interface Goods {
@@ -66,10 +67,7 @@ function Main({ app, setPrimaryRegion }) {
     isWish,
     created,
   }) => {
-    price =
-      typeof price === 'number'
-        ? price.toLocaleString('ko-KR') + '원'
-        : '가격미정';
+    price = parsePrice(price);
     created = parseTime(created);
 
     const chatElm = chat_count
