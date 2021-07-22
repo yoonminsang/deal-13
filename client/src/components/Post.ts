@@ -1,7 +1,6 @@
 // goods안에 isWish, isAuthor
-function Post({ app, goMain }) {
+function Post({ app, goMain, go }) {
   interface StateObj {
-    user: string;
     modal: string;
     tab: string;
     goods: string;
@@ -12,7 +11,6 @@ function Post({ app, goMain }) {
     saleModal: string;
   }
   const stateObj: StateObj = {
-    user: 'user',
     modal: 'modal',
     tab: 'tab',
     goods: 'goods',
@@ -63,7 +61,6 @@ function Post({ app, goMain }) {
       },
       body: JSON.stringify({
         goodsId: this.state.goods.id,
-        state,
       }),
     })
       .then((res) => {
@@ -122,6 +119,24 @@ function Post({ app, goMain }) {
       this.setState(stateObj.saleModal, !this.state.saleModal);
     } else if (classList.contains('js-status-item')) {
       changeState(target.dataset.state);
+    } else if (classList.contains('js-chattingDetail')) {
+      fetch('/api/goods-chatting', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          goodsId: this.state.goods.id,
+          sellerId: this.state.goods.user_id,
+        }),
+      })
+        .then((res) => res.json())
+        .then(({ result, data, message }) => {
+          console.log(message);
+          if (result === 0) {
+            go(`chattingDetail#${data.roomId}`);
+          }
+        });
     }
   });
 
@@ -220,7 +235,7 @@ function Post({ app, goMain }) {
         ${
           this.state.isAuthor
             ? `<button class="js-chatting#${this.state.goods.id} render btn-medium">채팅 목록보기</button>`
-            : `<button class="js-chattingDetail#${this.state.goods.id} render btn-medium">문의하기</button>`
+            : `<button class="js-chattingDetail btn-medium">문의하기</button>`
         }
       </div>
     </div>
@@ -251,6 +266,7 @@ function Post({ app, goMain }) {
   };
 
   this.rerender = (changeStateName) => {
+    console.log(changeStateName, this.state);
     switch (changeStateName) {
       case stateObj.isAuthor:
         const $forAuthor = $target.querySelector('.for-author');
