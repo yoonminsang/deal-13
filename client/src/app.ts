@@ -11,7 +11,6 @@ import Post from './components/Post';
 import Region from './components/Region';
 import Write from './components/Write';
 import Signup from './components/Signup';
-
 interface ActionObj {
   go: string;
   back: string;
@@ -36,7 +35,6 @@ interface RenderObj {
   region: string;
   modify: string;
 }
-
 const actionObj: ActionObj = {
   go: 'go',
   back: 'back',
@@ -62,10 +60,8 @@ const renderObj: RenderObj = {
   modify: 'modify',
 };
 const AUTO = 'auto';
-
 function App() {
   const app = document.querySelector('#app');
-
   app.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
@@ -73,38 +69,44 @@ function App() {
     if (classList.contains('js-back')) back();
     else if (closest) go(closest.classList[0].slice(3));
   });
-
   const go = (next: string): void => {
+    document.querySelector('.loading').classList.add('active');
+    setTimeout(
+      () => document.querySelector('.loading').classList.remove('active'),
+      600,
+    );
     const nextDepth = [...this.state.depth, next];
     this.setState(actionObj.go, { ...this.state, depth: nextDepth });
   };
-
   const back = (): void => {
+    document.querySelector('.loading').classList.add('active');
+    setTimeout(
+      () => document.querySelector('.loading').classList.remove('active'),
+      600,
+    );
     const nextDepth = this.state.depth.slice(0, this.state.depth.length - 1);
     this.setState(actionObj.back, { ...this.state, depth: nextDepth });
   };
-
   const goMain = (): void => {
     const nextDepth = [];
     this.setState(actionObj.goMain, { ...this.state, depth: nextDepth });
     main.getApi();
   };
-
   const goLogin = (): void => {
     alert('로그인해주세요');
     const nextDepth = [renderObj.login];
     this.setState(actionObj.goLogin, { ...this.state, depth: nextDepth });
   };
-
   const historyPush = (): void => {
     const nextUrl = this.state.depth.join('/') || '/';
+    console.log(nextUrl);
+    console.log(location.href);
     history.pushState('', '', nextUrl);
+    console.log(location.href);
   };
-
   const userReRender = () => {
     this.setState(actionObj.user, { ...this.state });
   };
-
   const setCategory = (
     category: object,
     auto: string = null,
@@ -116,7 +118,6 @@ function App() {
       category,
     });
   };
-
   const autoGetCategory = (): void => {
     const storageCategory = localStorage.getItem(actionObj.category);
     const category = storageCategory
@@ -124,7 +125,6 @@ function App() {
       : setCategory({ id: -1, category: '' }, AUTO);
     this.setState(actionObj.category, { ...this.state, category });
   };
-
   const setPrimaryRegion = (
     primaryRegion: string = '0',
     auto: string = null,
@@ -133,7 +133,6 @@ function App() {
     if (auto) return primaryRegion;
     this.setState(actionObj.primaryRegion, { ...this.state, primaryRegion });
   };
-
   const autoGetPrimaryRegion = (): void => {
     let primaryRegion =
       localStorage.getItem(actionObj.primaryRegion) ||
@@ -146,7 +145,6 @@ function App() {
     }
     this.setState(actionObj.primaryRegion, { ...this.state, primaryRegion });
   };
-
   const authProcess = (user: string) => {
     this.setState(actionObj.user, { ...this.state, user });
     if (user) {
@@ -154,7 +152,6 @@ function App() {
       autoGetPrimaryRegion();
     }
   };
-
   const autoLogin = (getUrl): void => {
     if (localStorage.getItem('user'))
       fetch('/api/auth', {
@@ -183,7 +180,6 @@ function App() {
       }
     }
   };
-
   const main = new Main({ app, setPrimaryRegion });
   const login = new Login({
     app,
@@ -209,14 +205,12 @@ function App() {
     back,
   });
   const region = new Region({ app, setPrimaryRegion, autoLogin });
-
   this.state = {
     user: undefined,
     category: undefined,
     primaryRegion: undefined,
     depth: [],
   };
-
   this.setState = (action: string, nextState: any): any => {
     console.log('app setstate');
     this.state = nextState;
@@ -234,7 +228,6 @@ function App() {
         console.log('action name is not found');
     }
   };
-
   this.render = (action: string): any => {
     console.log('app render', 'action: ', action, 'state: ', this.state);
     switch (action) {
@@ -245,7 +238,6 @@ function App() {
         const dbId = this.state.depth[this.state.depth.length - 1].slice(
           idx + 1,
         );
-        console.log(name);
         // case문을 if문으로 바꿀까 고민중
         switch (name) {
           case renderObj.category:
@@ -303,15 +295,12 @@ function App() {
         }
         login.render();
         return;
-
       case actionObj.user:
         main.setState(actionObj.user, this.state.user);
         login.setState(actionObj.user, this.state.user);
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         write.setState(actionObj.user, this.state.user);
-        post.setState(actionObj.user, this.state.user);
-        // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
         main.setState(actionObj.category, this.state.category);
@@ -324,7 +313,6 @@ function App() {
         return;
     }
   };
-
   const getCategory = () => {
     fetch('/api/category', {
       method: 'GET',
@@ -346,13 +334,12 @@ function App() {
         console.log(e);
       });
   };
-
   const getUrl = () => {
     const href = location.href.slice(location.origin.length + 1);
     const parse = href.split('/');
     for (let i = 0; i < parse.length; i++) {
       if (app.children.length > i) go(parse[i]);
-      else setTimeout(() => go(parse[i]), 1000);
+      else setTimeout(() => go(parse[i]), 300);
     }
   };
 
@@ -364,18 +351,15 @@ function App() {
   };
 
   const init = (): void => {
+    document.querySelector('.loading').classList.add('active-hard');
+    setTimeout(
+      () => document.querySelector('.loading').classList.remove('active-hard'),
+      800,
+    );
     getCategory();
     autoLogin(getUrl);
     backChange();
   };
   init();
-
-  // 새로고침이나 url 직접 이동시 유효성 검사
-  // 그냥 직접 순서를 배열로 주는방법(효율적x 다른방법 안보임)
-  // 거기서 user로 검사를 하고 틀리다면 goHome 또는 goLogin 함수 호출
-  // 그다음에 for문에서 break
-  // 슬라이드되는 거는 action을 하나줘서 바로 나오게 해야될듯?
-  // 또 생각할게 /login/signup 에서 나타나는 순서.
 }
-
 new App();

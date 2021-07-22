@@ -64,6 +64,9 @@
 }
 
 @mixin img-box($size: 'medium') {
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
   @if $size == large {
     height: 106px;
     width: 106px;
@@ -73,9 +76,9 @@
     width: 40px;
     border-radius: 6px;
   } @else {
+    border-radius: 8px;
     height: 76px;
     width: 76px;
-    border-radius: 8px;
   }
 }
 
