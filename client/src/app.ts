@@ -198,7 +198,7 @@ function App() {
   });
   const menu = new Menu({ app });
   const write = new Write({ app, goMain });
-  const post = new Post({ app, goMain });
+  const post = new Post({ app, goMain, go });
   const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
     app,
