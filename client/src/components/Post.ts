@@ -63,6 +63,7 @@ function Post({ app, goMain, go }) {
       },
       body: JSON.stringify({
         goodsId: this.state.goods.id,
+        state,
       }),
     })
       .then((res) => {

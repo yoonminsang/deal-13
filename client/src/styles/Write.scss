@@ -6,7 +6,7 @@
       border-bottom: 1px solid map.get($colors, 'grey-3');
       &.img-inner {
         white-space: nowrap;
-        overflow-x: scroll;
+        overflow-x: auto;
         display: flex;
         flex-direction: row;
         align-items: flex-start;
@@ -49,8 +49,24 @@
       }
       .category-inner {
         white-space: nowrap;
-        overflow-x: scroll;
+        overflow-x: auto;
         display: flex;
+        column-gap: 8px;
+        padding-bottom: 8px;
+        &::-webkit-scrollbar-track {
+          border-radius: 2px;
+          background-color: #e0e0e0;
+        }
+
+        &::-webkit-scrollbar {
+          height: 8px;
+          background-color: #e0e0e0;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          border-radius: 2px;
+          background-color: #2ac1bc;
+        }
         // .item {
         //   display: flex;
         //   flex-direction: row;

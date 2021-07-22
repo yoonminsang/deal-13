@@ -187,7 +187,16 @@ function Menu({ app }) {
                 ? 'js-more icon icon-more product-list-item__heart'
                 : 'js-wish icon icon-heart product-list-item__heart active'
             }
-          " data-id="${id}"></div>
+          " data-id="${id}">
+          ${
+            sale
+              ? `<ul class="drop-down-list product-popup modal">
+            <li class="js-modify#${id} render drop-down-item btn-product_edit">수정하기</li>
+            <li class="js-delete drop-down-item btn-product_delete">삭제하기</li>`
+              : ''
+          }
+            </ul>
+          </div>
           <p class="product-list-item__title">${title}</p>
           <p class="product-list-item__info">${region_name} - ${created}</p>
           <p class="product-list-item__price">${price}</p>
@@ -228,7 +237,7 @@ function Menu({ app }) {
       const value = this.state.wishList.filter((goods) => goods.id !== id);
       deleteWish(id, value);
     } else {
-      createPopup(target);
+      togglePopup(target);
     }
   };
 
@@ -280,15 +289,9 @@ function Menu({ app }) {
       });
   };
 
-  const createPopup = (target: HTMLElement) => {
-    document.querySelector('.product-popup')?.remove();
-    const output = `
-      <ul class="drop-down-list product-popup modal">
-        <li class="drop-down-item btn-product_edit js-modify#4">수정하기</li>
-        <li class="drop-down-item btn-product_delete js-delete">삭제하기</li>
-      </ul>
-    `;
-    target.innerHTML = output;
+  const togglePopup = (target: HTMLElement) => {
+    $target.querySelector('.js-more')?.classList.remove('active');
+    target.classList.add('active');
   };
 
   this.setState = (name, value, type = 'common', listObject) => {
@@ -315,7 +318,6 @@ function Menu({ app }) {
     $target.innerHTML = createHeader() + createGNB(this.state.tap);
     app.appendChild($target);
     getMenuItems();
-    rerenderMenuBody();
     const gnbContainer: HTMLDivElement =
       document.querySelector('.gnb-container');
     gnbContainer?.addEventListener('click', (e) => handleTap(e));
@@ -325,14 +327,41 @@ function Menu({ app }) {
   this.rerender = rerenderMenuBody;
   $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    console.log(target);
-    if (
-      target.classList.contains('js-wish') ||
-      target.classList.contains('js-more')
-    ) {
+    const classList = target.classList;
+    if (classList.contains('js-wish') || classList.contains('js-more')) {
       e.preventDefault();
       e.stopPropagation();
-      handleClickEvent(e);
+      return handleClickEvent(e);
+    }
+
+    $target.querySelector('.js-more.active')?.classList.remove('active');
+    if (classList.contains('js-delete')) {
+      e.preventDefault();
+      e.stopPropagation();
+      const closestTag = target.closest('.js-more') as HTMLElement;
+      const goodsId = closestTag?.dataset?.id;
+      if (!goodsId) return;
+      // fetch delete
+      fetch('/api/goods', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          goodsId,
+        }),
+      })
+        .then((res) => {
+          if (res.ok || res.status === 409) return res.json();
+        })
+        .then(({ result, message }) => {
+          if (result == 0) {
+            getMenuItems();
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
     }
   });
 }
