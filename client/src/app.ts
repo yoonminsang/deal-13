@@ -198,7 +198,7 @@ function App() {
   });
   const menu = new Menu({ app });
   const write = new Write({ app, goMain });
-  const post = new Post({ app, goMain });
+  const post = new Post({ app, goMain, go });
   const chatting = new Chatting({ app, go, back });
   const chattingDetail = new ChattingDetail({
     app,
@@ -301,6 +301,7 @@ function App() {
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         write.setState(actionObj.user, this.state.user);
+        chattingDetail.setState(actionObj.user, this.state.user);
         return;
       case actionObj.category:
         main.setState(actionObj.category, this.state.category);

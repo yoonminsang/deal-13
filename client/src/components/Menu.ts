@@ -1,5 +1,6 @@
 // import '../styles/menu.scss'
-
+import { parsePrice } from '../lib/parsePrice';
+import { parseTime } from '../lib/parseTime';
 interface IProduct {
   id: number;
   title: string;
@@ -166,10 +167,8 @@ function Menu({ app }) {
       isWish,
       created,
     } = product;
-    price =
-      typeof price === 'number'
-        ? price.toLocaleString('ko-KR') + '원'
-        : '가격미정';
+    price = parsePrice(price);
+    created = parseTime(created);
 
     const chatElm = chat_count
       ? `<div class="icon icon-message"></div><p>${chat_count}</p>`
