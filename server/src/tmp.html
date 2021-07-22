@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form
+      action="http://localhost:3000/api/goods-photo"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <button id="abc">
+        asdf
+        <input
+          id="input"
+          type="file"
+          accept=".jpg, .png, .jpeg"
+          name="file"
+          style="display: none"
+          multiple
+        />
+      </button>
+      <input type="submit" value="등록" />
+    </form>
+    <script>
+      const inputElement = document.getElementById('input');
+      inputElement.addEventListener('change', handleFiles, false);
+      function handleFiles() {
+        const fileList = this.files; /* 이제 파일 리스트로 작업할 수 있습니다 */
+        console.log(fileList);
+        // fetch('http://localhost:3000/api/goods-photo', {
+        //   method: 'POST',
+        //   enctype: 'multipart/form-data',
+        // });
+      }
+      const abc = document.getElementById('abc');
+      abc.addEventListener('click', (e) => {});
+    </script>
+  </body>
+</html>
