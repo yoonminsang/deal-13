@@ -222,7 +222,7 @@ function Post({ app, goMain }) {
         ${
           this.state.isAuthor
             ? `<button class="js-chatting#${this.state.goods.id} render btn-medium">채팅 목록보기</button>`
-            : '<button class="js-chattingDetail#${id} render btn-medium">문의하기</button>'
+            : `<button class="js-chattingDetail#${this.state.goods.id} render btn-medium">문의하기</button>`
         }
       </div>
     </div>
