@@ -282,7 +282,7 @@ function App() {
         lastChild.classList.remove('slidein');
         setTimeout(() => {
           lastChild.remove();
-        }, 500);
+        }, 300);
         return;
       case actionObj.goMain:
         while (app.children.length !== 1) {
@@ -340,7 +340,7 @@ function App() {
     const parse = href.split('/');
     for (let i = 0; i < parse.length; i++) {
       if (app.children.length > i) go(parse[i]);
-      else setTimeout(() => go(parse[i]), 300);
+      else setTimeout(() => go(parse[i]), 400);
     }
   };
 

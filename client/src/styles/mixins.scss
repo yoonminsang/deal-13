@@ -3,16 +3,16 @@
   font-style: normal;
   font-weight: 400;
   @if $size == large {
-    font-size: 18px;
+    font-size: 20px;
     line-height: 24px;
   } @else if $size == small {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 20px;
   } @else if $size == x-small {
-    font-size: 12px;
+    font-size: 14px;
     line-height: 16px;
   } @else {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 22px;
   }
 }
@@ -68,8 +68,8 @@
   background-position: 50%;
   background-repeat: no-repeat;
   @if $size == large {
-    height: 106px;
-    width: 106px;
+    height: 92px;
+    width: 92px;
     border-radius: 10px;
   } @else if $size == small {
     height: 40px;

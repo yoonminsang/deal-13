@@ -9,31 +9,38 @@
     .drop-down-sale {
       position: absolute;
       top: 56px;
-      transition: all 0.5s;
+      transition: all 0.25s;
     }
   }
   .top-bar.invisible {
     position: fixed;
-    width: 100%;
+    max-width: 100%;
+    width: 25rem;
+    z-index: 1;
     // z-index: 10;
     border: 0;
-    .icon-left {
+    .icon-left,
+    .icon-more {
       filter: map.get($filter_colors, 'white');
     }
     .drop-down-modal {
-      position: fixed;
+      position: absolute;
       top: 48px;
       right: 16px;
-      transition: all 0.5s;
+      transition: all 0.25s;
       .js-delete {
         color: map.get($colors, 'error');
       }
     }
   }
+  .for-author {
+    cursor: pointer;
+  }
   .img-box-large {
     width: 100%;
     height: 320px;
-
+    filter: brightness(0.9);
+    border-radius: 1px;
     background-size: contain;
     background-position: 50%;
     background-repeat: no-repeat;
@@ -52,7 +59,7 @@
   }
   .goods-inner {
     .goods-margin {
-      margin: 24px 16px 32px;
+      margin: 24px 0 32px;
       .btn-status {
         width: 103px;
         span {

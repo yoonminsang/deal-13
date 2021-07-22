@@ -3,18 +3,19 @@
 @import './reset';
 @import './variables';
 @import './mixins';
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
 
 body {
-  max-width: 25vw;
+  max-width: 100%;
+  width: 25rem;
   margin: 0 auto;
-  padding: 5vh 0;
   height: 100vh;
+  position: relative;
   overflow-y: auto;
 }
 
 * {
-  font-family: 'Noto Sans KR';
+  font-family: 'Jua';
 }
 
 #app {
@@ -56,18 +57,63 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  display: none;
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 200;
+  & > * {
+    max-width: 100%;
+    width: 25rem;
+  }
+  h2 {
+    color: #fff;
+    font-size: 28px;
+    font-weight: 400;
+  }
+  .loading-bar {
+    & > * {
+      max-width: 100%;
+      width: 25rem;
+    }
+    width: 0px;
+    height: 8px;
+    position: relative;
+    transition: width 0.5s ease-in;
+    background-color: map.get($colors, 'primary-1');
+    margin-top: 20px;
+    img {
+      position: absolute;
+      top: -30px;
+      width: 40px;
+      transition: transform 0.5s ease-in;
+      transform: translateX(0);
+    }
+  }
   &.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
+    visibility: visible;
     &-hard {
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 200;
       background-color: #fff;
+    }
+    .loading-bar {
+      width: 100%;
+      img {
+        transform: translateX(380px);
+      }
+    }
+    .loading-bar::after {
+      max-width: 100%;
+      width: 25rem;
+      height: 8px;
+      position: absolute;
+      content: '';
+      z-index: -1;
+      background-color: map.get($colors, 'grey-5');
     }
   }
 }
@@ -457,7 +503,7 @@ body {
   background-color: map.get($colors, 'white');
   height: 56px;
   display: grid;
-  grid-template-columns: 1fr 6fr 1.5fr;
+  grid-template-columns: 1.5fr 6fr 1.5fr;
   align-items: center;
   justify-content: space-around;
   border-bottom: 1px solid #d7d7d7;
@@ -465,6 +511,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100%;
   }
   &.off-white {
     background-color: map.get($colors, 'off-white');
@@ -473,11 +520,14 @@ body {
     background-color: map.get($colors, 'primary-1');
     border-radius: 0px 0px 16px 16px;
     color: map.get($colors, 'white');
+    & > div:nth-of-type(1) {
+      margin-left: -10px;
+    }
     & > div:nth-of-type(2) {
       column-gap: 6px;
     }
     & > div:nth-of-type(3) {
-      column-gap: 16px;
+      column-gap: 8px;
     }
     .icon {
       filter: map.get($filter_colors, 'white');
@@ -497,7 +547,7 @@ body {
 .info-saler {
   background-color: map.get($colors, 'off-white');
   height: 48px;
-  width: 288px;
+  width: 100%;
   padding: 8px 16px;
   display: grid;
   align-items: center;
@@ -540,11 +590,11 @@ body {
 .product-bar {
   background-color: map.get($colors, 'white');
   height: 68px;
-  padding: 16px;
+  padding: 16px 0;
   display: flex;
   grid-gap: 16px;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   .icon {
     width: 22px;
     height: 22px;
@@ -588,6 +638,7 @@ body {
     color: map.get($colors, 'title-active');
     margin-bottom: 4px;
     width: auto;
+    max-width: 85%;
     cursor: pointer;
     &:hover {
       color: map.get($colors, 'primary-1');
@@ -719,7 +770,7 @@ body {
 // }
 // }
 
-@import './menu.scss';
+@import './Menu.scss';
 @import './Write.scss';
 @import './Post.scss';
 @import './ChattingDetail.scss';
