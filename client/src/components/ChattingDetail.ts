@@ -1,11 +1,17 @@
+import { parsePrice } from '../lib/parsePrice';
+
 function ChattingDetail({ app, back }) {
   interface StateObj {
     user: string;
     modal: string;
+    chatting: string;
+    roomId: string;
   }
   const stateObj: StateObj = {
     user: 'user',
     modal: 'modal',
+    chatting: 'chatting',
+    roomId: 'roomId',
   };
 
   const $target = document.createElement('div');
@@ -16,7 +22,7 @@ function ChattingDetail({ app, back }) {
       <div class="js-back icon icon-left"></div>
     </div>
     <div>
-      <div class="id top-bar__text">####유저 아이디</div>
+      <div class="id top-bar__text"></div>
     </div>
     <div>
       <div class="js-modal icon icon-logout"></div>
@@ -25,20 +31,22 @@ function ChattingDetail({ app, back }) {
   <div class="chat-header">
     <div class="js-img img-box-small"></div>
     <div class="chat-header-text">
-      <p class="title chat-list-item__name">###제목</p>
-      <p class="price chat-list-item__message">###가격</p>
+      <p class="title chat-list-item__name"></p>
+      <p class="price chat-list-item__message"></p>
     </div>
     <div class="chat-list-item__content-right">
       <button class="btn-status">
-        <span>판매중</span>
+        <span></span>
       </button>
     </div>
   </div>
+
   <div class="chat-inner">
     <div class="chat-itme you">안녕하세ㅛㅇ 궁금한게</div>
     <div class="chat-itme you">안녕하세ㅛㅇ 궁금한게</div>
     <div class="chat-itme me">응 안뇽</div>
   </div>
+
   <form>
     <div class="chat-bar">
       <input
@@ -60,6 +68,7 @@ function ChattingDetail({ app, back }) {
       </div>
     </div>
   </div>
+
   `;
   // 엠티를 없애고 만들고 위에 send버튼
 
@@ -69,12 +78,15 @@ function ChattingDetail({ app, back }) {
     2: '판매완료',
   };
 
-  const $img = $target.querySelector('.js-img');
+  const $id = $target.querySelector('.id');
+  const $img: HTMLLIElement = $target.querySelector('.js-img');
   const $title = $target.querySelector('.title');
   const $price = $target.querySelector('.price');
-  const $btnStatus = $target.querySelector('.btnStatus');
+  const $btnStatus = $target.querySelector('.btn-status');
+  const $btnStatusSpan = $btnStatus.querySelector('span');
   const $content: HTMLInputElement = $target.querySelector('.content');
   const $dropDown = $target.querySelector('.js-dropdown');
+  const $chatInner = $target.querySelector('.chat-inner');
 
   $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
@@ -92,35 +104,106 @@ function ChattingDetail({ app, back }) {
 
   $target.addEventListener('submit', () => {
     const content = $content.value;
+    fetch(`/api/goods-chatting/message`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        roomId: this.state.roomId,
+        content,
+      }),
+    })
+      .then((res) => res.json())
+      .then(({ message }) => {
+        console.log(message);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   });
 
+  const makeChatInner = (content, tf) => {
+    const $div = document.createElement('div');
+    $div.className = 'chat-item';
+    if (tf) $div.classList.add('me');
+    else $div.classList.add('you');
+    $div.textContent = content;
+    return $div;
+  };
+
   const getApi = (dbId, fn) => {
-    console.log('chatting detail', 'getapi');
-    fn();
+    fetch(`/api/goods-chatting/detail?roomId=${dbId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+      })
+      .then(({ result, data, message }) => {
+        console.log(message);
+        data = data[0];
+        if (result === 0) {
+          console.log(data, '나중에 삭제');
+          const price = parsePrice(data.price);
+          $id.textContent = data.seller_id;
+          $img.style.backgroundImage = `url(${data.thumbnail})`;
+          $title.textContent = data.title;
+          $btnStatusSpan.textContent = status[data.sale_state];
+          $price.textContent = price;
+          this.setState(stateObj.roomId, data.room_id);
+          this.setState(stateObj.chatting, data.chattingList);
+          fn();
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const getChatting = () => {
+    // 디비 수정하고 구현
   };
 
   this.state = {
+    user: undefined,
     modal: false,
+    chatting: [],
+    roomId: undefined,
   };
 
   this.setState = (nextStateName, nextState) => {
-    console.log('chatting detail setstate', nextStateName, nextState);
-    console.log('state', this.state);
     this.state = { ...this.state, [nextStateName]: nextState };
-    console.log('state', this.state);
     this.rerender(nextStateName);
   };
 
   this.render = (dbId) => {
+    $chatInner.innerHTML = '';
     app.appendChild($target);
     getApi(dbId, () => setTimeout(() => $target.classList.add('slidein'), 0));
   };
 
   this.rerender = (changeStateName) => {
+    console.log(changeStateName);
     switch (changeStateName) {
+      case stateObj.user:
+      case stateObj.roomId:
+        return;
       case stateObj.modal:
         if (this.state.modal) $dropDown.classList.remove('blind');
         else $dropDown.classList.add('blind');
+        return;
+      case stateObj.chatting:
+        const $fragment = document.createDocumentFragment();
+        this.state.chatting.forEach((v) => {
+          const { user_id, content } = v;
+          $fragment.appendChild(
+            makeChatInner(content, user_id === this.state.user),
+          );
+        });
+        $chatInner.appendChild($fragment);
         return;
       default:
         console.log('state name is not found');

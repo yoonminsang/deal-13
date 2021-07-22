@@ -301,6 +301,7 @@ function App() {
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         write.setState(actionObj.user, this.state.user);
+        chattingDetail.setState(actionObj.user, this.state.user);
         return;
       case actionObj.category:
         main.setState(actionObj.category, this.state.category);
