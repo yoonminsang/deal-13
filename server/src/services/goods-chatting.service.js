@@ -54,14 +54,15 @@ const updateChattingMessage = async (data) => {
 };
 
 const selectChattingRoomDetail = async (data) => {
-  const { roomId, userId } = data;
+  const { roomId, lastIndex = 0, userId } = data;
   if (!roomId) return null;
   if (!userId) return null;
   const result = await goodsChattingQuery.selectChattingRoomDetail(
     roomId,
+    lastIndex,
     userId,
   );
-  if (result) updateChattingMessage(data);
+  if (result) goodsChattingQuery.updateChattingMessage(roomId, userId);
   return result;
 };
 
