@@ -97,8 +97,8 @@ function App() {
   };
 
   const historyPush = (): void => {
-    // const nextUrl = this.state.depth.join('/') || '/';
-    // history.pushState('', '', nextUrl);
+    const nextUrl = this.state.depth.join('/') || '/';
+    history.pushState('', '', nextUrl);
   };
 
   const userReRender = () => {
@@ -155,7 +155,7 @@ function App() {
     }
   };
 
-  const autoLogin = (): void => {
+  const autoLogin = (getUrl): void => {
     if (localStorage.getItem('user'))
       fetch('/api/auth', {
         method: 'GET',
@@ -169,12 +169,18 @@ function App() {
         .then(({ user, error }) => {
           if (user) authProcess(user);
           if (error) console.log(error);
+          if (getUrl) {
+            getUrl();
+          }
         })
         .catch((e) => {
           console.error(e);
         });
     else {
       authProcess(null);
+      if (getUrl) {
+        getUrl();
+      }
     }
   };
 
@@ -268,7 +274,7 @@ function App() {
             return post.render(dbId);
           case renderObj.chatting:
             if (!this.state.user) return goLogin();
-            return chatting.render();
+            return chatting.render(dbId);
           case renderObj.chattingDetail:
             if (!this.state.user) return goLogin();
             return chattingDetail.render(dbId);
@@ -276,7 +282,7 @@ function App() {
             if (!this.state.user) return goLogin();
             return region.render();
           default:
-            console.log('render name is not found');
+            goMain();
             return;
         }
       case actionObj.back:
@@ -341,11 +347,29 @@ function App() {
       });
   };
 
+  const getUrl = () => {
+    const href = location.href.slice(location.origin.length + 1);
+    const parse = href.split('/');
+    for (let i = 0; i < parse.length; i++) {
+      if (app.children.length > i) go(parse[i]);
+      else setTimeout(() => go(parse[i]), 1000);
+    }
+  };
+
+  const backChange = () => {
+    window.onpopstate = (e) => {
+      e.preventDefault();
+      back();
+    };
+  };
+
   const init = (): void => {
     getCategory();
-    autoLogin();
+    autoLogin(getUrl);
+    backChange();
   };
   init();
+
   // 새로고침이나 url 직접 이동시 유효성 검사
   // 그냥 직접 순서를 배열로 주는방법(효율적x 다른방법 안보임)
   // 거기서 user로 검사를 하고 틀리다면 goHome 또는 goLogin 함수 호출

@@ -113,7 +113,6 @@ function ChattingDetail({ app, back }) {
 
   this.render = (dbId) => {
     app.appendChild($target);
-    $target.classList.replace('slideout', 'slidein');
     getApi(dbId, () => setTimeout(() => $target.classList.add('slidein'), 0));
   };
 
@@ -122,8 +121,6 @@ function ChattingDetail({ app, back }) {
       case stateObj.modal:
         if (this.state.modal) $dropDown.classList.remove('blind');
         else $dropDown.classList.add('blind');
-        // if (this.state.modal) $dropDown.innerHTML = makeModal();
-        // else $dropDown.innerHTML = '';
         return;
       default:
         console.log('state name is not found');
