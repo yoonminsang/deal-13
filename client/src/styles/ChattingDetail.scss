@@ -1,6 +1,10 @@
 .chattingDetail {
+  z-index: 1;
   .icon-logout {
     filter: map.get($filter_colors, 'error');
+  }
+  .icon-left {
+    filter: none;
   }
   .chat-header {
     padding: 16px;
