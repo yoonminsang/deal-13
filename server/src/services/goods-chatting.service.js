@@ -1,14 +1,16 @@
 import { goodsChattingQuery } from '../queries/goods-chatting.query.js';
 
 const createChattingRoom = async (data) => {
-  const { goodsId, sellerId, buyerId } = data;
+  const { goodsId, sellerId, buyerId, userId } = data;
   if (!goodsId && goodsId !== 0) return null;
   if (!sellerId) return null;
   if (!buyerId) return null;
+  if (!userId) return null;
   const result = await goodsChattingQuery.insertChattingRoom(
     goodsId,
     sellerId,
     buyerId,
+    userId,
   );
   return result;
 };
@@ -41,6 +43,7 @@ const createChattingMessage = async (data) => {
     roomId,
     userId,
   );
+  if (result) updateChattingMessage(data);
   return result;
 };
 
@@ -60,6 +63,7 @@ const selectChattingRoomDetail = async (data) => {
     roomId,
     userId,
   );
+  if (result) updateChattingMessage(data);
   return result;
 };
 

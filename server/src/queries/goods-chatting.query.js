@@ -1,12 +1,13 @@
 import db from '../db/index.js';
 
 // 채팅방 생성
-const insertChattingRoom = async (goodsId, sellerId, buyerId) => {
+const insertChattingRoom = async (goodsId, sellerId, buyerId, userId) => {
   const result = await db.query(
-    `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_read, buyer_read, seller_entrance, buyer_entrance) VALUES(${goodsId}, '${sellerId}', '${buyerId}', 1, 1, 0, 0);`,
+    `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_read, buyer_read, seller_entrance, buyer_entrance) VALUES(${goodsId}, '${sellerId}', '${buyerId}', 1, 1, 1, 1);`,
   );
   if (result) {
-    return result;
+    const room = await selectChattingRoomDetail(result[0].insertId, userId);
+    return room;
   }
   return null;
 };
@@ -24,10 +25,10 @@ const insertChattingMessage = async (content, roomId, userId) => {
 
 // 채팅방 목록 조회, 상품 id (상품 상세에서 채팅 목록 보기)
 const selectChattingRoomByGoodsId = async (goodsId) => {
-  const result = await db.query(
+  const [result] = await db.query(
     `
     SELECT 
-      r.id, 
+      r.id as room_id, 
       g.thumbnail, 
       r.buyer_id AS partner_id,
       (
@@ -58,8 +59,8 @@ const selectChattingRoomByGoodsId = async (goodsId) => {
     AND
       r.goods_id = g.id
     AND
-      r.seller_entrance = 0
-    ORDER BY created DESC;
+      r.seller_entrance > -1
+    ORDER BY last_created DESC;
     `,
   );
   if (result) {
@@ -79,7 +80,9 @@ const selectChattingRoomDetail = async (roomId, userId) => {
       g.thumbnail, 
       g.title, 
       g.sale_state, 
-      g.price 
+      g.price,
+      r.seller_entrance,
+      r.buyer_entrance
     FROM 
       chatting_room r, 
       goods g
@@ -90,12 +93,20 @@ const selectChattingRoomDetail = async (roomId, userId) => {
   `);
   if (result) {
     result[0].isSeller = userId === result[0].seller_id;
+    if (result[0].isSeller && result[0].seller_entrance === -1) return null;
+    if (!result[0].isSeller && result[0].buyer_entrance === -1) return null;
     const [chattingList] = await db.query(`
       SELECT id, user_id, content
       FROM 
         chatting_message
       WHERE
         room_id = ${roomId}
+      AND
+        id >= ${
+          result[0].isSeller
+            ? result[0].seller_entrance
+            : result[0].buyer_entrance
+        }
     `);
     result[0].chattingList = chattingList;
     return result;
@@ -105,10 +116,10 @@ const selectChattingRoomDetail = async (roomId, userId) => {
 
 // 채팅방 목록 조회, 유저 id (메뉴에서 채팅 목록 보기)
 const selectChattingRoomByUserId = async (userId) => {
-  const result = await db.query(
+  const [result] = await db.query(
     `
     SELECT
-      r.id, 
+      r.id as room_id, 
       g.thumbnail, 
       (
         SELECT IF(r2.buyer_id = '${userId}', r2.seller_id, r2.buyer_id)
@@ -140,11 +151,11 @@ const selectChattingRoomByUserId = async (userId) => {
       chatting_room r, 
       goods g
     WHERE
-      (r.buyer_id = '${userId}' AND r.buyer_entrance = 0)
+      (r.buyer_id = '${userId}' AND r.buyer_entrance > -1)
       OR
-      (r.seller_id = '${userId}' AND r.seller_entrance = 0)
+      (r.seller_id = '${userId}' AND r.seller_entrance > -1)
     GROUP BY r.id
-    ORDER BY created DESC;
+    ORDER BY last_created DESC;
     `,
   );
   if (result) {
@@ -159,8 +170,8 @@ const deleteChattingRoom = async (roomId, userId) => {
     `
     UPDATE chatting_room 
       SET 
-        buyer_entrance = IF(buyer_id = '${userId}', 1, 0),
-        seller_entrance = IF(seller_id = '${userId}', 1, 0) 
+        buyer_entrance = IF(buyer_id = '${userId}', -1, buyer_entrance),
+        seller_entrance = IF(seller_id = '${userId}', -1, seller_entrance) 
       WHERE 
         id = ${roomId};`,
   );
