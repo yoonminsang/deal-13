@@ -5,8 +5,36 @@
 @import './mixins';
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
+body {
+  max-width: 25vw;
+  margin: 0 auto;
+  padding: 5vh 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
 * {
   font-family: 'Noto Sans KR';
+}
+
+#app {
+  height: 100%;
+  overflow-y: auto;
+}
+
+#app::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: map.get($colors, 'grey-5');
+}
+
+#app::-webkit-scrollbar {
+  width: 8px;
+  background-color: map.get($colors, 'grey-5');
+}
+
+#app::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: map.get($colors, 'primary-1');
 }
 
 .icon {
@@ -63,7 +91,8 @@
   }
   &-heart {
     background-image: url('../public/images/heart.svg');
-    &.active {
+    &.active,
+    &:hover {
       background-image: url('../public/images/heart-fill.svg');
     }
   }
@@ -86,6 +115,9 @@
   }
   &-more {
     background-image: url('../public/images/more.svg');
+    &:hover {
+      filter: map.get($filter_colors, 'primary-1');
+    }
   }
   &-pin {
     background-image: url('../public/images/pin.svg');
@@ -425,7 +457,7 @@
   background-color: map.get($colors, 'white');
   height: 56px;
   display: grid;
-  grid-template-columns: 1fr 6fr 1fr;
+  grid-template-columns: 1fr 6fr 1.5fr;
   align-items: center;
   justify-content: space-around;
   border-bottom: 1px solid #d7d7d7;
@@ -456,6 +488,9 @@
   }
   &.__text {
     @include text('medium');
+  }
+  .icon-left:hover {
+    filter: map.get($filter_colors, 'primary-1');
   }
 }
 
@@ -554,6 +589,9 @@
     margin-bottom: 4px;
     width: auto;
     cursor: pointer;
+    &:hover {
+      color: map.get($colors, 'primary-1');
+    }
   }
   &__info {
     @include text('small');
@@ -576,7 +614,9 @@
     .icon {
       width: 16px;
       height: 16px;
-      filter: map.get($filter_colors, 'grey-1');
+      &:hover {
+        background-image: url('../public/images/heart.svg');
+      }
     }
     & > p:not(:last-of-type) {
       margin-right: 10px;
@@ -663,6 +703,10 @@
 
 .slidein {
   min-height: 100vh;
+}
+
+.category-list-item:hover > div {
+  filter: map.get($filter_colors, 'primary-1');
 }
 
 @import './Main.scss';

@@ -1,13 +1,24 @@
 import db from '../db/index.js';
 
 // 채팅방 생성
-const insertChattingRoom = async (goodsId, sellerId, buyerId, userId) => {
-  const result = await db.query(
-    `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_read, buyer_read, seller_entrance, buyer_entrance) VALUES(${goodsId}, '${sellerId}', '${buyerId}', 1, 1, 1, 1);`,
-  );
-  if (result) {
-    const room = await selectChattingRoomDetail(result[0].insertId, userId);
-    return room;
+const insertChattingRoom = async (goodsId, sellerId, userId) => {
+  const [check] = await db.query(`
+    SELECT id AS roomId FROM chatting_room WHERE buyer_id = '${userId}' AND goods_id = ${goodsId} AND seller_id = '${sellerId}';
+  `);
+  if (check.length) {
+    return {
+      roomId: check[0].roomId,
+      check: true,
+    };
+  } else {
+    const result = await db.query(
+      `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_read, buyer_read, seller_entrance, buyer_entrance) VALUES(${goodsId}, '${sellerId}', '${userId}', 1, 1, 1, 1);`,
+    );
+    if (result) {
+      return {
+        roomId: result[0].insertId,
+      };
+    }
   }
   return null;
 };

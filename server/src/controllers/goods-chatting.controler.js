@@ -5,9 +5,13 @@ const createChattingRoom = async (req, res) => {
   data.userId = 'zzz';
   const result = await goodChattingService.createChattingRoom(data);
   if (result) {
+    const message = result.check
+      ? '이미 채팅방이 존재합니다.'
+      : '채팅방 등록 성공';
+    delete result.check;
     res.status(200).json({
       result: 0,
-      message: '채팅방 등록 성공',
+      message,
       data: result,
     });
   } else {
@@ -19,7 +23,7 @@ const createChattingRoom = async (req, res) => {
 };
 const selectChattingRoom = async (req, res) => {
   const data = req.query;
-  data.userId = req.user.id;
+  data.userId = 'asdf';
   const result = await goodChattingService.selectChattingRoom(data);
   if (result) {
     res.status(200).json({
@@ -36,7 +40,7 @@ const selectChattingRoom = async (req, res) => {
 };
 const deleteChattingRoom = async (req, res) => {
   const data = req.body;
-  data.userId = req.user.id;
+  data.userId = 'asdf';
   const result = await goodChattingService.deleteChattingRoom(data);
   if (result) {
     res.status(200).json({
@@ -52,7 +56,7 @@ const deleteChattingRoom = async (req, res) => {
 };
 const createChattingMessage = async (req, res) => {
   const data = req.body;
-  data.userId = req.user.id;
+  data.userId = 'asdf';
   const result = await goodChattingService.createChattingMessage(data);
   if (result) {
     res.status(200).json({
@@ -68,7 +72,7 @@ const createChattingMessage = async (req, res) => {
 };
 const updateChattingMessage = async (req, res) => {
   const data = req.body;
-  data.userId = req.user.id;
+  data.userId = 'asdf';
   const result = await goodChattingService.updateChattingMessage(data);
   if (result) {
     res.status(200).json({
@@ -84,7 +88,7 @@ const updateChattingMessage = async (req, res) => {
 };
 const selectChattingRoomDetail = async (req, res) => {
   const data = req.query;
-  data.userId = req.user.id;
+  data.userId = 'asdf';
   const result = await goodChattingService.selectChattingRoomDetail(data);
   if (result) {
     res.status(200).json({
