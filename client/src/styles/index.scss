@@ -280,6 +280,7 @@
 }
 
 .img-box {
+  background-size: cover;
   &-medium {
     @include img-box('medium');
     border: 1px solid map.get($colors, 'grey-3');
