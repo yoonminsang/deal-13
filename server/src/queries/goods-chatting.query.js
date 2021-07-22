@@ -1,9 +1,9 @@
 import db from '../db/index.js';
 
 // 채팅방 생성
-const insertChattingRoom = async (Id, sellerId, buyerId) => {
+const insertChattingRoom = async (goodsId, sellerId, buyerId) => {
   const result = await db.query(
-    `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_read, buyer_read, seller_entrance, buyer_entrance) VALUES(${Id}, '${sellerId}', '${buyerId}', 1, 1, 0, 0);`,
+    `INSERT INTO chatting_room(goods_id, seller_id, buyer_id, seller_read, buyer_read, seller_entrance, buyer_entrance) VALUES(${goodsId}, '${sellerId}', '${buyerId}', 1, 1, 0, 0);`,
   );
   if (result) {
     return result;
@@ -69,7 +69,7 @@ const selectChattingRoomByGoodsId = async (goodsId) => {
 };
 
 // 채팅방 상세
-const selectChaatingRoomDetail = async (roomId, userId) => {
+const selectChattingRoomDetail = async (roomId, userId) => {
   const [result] = await db.query(`
     SELECT 
       r.id as room_id, 
@@ -188,14 +188,12 @@ const updateChattingMessage = async (roomId, userId) => {
   return null;
 };
 
-// 채팅방 목록 조회
-
-export const WishQuery = {
+export const goodsChattingQuery = {
   insertChattingRoom,
   insertChattingMessage,
   selectChattingRoomByGoodsId,
   selectChattingRoomByUserId,
   deleteChattingRoom,
   updateChattingMessage,
-  selectChaatingRoomDetail,
+  selectChattingRoomDetail,
 };
