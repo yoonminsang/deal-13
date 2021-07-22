@@ -18,7 +18,7 @@ const selectChattingRoom = async (data) => {
   if (!goodsId && !userId) return null;
 
   const result = await (goodsId
-    ? goodsChattingQuery.selectChattingRoomByGoodsId(goodsId)
+    ? goodsChattingQuery.selectChattingRoomByGoodsId(goodsId, userId)
     : goodsChattingQuery.selectChattingRoomByUserId(userId));
   return result;
 };

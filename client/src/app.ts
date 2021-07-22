@@ -99,10 +99,7 @@ function App() {
   };
   const historyPush = (): void => {
     const nextUrl = this.state.depth.join('/') || '/';
-    console.log(nextUrl);
-    console.log(location.href);
     history.pushState('', '', nextUrl);
-    console.log(location.href);
   };
   const userReRender = () => {
     this.setState(actionObj.user, { ...this.state });

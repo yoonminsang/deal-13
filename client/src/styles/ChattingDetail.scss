@@ -1,5 +1,8 @@
 .chattingDetail {
   z-index: 1;
+  .js-back {
+    z-index: 1;
+  }
   .icon-logout {
     filter: map.get($filter_colors, 'error');
   }
@@ -22,6 +25,7 @@
     margin-top: 0px;
     display: flex;
     flex-direction: column;
+    min-height: calc(100vh - 200px);
     .chat-item {
       display: flex;
       flex-direction: row;

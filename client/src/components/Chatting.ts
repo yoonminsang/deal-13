@@ -53,7 +53,7 @@ function Chatting({ app, go, back }) {
   ) => {
     last_created = parseTime(last_created);
     return `
-    <div class="js-chattingDetail${room_id} render chat-list">
+    <div class="js-chattingDetail#${room_id} render chat-list">
       <div class="chat-list-item">
         <div>
           <p class="chat-list-item__name">${partner_id}</p>
