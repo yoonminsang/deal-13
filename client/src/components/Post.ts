@@ -41,9 +41,7 @@ function Post({ app, goMain, go }) {
         goodsId: this.state.goods.id,
       }),
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ result, message, data }) => {
         if (result == 0) {
           this.setState(stateObj.goods, {
@@ -66,9 +64,7 @@ function Post({ app, goMain, go }) {
         state,
       }),
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ result, message, data }) => {
         console.log(message);
         if (result == 0) {
@@ -105,9 +101,7 @@ function Post({ app, goMain, go }) {
           goodsId: this.state.goods.id,
         }),
       })
-        .then((res) => {
-          if (res.ok || res.status === 409) return res.json();
-        })
+        .then((res) => res.json())
         .then(({ result, message }) => {
           console.log(message);
           if (result == 0) {
@@ -150,9 +144,7 @@ function Post({ app, goMain, go }) {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ data, error }) => {
         if (error) alert(error);
         else if (data) {

@@ -60,9 +60,7 @@ function Login({ app, back, authProcess }) {
           password,
         }),
       })
-        .then((res) => {
-          if (res.ok || res.status === 409) return res.json();
-        })
+        .then((res) => res.json())
         .then(({ user, error }) => {
           if (error) alert(error);
           else if (user) {

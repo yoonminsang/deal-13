@@ -165,9 +165,7 @@ function Write({ app, goMain }) {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ data, error }) => {
         if (error) alert(error);
         else if (data) {

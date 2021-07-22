@@ -162,7 +162,6 @@ function Main({ app, setPrimaryRegion }) {
             changePost,
             ...this.state.post.slice(index + 1),
           ];
-          console.log(nextPost);
           this.setState(stateObj.post, nextPost);
         }
       })
@@ -180,12 +179,8 @@ function Main({ app, setPrimaryRegion }) {
       const id = closest.classList[0].slice(8);
       if (classList.contains('active')) {
         postIsWish('DELETE', id);
-        // this.getApi();
-        // classList.remove('active');
       } else {
         postIsWish('POST', id);
-        // this.getApi();
-        // classList.add('active');
       }
       e.stopPropagation();
     } else if (renderClosest && renderClosest.classList.contains('render')) {

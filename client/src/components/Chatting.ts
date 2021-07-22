@@ -78,9 +78,7 @@ function Chatting({ app, go, back }) {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        if (res.ok) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ result, data, message }) => {
         console.log(message);
         if (result === 0) {

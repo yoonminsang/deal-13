@@ -160,9 +160,7 @@ function App() {
           'Content-Type': 'application/json',
         },
       })
-        .then((res) => {
-          if (res.ok || res.status === 401) return res.json();
-        })
+        .then((res) => res.json())
         .then(({ user, error }) => {
           if (user) authProcess(user);
           if (error) console.log(error);
@@ -321,9 +319,7 @@ function App() {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        if (res.ok) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ data, error }) => {
         if (error) alert(error);
         if (data) {
