@@ -11,6 +11,18 @@ const insertChattingRoom = async (Id, sellerId, buyerId) => {
   return null;
 };
 
+// 채팅 메세지 생성
+const insertChattingMessage = async (content, roomId, userId) => {
+  const result = await db.query(
+    `INSERT INTO chatting_message(content, room_id, user_id) VALUES('${content}', ${roomId}, '${userId}');`,
+  );
+  if (result) {
+    return result;
+  }
+  return null;
+};
+
 export const WishQuery = {
   insertChattingRoom,
+  insertChattingMessage,
 };
