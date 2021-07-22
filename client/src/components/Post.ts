@@ -197,7 +197,9 @@ function Post({ app, goMain, go }) {
     const chatting_count = 0; // 임시
 
     return `
-    <div class="img-box-large" style="background-image:url(${urls[0]})">
+    <div class="img-box-large gradient" style="background-image:url(${
+      urls[0]
+    })">
       <ul class="img-navigation">${tab}</ul>
     </div>
     <div class="goods-inner">

@@ -81,7 +81,7 @@ const selectChattingRoomByGoodsId = async (goodsId) => {
 };
 
 // 채팅방 상세
-const selectChattingRoomDetail = async (roomId, userId) => {
+const selectChattingRoomDetail = async (roomId, lastIndex, userId) => {
   const [result] = await db.query(`
     SELECT 
       r.id as room_id, 
@@ -113,14 +113,10 @@ const selectChattingRoomDetail = async (roomId, userId) => {
       WHERE
         room_id = ${roomId}
       AND
-        id >= ${
-          result[0].isSeller
-            ? result[0].seller_entrance
-            : result[0].buyer_entrance
-        }
+        id > ${lastIndex}
     `);
     result[0].chattingList = chattingList;
-    return result;
+    return result[0];
   }
   return null;
 };
