@@ -10,6 +10,7 @@ router.get('/list/seller', goodsController.findGoodsByUserId);
 router.get('/list/wish', goodsController.findGoodsByUserWish);
 router.post('/', goodsController.createGoods);
 router.put('/', goodsController.updateGoods);
+router.get('/menu', goodsController.findGoodsForMenu);
 router.delete('/', goodsController.deleteGoodsViewState);
 
 export default router;

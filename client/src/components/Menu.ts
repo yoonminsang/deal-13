@@ -2,13 +2,14 @@
 
 interface IProduct {
   id: number;
-  name: string;
-  region: string;
-  time: string;
-  price: string;
-  chat: number;
-  heart: boolean;
-  url: string;
+  title: string;
+  region_name: string;
+  created: string;
+  price: number | string;
+  thumbnail: string;
+  chat_count?: number;
+  wish_count?: number;
+  isWish: boolean;
 }
 
 interface IChat {
@@ -45,49 +46,6 @@ const createGNB = (index: number): string => {
     `;
 };
 
-const tmpProductList = [
-  {
-    id: 0,
-    name: '다용도 캐비넷',
-    region: '역삼동',
-    time: '방금 전',
-    price: '15,000원',
-    chat: 3,
-    heart: false,
-    url: '',
-  },
-  {
-    id: 1,
-    name: '여행용 치약 칫솔 세트',
-    region: '방이동',
-    time: '1일 전',
-    price: '0원',
-    chat: 0,
-    heart: true,
-    url: '',
-  },
-  {
-    id: 2,
-    name: '버거킹 와퍼 기프티콘',
-    region: '법정동',
-    time: '1일 전',
-    price: '3,000원',
-    chat: 4,
-    heart: true,
-    url: '',
-  },
-  {
-    id: 3,
-    name: '롯데타워 아쿠아리움 연간 회원권',
-    region: '등촌동',
-    time: '3일 전',
-    price: '80,000원',
-    chat: 11,
-    heart: true,
-    url: '',
-  },
-];
-
 const tmpChatList: IChat[] = [
   {
     id: 0,
@@ -123,8 +81,9 @@ const tmpChatList: IChat[] = [
 function Menu({ app }) {
   this.state = {
     tap: 0,
-    chatList: tmpChatList,
-    productList: tmpProductList,
+    chatList: [],
+    sellList: [] as IProduct[],
+    wishList: [] as IProduct[],
   };
 
   const $target = document.createElement('div');
@@ -153,13 +112,13 @@ function Menu({ app }) {
       case 1:
         return createChatBody();
       case 2:
-        return createHeartBody();
+        return createWishBody();
     }
   };
 
   const çreteSaleBody = (): string => {
     return (
-      tmpProductList.reduce(
+      this.state.sellList.reduce(
         (acc, cur) => acc + createProductItem(cur, true),
         '<div class="product-list">',
       ) + '</div>'
@@ -175,31 +134,66 @@ function Menu({ app }) {
     );
   };
 
-  const createHeartBody = (): string => {
+  const createWishBody = (): string => {
     return (
-      this.state.productList.reduce(
-        (acc, cur) => (cur.heart ? acc + createProductItem(cur, false) : acc),
+      this.state.wishList.reduce(
+        (acc, cur) => acc + createProductItem(cur, false),
         '<div class="product-list">',
       ) + '</div>'
     );
   };
 
+  const getMenuItems = () => {
+    fetch('/api/goods/menu', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => (res.ok || res.status === 401) && res.json())
+      .then((data) => this.setState('', '', '1', data.data));
+  };
+
   const createProductItem = (product: IProduct, sale: boolean): string => {
+    let {
+      id,
+      thumbnail,
+      title,
+      region_name,
+      price,
+      chat_count,
+      wish_count,
+      isWish,
+      created,
+    } = product;
+    price =
+      typeof price === 'number'
+        ? price.toLocaleString('ko-KR') + '원'
+        : '가격미정';
+
+    const chatElm = chat_count
+      ? `<div class="icon icon-message"></div><p>${chat_count}</p>`
+      : '';
+    const wishElm = wish_count
+      ? `<div class="icon icon-heart"></div><p>${wish_count}</p>`
+      : '';
     return `
-      <div class="product-list-item">
-        <div class="img-box-large"></div>
+      <div class="js-post#${id} render product-list-item">
+        <div class="img-box-large" style="background-image: url(${thumbnail})">
+        </div>
         <div class="product-list-item__content">
-          <div class="icon ${
-            sale ? 'icon-more' : 'icon-heart'
-          } product-list-item__heart active"></div>
-          <p class="product-list-item__title">${product.name}</p>
-          <p class="product-list-item__info">${product.region} - ${
-      product.time
-    }</p>
-          <p class="product-list-item__price">${product.price}</p>
+          <div class="
+            ${
+              sale
+                ? 'js-more icon icon-more product-list-item__heart'
+                : 'js-wish icon icon-heart product-list-item__heart active'
+            }
+          " data-id="${id}"></div>
+          <p class="product-list-item__title">${title}</p>
+          <p class="product-list-item__info">${region_name} - ${created}</p>
+          <p class="product-list-item__price">${price}</p>
           <div class="product-list-item__bottom">
-            <div class="icon icon-message"></div>
-            <p>${product.chat ? product.chat : ''}</p>
+            ${chatElm}${wishElm}
           </div>
         </div>
       </div>
@@ -230,31 +224,90 @@ function Menu({ app }) {
 
   const handleClickEvent = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
-    if (target.classList.contains('icon-heart')) {
-      const name = target.nextElementSibling.textContent;
-      const value = this.state.productList.filter(
-        (product) => product.name !== name,
-      );
-      this.setState('productList', value);
-    } else if (target.classList.contains('icon-more')) {
+    if (target.classList.contains('js-wish')) {
+      const id = Number(target.dataset.id);
+      const value = this.state.wishList.filter((goods) => goods.id !== id);
+      deleteWish(id, value);
+    } else {
       createPopup(target);
     }
   };
 
-  const createPopup = (target: HTMLElement) => {
-    const output = `
-      <ul class="drop-down-list product-popup">
-        <li class="drop-down-item btn-product_edit">수정하기</li>
-        <li class="drop-down-item btn-product_delete">삭제하기</li>
-      </ul>
-    `;
+  const deleteWish = (id, nextWishList) => {
+    console.log('next');
+    console.log(nextWishList);
+    fetch('/api/goods-wish', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goodsId: id,
+      }),
+    })
+      .then((res) => {
+        if (res.ok || res.status === 409) return res.json();
+      })
+      .then(({ result }) => {
+        if (Number(result) === 0) {
+          this.setState('wishList', nextWishList);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   };
 
-  this.setState = (name, value) => {
-    this.state = {
-      ...this.state,
-      [name]: value,
-    };
+  const deleteProduct = () => {
+    fetch('/api/goods', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        goodsId: this.state.goods.id,
+      }),
+    })
+      .then((res) => {
+        if (res.ok || res.status === 409) return res.json();
+      })
+      .then(({ result, message }) => {
+        if (result == 0) {
+          this.rerender();
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  const createPopup = (target: HTMLElement) => {
+    document.querySelector('.product-popup')?.remove();
+    const output = `
+      <ul class="drop-down-list product-popup modal">
+        <li class="drop-down-item btn-product_edit js-modify#4">수정하기</li>
+        <li class="drop-down-item btn-product_delete js-delete">삭제하기</li>
+      </ul>
+    `;
+    target.innerHTML = output;
+  };
+
+  this.setState = (name, value, type = 'common', listObject) => {
+    if (type === 'common') {
+      this.state = {
+        ...this.state,
+        [name]: value,
+      };
+    } else {
+      for (const key of Object.keys(listObject)) {
+        if (listObject[key] === null) listObject[key] = [];
+      }
+      this.state = {
+        ...this.state,
+        ...listObject,
+      };
+    }
+    console.log(this.state);
     this.rerender();
   };
 
@@ -262,6 +315,7 @@ function Menu({ app }) {
     $target.className = 'menu';
     $target.innerHTML = createHeader() + createGNB(this.state.tap);
     app.appendChild($target);
+    getMenuItems();
     rerenderMenuBody();
     const gnbContainer: HTMLDivElement =
       document.querySelector('.gnb-container');
@@ -271,11 +325,16 @@ function Menu({ app }) {
 
   this.rerender = rerenderMenuBody;
   $target.addEventListener('click', (e) => {
-    // if (isBackButton(e) && back()) {
-    //   return;
-    // }
-    handleClickEvent(e);
-    this.rerender();
+    const target = e.target as HTMLElement;
+    console.log(target);
+    if (
+      target.classList.contains('js-wish') ||
+      target.classList.contains('js-more')
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleClickEvent(e);
+    }
   });
 }
 export default Menu;
