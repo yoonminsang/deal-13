@@ -136,7 +136,6 @@ function Post({ app, goMain }) {
         if (res.ok || res.status === 409) return res.json();
       })
       .then(({ data, error }) => {
-        console.log('post get api', data);
         if (error) alert(error);
         else if (data) {
           this.setState(stateObj.goods, data);
@@ -191,8 +190,7 @@ function Post({ app, goMain }) {
     const chatting_count = 0; // 임시
 
     return `
-    <div class="img-box-large">
-    <img class="image" src="${urls[0]}" alt="이미지"/>
+    <div class="img-box-large" style="background-image:url(${urls[0]})">
       <ul class="img-navigation">${tab}</ul>
     </div>
     <div class="goods-inner">
@@ -222,7 +220,7 @@ function Post({ app, goMain }) {
         ${
           this.state.isAuthor
             ? `<button class="js-chatting#${this.state.goods.id} render btn-medium">채팅 목록보기</button>`
-            : '<button class="js-chattingDetail#${id} render btn-medium">문의하기</button>'
+            : `<button class="js-chattingDetail#${this.state.goods.id} render btn-medium">문의하기</button>`
         }
       </div>
     </div>
@@ -245,17 +243,14 @@ function Post({ app, goMain }) {
 
   this.setState = (nextStateName, nextState) => {
     this.state = { ...this.state, [nextStateName]: nextState };
-    console.log('post setstate', nextStateName, nextState, this.state);
     this.rerender(nextStateName);
   };
 
   this.render = (dbId) => {
-    console.log('post render', dbId);
     getApi(dbId, () => setTimeout(() => $target.classList.add('slidein'), 0));
   };
 
   this.rerender = (changeStateName) => {
-    console.log(changeStateName);
     switch (changeStateName) {
       case stateObj.isAuthor:
         const $forAuthor = $target.querySelector('.for-author');
@@ -294,17 +289,19 @@ function Post({ app, goMain }) {
         return;
       case stateObj.tab:
         const $tabNav = $target.querySelector('.img-navigation');
-        const $img: HTMLImageElement = $target.querySelector('.image');
+        const $img: HTMLImageElement = $target.querySelector('.img-box-large');
         $tabNav.innerHTML = this.state.goods.urls
           .map((_, i) => makeTab(i))
           .join('');
-        $img.src = this.state.goods.urls[this.state.tab];
+        $img.style.backgroundImage = `url(${
+          this.state.goods.urls[this.state.tab]
+        })`;
+        return;
       case stateObj.saleState:
         const $dropDownSale = $target.querySelector('.drop-down-sale');
         if (this.state.isAuthor) {
           const $btnStatus = $target.querySelector('.btn-status');
           const $span = $btnStatus.firstElementChild;
-          console.log($btnStatus, $span, saleState[this.state.sale_state]);
           $span.textContent = saleState[this.state.saleState];
           $dropDownSale.innerHTML = [0, 1, 2]
             .map((v) => {

@@ -1,0 +1,19 @@
+.chatting {
+  .chat-list-item {
+    .chat-list-item__info {
+      font-size: 12px;
+      line-height: 16px;
+      color: map.get($colors, 'grey-1');
+    }
+    .chat-badge {
+      height: 20px;
+      margin-left: auto;
+      margin-bottom: 5px;
+    }
+    .chat-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+  }
+}

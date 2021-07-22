@@ -85,8 +85,8 @@ function Write({ app, goMain }) {
 
   const makeImgItem = (index, url) => {
     return `
-    <div class="btn-img active" data-index="${index}">
-      <img src="${url}"/>
+    <div class="btn-img active" data-index="${index}" style="background-image:url(${url})">
+
       <div class="js-delete btn-img__close">
         <div class="icon icon-close"></div>
       </div>
@@ -95,7 +95,8 @@ function Write({ app, goMain }) {
   };
 
   const priceValidation = (value) => {
-    if (value === null) return value;
+    if (typeof value === 'number') return value;
+    console.log(value);
     value = value.replace(/[^0-9]/g, '');
     value = value.slice(0, 9);
     if (value.length > 0)
@@ -140,7 +141,6 @@ function Write({ app, goMain }) {
       urls,
     };
     if (type === 'PUT') obj['id'] = this.state.id;
-    console.log(obj);
     fetch(`/api/goods`, {
       method: `${type}`,
       headers: {
@@ -169,7 +169,6 @@ function Write({ app, goMain }) {
         if (res.ok || res.status === 409) return res.json();
       })
       .then(({ data, error }) => {
-        console.log('update get api', data);
         if (error) alert(error);
         else if (data) {
           this.setState(stateObj.id, data.id);
@@ -239,7 +238,6 @@ function Write({ app, goMain }) {
       })
         .then((res) => res.json())
         .then(({ data }) => {
-          console.log(data);
           this.setState(stateObj.urls, [...this.state.urls, ...data]);
         })
         .catch((e) => {
@@ -316,7 +314,6 @@ function Write({ app, goMain }) {
 
   this.setState = (nextStateName, nextState) => {
     this.state = { ...this.state, [nextStateName]: nextState };
-    console.log(this.state);
     this.rerender(nextStateName);
   };
 
@@ -337,7 +334,6 @@ function Write({ app, goMain }) {
   // user랑 primaryRegion을 rerender를 계속하면 낭비인듯
   // 그냥 render될때만 불러오면 되는데
   this.rerender = (changeStateName) => {
-    console.log(changeStateName, stateObj.mode === changeStateName);
     switch (changeStateName) {
       case stateObj.user:
       case stateObj.primaryRegion:

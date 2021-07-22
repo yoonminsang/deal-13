@@ -586,8 +586,8 @@
 
 .chat-list-item {
   height: 72px;
-  padding: 16px 0 8px 0;
-  margin: 0 16px 8px 16px;
+  padding: 16px 16px 8px 16px;
+  margin: 0 0 8px 0;
   background-color: map.get($colors, 'white');
   border-bottom: 1px solid map.get($colors, 'grey-3');
   display: grid;
@@ -678,3 +678,5 @@
 @import './menu.scss';
 @import './Write.scss';
 @import './Post.scss';
+@import './ChattingDetail.scss';
+@import './Chatting.scss';

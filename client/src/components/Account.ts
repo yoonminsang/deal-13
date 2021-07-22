@@ -38,9 +38,6 @@ function Account({ app, back, authProcess }) {
       .then((res) => {
         if (res.ok) {
           authProcess(null);
-          // back();
-          // localStorage.removeItem('user');
-          // console.log('로그아웃');
         } else console.error('로그아웃 에러');
       })
       .catch((e) => {

@@ -88,8 +88,7 @@ function Main({ app, setPrimaryRegion }) {
       : '';
     return `
     <div class="js-post#${id} render product-list-item">
-      <div class="img-box-large">
-        <img src="${thumbnail}" alt="이미지">
+      <div class="img-box-large" style="background-image:url(${thumbnail})">
       </div>
       <div class="product-list-item__content">
         <div class="js-wish  icon icon-heart product-list-item__heart ${
@@ -135,7 +134,6 @@ function Main({ app, setPrimaryRegion }) {
       )
         .then((res) => res.json())
         .then(({ data, text }) => {
-          console.log('main get api', data);
           this.setState(stateObj.post, data);
           if (text) console.log(text);
         })

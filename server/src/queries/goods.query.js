@@ -97,7 +97,7 @@ const selectGoodsByUserId = async (userId) => {
 const selectGoodsByWish = async (userId) => {
   const result = await db.query(
     `
-      SELECT distinct g.id, g.title, g.content, g.price, 
+      SELECT g.id, g.title, g.content, g.price, 
       g.thumbnail, g.view_count, g.view_state, 
       g.sale_state, g.user_id, g.region_id, g.category_id, 
       r.region as region_name, 

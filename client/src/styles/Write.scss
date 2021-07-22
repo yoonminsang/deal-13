@@ -13,6 +13,9 @@
         .btn-img {
           min-width: 76px;
           min-height: 76px;
+          background-size: contain;
+          background-position: 50%;
+          background-repeat: no-repeat;
           ~ div {
             padding: 0;
           }

@@ -99,7 +99,10 @@ function App() {
   };
   const historyPush = (): void => {
     const nextUrl = this.state.depth.join('/') || '/';
+    console.log(nextUrl);
+    console.log(location.href);
     history.pushState('', '', nextUrl);
+    console.log(location.href);
   };
   const userReRender = () => {
     this.setState(actionObj.user, { ...this.state });
@@ -235,7 +238,6 @@ function App() {
         const dbId = this.state.depth[this.state.depth.length - 1].slice(
           idx + 1,
         );
-        console.log(name);
         // case문을 if문으로 바꿀까 고민중
         switch (name) {
           case renderObj.category:
@@ -264,7 +266,7 @@ function App() {
             return post.render(dbId);
           case renderObj.chatting:
             if (!this.state.user) return goLogin();
-            return chatting.render();
+            return chatting.render(dbId);
           case renderObj.chattingDetail:
             if (!this.state.user) return goLogin();
             return chattingDetail.render(dbId);
@@ -299,8 +301,6 @@ function App() {
         account.setState(actionObj.user, this.state.user);
         region.setState(actionObj.user, this.state.user);
         write.setState(actionObj.user, this.state.user);
-        post.setState(actionObj.user, this.state.user);
-        // 여기다가 user 필요한 컴포넌트 전부 같은방식
         return;
       case actionObj.category:
         main.setState(actionObj.category, this.state.category);
@@ -342,6 +342,14 @@ function App() {
       else setTimeout(() => go(parse[i]), 300);
     }
   };
+
+  const backChange = () => {
+    window.onpopstate = (e) => {
+      e.preventDefault();
+      back();
+    };
+  };
+
   const init = (): void => {
     document.querySelector('.loading').classList.add('active-hard');
     setTimeout(
@@ -350,13 +358,8 @@ function App() {
     );
     getCategory();
     autoLogin(getUrl);
+    backChange();
   };
   init();
-  // 새로고침이나 url 직접 이동시 유효성 검사
-  // 그냥 직접 순서를 배열로 주는방법(효율적x 다른방법 안보임)
-  // 거기서 user로 검사를 하고 틀리다면 goHome 또는 goLogin 함수 호출
-  // 그다음에 for문에서 break
-  // 슬라이드되는 거는 action을 하나줘서 바로 나오게 해야될듯?
-  // 또 생각할게 /login/signup 에서 나타나는 순서.
 }
 new App();
