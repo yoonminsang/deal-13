@@ -1,5 +1,4 @@
 import db from '../db/index.js';
-
 // 채팅방 생성
 const insertChattingRoom = async (goodsId, sellerId, userId) => {
   const [check] = await db.query(`
@@ -22,7 +21,6 @@ const insertChattingRoom = async (goodsId, sellerId, userId) => {
   }
   return null;
 };
-
 // 채팅 메세지 생성
 const insertChattingMessage = async (content, roomId, userId) => {
   const result = await db.query(
@@ -33,9 +31,8 @@ const insertChattingMessage = async (content, roomId, userId) => {
   }
   return null;
 };
-
 // 채팅방 목록 조회, 상품 id (상품 상세에서 채팅 목록 보기)
-const selectChattingRoomByGoodsId = async (goodsId) => {
+const selectChattingRoomByGoodsId = async (goodsId, userId) => {
   const [result] = await db.query(
     `
     SELECT 
@@ -46,7 +43,7 @@ const selectChattingRoomByGoodsId = async (goodsId) => {
         SELECT count(distinct m2.id) 
         FROM chatting_message m2
         WHERE m2.id > r.seller_read
-        AND m2.user_id = r.buyer_id
+        AND m2.user_id = '${userId}'
       ) AS chat_count,
       (
         SELECT m.content
@@ -79,7 +76,6 @@ const selectChattingRoomByGoodsId = async (goodsId) => {
   }
   return null;
 };
-
 // 채팅방 상세
 const selectChattingRoomDetail = async (roomId, lastIndex, userId) => {
   const [result] = await db.query(`
@@ -106,21 +102,32 @@ const selectChattingRoomDetail = async (roomId, lastIndex, userId) => {
     result[0].isSeller = userId === result[0].seller_id;
     if (result[0].isSeller && result[0].seller_entrance === -1) return null;
     if (!result[0].isSeller && result[0].buyer_entrance === -1) return null;
-    const [chattingList] = await db.query(`
+    if (!lastIndex) {
+      const [chattingList] = await db.query(`
       SELECT id, user_id, content
       FROM 
-        chatting_message
+      chatting_message
       WHERE
+      room_id = ${roomId}
+      `);
+      result[0].chattingList = chattingList;
+      return result[0];
+    } else {
+      const [chattingList] = await db.query(`
+        SELECT id, user_id, content
+        FROM 
+        chatting_message
+        WHERE
         room_id = ${roomId}
-      AND
+        AND
         id > ${lastIndex}
-    `);
-    result[0].chattingList = chattingList;
-    return result[0];
+      `);
+      result[0].chattingList = chattingList;
+      return result[0];
+    }
   }
   return null;
 };
-
 // 채팅방 목록 조회, 유저 id (메뉴에서 채팅 목록 보기)
 const selectChattingRoomByUserId = async (userId) => {
   const [result] = await db.query(
@@ -170,7 +177,6 @@ const selectChattingRoomByUserId = async (userId) => {
   }
   return null;
 };
-
 // 채팅방 나가기
 const deleteChattingRoom = async (roomId, userId) => {
   const result = await db.query(
@@ -187,7 +193,6 @@ const deleteChattingRoom = async (roomId, userId) => {
   }
   return null;
 };
-
 // 채팅방 메세지 전송 또는 입장 시, 읽은 메세지 갱신
 const updateChattingMessage = async (roomId, userId) => {
   const result = await db.query(
@@ -205,7 +210,6 @@ const updateChattingMessage = async (roomId, userId) => {
   }
   return null;
 };
-
 export const goodsChattingQuery = {
   insertChattingRoom,
   insertChattingMessage,

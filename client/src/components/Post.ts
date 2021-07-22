@@ -41,9 +41,7 @@ function Post({ app, goMain, go }) {
         goodsId: this.state.goods.id,
       }),
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ result, message, data }) => {
         if (result == 0) {
           this.setState(stateObj.goods, {
@@ -66,9 +64,7 @@ function Post({ app, goMain, go }) {
         state,
       }),
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ result, message, data }) => {
         console.log(message);
         if (result == 0) {
@@ -105,9 +101,7 @@ function Post({ app, goMain, go }) {
           goodsId: this.state.goods.id,
         }),
       })
-        .then((res) => {
-          if (res.ok || res.status === 409) return res.json();
-        })
+        .then((res) => res.json())
         .then(({ result, message }) => {
           console.log(message);
           if (result == 0) {
@@ -150,15 +144,14 @@ function Post({ app, goMain, go }) {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ data, error }) => {
         if (error) alert(error);
         else if (data) {
+          console.log('post getapi', data);
           this.setState(stateObj.goods, data);
-          this.setState(stateObj.isWish, data.isWish);
           this.setState(stateObj.isAuthor, data.isAuthor);
+          this.setState(stateObj.isWish, data.isWish);
           this.setState(stateObj.saleState, data.sale_state);
           fn();
         }
@@ -203,7 +196,6 @@ function Post({ app, goMain, go }) {
     } = this.state.goods;
     const price = parsePrice(this.state.goods.price);
     const chatting_count = 0; // 임시
-
     return `
     <div class="img-box-large gradient" style="background-image:url(${
       urls[0]
@@ -234,11 +226,7 @@ function Post({ app, goMain, go }) {
         <div class="js-wish icon icon-heart"></div>
         <div class="separator"></div>
         <div class="product-bar__price">${price}</div>
-        ${
-          this.state.isAuthor
-            ? `<button class="js-chatting#${this.state.goods.id} render btn-medium">채팅 목록보기</button>`
-            : `<button class="js-chattingDetail btn-medium">문의하기</button>`
-        }
+        <div class="js-chat-btn"></div>
       </div>
     </div>
     `;
@@ -246,6 +234,18 @@ function Post({ app, goMain, go }) {
 
   const makeSaleList = (num) => {
     return `<li class="drop-down-item js-status-item" data-state=${num}>${saleState[num]}</li>`;
+  };
+
+  const initializeState = () => {
+    this.state = {
+      user: undefined,
+      goods: undefined,
+      tab: 0,
+      isAuthor: undefined,
+      isWish: undefined,
+      saleState: undefined,
+      slaeModal: false,
+    };
   };
 
   this.state = {
@@ -264,6 +264,8 @@ function Post({ app, goMain, go }) {
   };
 
   this.render = (dbId) => {
+    console.log('post render', this.state);
+    initializeState();
     // this.setState(stateObj.tab, 0);
     // this.setState(stateObj.isAuthor, undefined);
     // this.setState(stateObj.saleState, undefined);
@@ -271,11 +273,12 @@ function Post({ app, goMain, go }) {
   };
 
   this.rerender = (changeStateName) => {
-    console.log(changeStateName, this.state);
+    console.log('post rerender', changeStateName, this.state);
     switch (changeStateName) {
       case stateObj.isAuthor:
         const $forAuthor = $target.querySelector('.for-author');
         const $forStatus = $target.querySelector('.for-status');
+        const $chatBtn = $target.querySelector('.js-chat-btn');
         if (this.state.isAuthor) {
           $forAuthor.innerHTML = `
           <div class="js-modal icon icon-more"></div>
@@ -291,6 +294,11 @@ function Post({ app, goMain, go }) {
           <ul class="drop-down-sale drop-down-list blind"></ul>
           `;
         }
+        $chatBtn.innerHTML = `${
+          this.state.isAuthor
+            ? `<button class="js-chatting#${this.state.goods.id} render btn-medium">채팅 목록보기</button>`
+            : `<button class="js-chattingDetail btn-medium">문의하기</button>`
+        }`;
         return;
       case stateObj.isWish:
         const $wish = $target.querySelector('.js-wish');

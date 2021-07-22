@@ -1,6 +1,7 @@
 import { parsePrice } from '../lib/parsePrice';
 
 function ChattingDetail({ app, back }) {
+  let timeId;
   interface StateObj {
     user: string;
     modal: string;
@@ -102,7 +103,8 @@ function ChattingDetail({ app, back }) {
     }
   });
 
-  $target.addEventListener('submit', () => {
+  $target.addEventListener('submit', (e) => {
+    e.preventDefault();
     const content = $content.value;
     fetch(`/api/goods-chatting/message`, {
       method: 'POST',
@@ -117,6 +119,7 @@ function ChattingDetail({ app, back }) {
       .then((res) => res.json())
       .then(({ message }) => {
         console.log(message);
+        $content.value = '';
       })
       .catch((e) => {
         console.log(e);
@@ -139,12 +142,9 @@ function ChattingDetail({ app, back }) {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        if (res.ok) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ result, data, message }) => {
         console.log(message);
-        data = data[0];
         if (result === 0) {
           console.log(data, '나중에 삭제');
           const price = parsePrice(data.price);
@@ -164,7 +164,48 @@ function ChattingDetail({ app, back }) {
   };
 
   const getChatting = () => {
-    // 디비 수정하고 구현
+    const loc = location.href.split('/');
+    if (
+      loc[loc.length - 1].slice(0, loc[loc.length - 1].indexOf('#')) !==
+      'chattingDetail'
+    )
+      clearInterval(timeId);
+
+    fetch(
+      `/api/goods-chatting/detail?roomId=${this.state.roomId}&lastIndex=${
+        this.state.chatting[this.state.chatting.length - 1].id
+      }`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+      .then((res) => res.json())
+      .then(({ result, data, message }) => {
+        console.log(message);
+        if (result === 0) {
+          if (data.chattingList.length) {
+            const $fragment = document.createDocumentFragment();
+            data.chattingList.forEach((v) => {
+              const { user_id, content } = v;
+              $fragment.appendChild(
+                makeChatInner(content, user_id === this.state.user.id),
+              );
+            });
+            $chatInner.appendChild($fragment);
+          }
+          this.state = {
+            ...this.state,
+            chatting: [...this.state.chatting, ...data.chattingList],
+          };
+          // this.setState(stateObj.chatting, data.chattingList);
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   this.state = {
@@ -183,6 +224,7 @@ function ChattingDetail({ app, back }) {
     $chatInner.innerHTML = '';
     app.appendChild($target);
     getApi(dbId, () => setTimeout(() => $target.classList.add('slidein'), 0));
+    timeId = setInterval(() => getChatting(), 500);
   };
 
   this.rerender = (changeStateName) => {
@@ -197,13 +239,15 @@ function ChattingDetail({ app, back }) {
         return;
       case stateObj.chatting:
         const $fragment = document.createDocumentFragment();
-        this.state.chatting.forEach((v) => {
-          const { user_id, content } = v;
-          $fragment.appendChild(
-            makeChatInner(content, user_id === this.state.user),
-          );
-        });
-        $chatInner.appendChild($fragment);
+        if (this.state.chatting) {
+          this.state.chatting.forEach((v) => {
+            const { user_id, content } = v;
+            $fragment.appendChild(
+              makeChatInner(content, user_id === this.state.user.id),
+            );
+          });
+          $chatInner.appendChild($fragment);
+        }
         return;
       default:
         console.log('state name is not found');

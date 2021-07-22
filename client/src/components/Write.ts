@@ -165,9 +165,7 @@ function Write({ app, goMain }) {
         'Content-Type': 'application/json',
       },
     })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
+      .then((res) => res.json())
       .then(({ data, error }) => {
         if (error) alert(error);
         else if (data) {
@@ -318,12 +316,23 @@ function Write({ app, goMain }) {
   };
 
   this.render = (dbId, modify) => {
+    this.state = {
+      user: this.state.user,
+      primaryRegion: undefined,
+      urls: [],
+      category: undefined,
+      selectCategory: null,
+      thumbnail: null,
+      mode: undefined,
+      id: undefined,
+    };
     if (modify) {
       getApi(dbId);
     } else {
       $title.value = '';
       $price.value = '';
       $content.value = '';
+
       $imgInner.innerHTML = makeImgBtn(0);
       this.setState(stateObj.mode, mode.write);
     }
