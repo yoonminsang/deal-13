@@ -172,6 +172,9 @@ const updateGoods = async ({
   if (result) {
     const urlQuery = urls.map((url) => `('${url}', ${id})`);
     if (urlQuery.length > 0) {
+      const destroyOldPhoto = await db.query(
+        `DELETE FROM goods_photo WHERE goods_id = ${id}`,
+      );
       const photoInsertResult = await db.query(
         `INSERT INTO goods_photo(url, goods_id) VALUES${urlQuery.join(',')}`,
       );
