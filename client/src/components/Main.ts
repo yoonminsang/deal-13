@@ -66,6 +66,7 @@ function Main({ app, setPrimaryRegion }) {
     wish_count,
     isWish,
     created,
+    sale_state,
   }) => {
     price = parsePrice(price);
     created = parseTime(created);
@@ -77,7 +78,9 @@ function Main({ app, setPrimaryRegion }) {
       ? `<div class="icon icon-heart"></div><p>${wish_count}</p>`
       : '';
     return `
-    <div class="js-post#${id} render product-list-item">
+    <div class="js-post#${id} render product-list-item ${
+      Number(sale_state) === 2 ? 'sold-out' : ''
+    }">
       <div class="img-box-large" style="background-image:url(${thumbnail})">
       </div>
       <div class="product-list-item__content">
@@ -86,7 +89,14 @@ function Main({ app, setPrimaryRegion }) {
         }"></div>
         <p class="product-list-item__title">${title}</p>
         <p class="product-list-item__info">${region_name} - ${created}</p>
-        <p class="product-list-item__price">${price}</p>
+        <p class="product-list-item__price">
+        ${
+          Number(sale_state) === 2
+            ? `<span class="label-state">거래 완료</span>`
+            : ''
+        }
+        <span>${price}</span>
+        </p>
         <div class="product-list-item__bottom">
           ${chatElm}${wishElm}
         </div>
@@ -245,6 +255,7 @@ function Main({ app, setPrimaryRegion }) {
               wish_count,
               isWish,
               created,
+              sale_state,
             }) =>
               makeListItem({
                 id,
@@ -256,6 +267,7 @@ function Main({ app, setPrimaryRegion }) {
                 wish_count,
                 isWish,
                 created,
+                sale_state,
               }),
           )
           .join('');

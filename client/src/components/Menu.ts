@@ -14,12 +14,12 @@ interface IProduct {
 }
 
 interface IChat {
-  id: number;
-  name: string;
-  time: string;
-  message: string;
-  url: string;
-  chatCount: number;
+  room_id: number;
+  partner_id: string;
+  last_created: string;
+  last_content: string;
+  thumbnail: string;
+  chat_count: number;
 }
 
 const createHeader = (): string => {
@@ -47,33 +47,6 @@ const createGNB = (index: number): string => {
     `;
 };
 
-const tmpChatList: IChat[] = [
-  {
-    id: 0,
-    name: 'User A',
-    message: '혹시 팔렸나요?',
-    time: '15분 전',
-    url: '',
-    chatCount: 5,
-  },
-  {
-    id: 1,
-    name: 'User B',
-    message: '내일 오후 2시 어떠신가요?!',
-    time: '2시간 전',
-    url: '',
-    chatCount: 2,
-  },
-  {
-    id: 2,
-    name: 'User C',
-    message: '쿨거래 감사합니다~!',
-    time: '3일 전',
-    url: '',
-    chatCount: 0,
-  },
-];
-
 // const isBackButton = (e: MouseEvent) => {
 //   const target = e.target as HTMLElement;
 //   return target.classList.contains('js-back');
@@ -90,7 +63,7 @@ function Menu({ app }) {
   const $target = document.createElement('div');
 
   const handleTap = (e: MouseEvent) => {
-    e.preventDefault();
+    // e.preventDefault();
     const target = e.target as HTMLButtonElement;
     if (target.classList.contains('active')) return;
     const btns = document.querySelectorAll('.gnb-container .btn-tap');
@@ -208,23 +181,28 @@ function Menu({ app }) {
     `;
   };
 
-  const createChatItem = (chat: IChat): string => {
+  const createChatItem = ({
+    room_id,
+    partner_id,
+    last_content,
+    last_created,
+    chat_count,
+    thumbnail,
+  }: IChat): string => {
     return `
-    <div class="chat-list-item">
-      <div>
-        <p class="chat-list-item__name">${chat.name}</p>
-        <p class="chat-list-item__message">${chat.message}</p>
-      </div>
-      <div class="chat-list-item__content-right">
-        <div class="chat-list-item__info">
-          <p class="chat-list-item__time">${chat.time}</p>
-          ${
-            chat.chatCount
-              ? '<div class="chat-badge">' + chat.chatCount + '</div>'
-              : ''
-          }
+    <div class="js-chattingDetail#${room_id} render chat-list">
+      <div class="chat-list-item">
+        <div>
+          <p class="chat-list-item__name">${partner_id}</p>
+          <p class="chat-list-item__message">${last_content}</p>
         </div>
-        <div class="img-box-small"></div>
+        <div class="chat-list-item__content-right">
+          <div class="chat-column">
+            <p class="chat-list-item__info">1분전</p>
+            ${chat_count ? `<div class="chat-badge">${chat_count}</div>` : ''}
+          </div>
+          <div class="img-box-small" style="background-image:url(${thumbnail})"></div>
+        </div>
       </div>
     </div>
     `;
@@ -242,8 +220,6 @@ function Menu({ app }) {
   };
 
   const deleteWish = (id, nextWishList) => {
-    console.log('next');
-    console.log(nextWishList);
     fetch('/api/goods-wish', {
       method: 'DELETE',
       headers: {
@@ -259,29 +235,6 @@ function Menu({ app }) {
       .then(({ result }) => {
         if (Number(result) === 0) {
           this.setState('wishList', nextWishList);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  };
-
-  const deleteProduct = () => {
-    fetch('/api/goods', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        goodsId: this.state.goods.id,
-      }),
-    })
-      .then((res) => {
-        if (res.ok || res.status === 409) return res.json();
-      })
-      .then(({ result, message }) => {
-        if (result == 0) {
-          this.rerender();
         }
       })
       .catch((e) => {
@@ -309,8 +262,7 @@ function Menu({ app }) {
         ...listObject,
       };
     }
-    console.log(this.state);
-    this.rerender();
+    rerenderMenuBody();
   };
 
   this.render = () => {
@@ -324,7 +276,9 @@ function Menu({ app }) {
     setTimeout(() => $target.classList.add('slidein'), 0);
   };
 
-  this.rerender = rerenderMenuBody;
+  this.rerender = () => {
+    getMenuItems();
+  };
   $target.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
     const classList = target.classList;
