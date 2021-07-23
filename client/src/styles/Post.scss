@@ -4,7 +4,7 @@
     user-select: none;
     pointer-events: none;
   }
-  .icon-heart:hover {
+  .icon-heart:not(.active):hover {
     background-image: url('../public/images/heart.svg');
   }
   .for-status {

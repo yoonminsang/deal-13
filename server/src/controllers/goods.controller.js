@@ -1,4 +1,5 @@
 import { goodsService } from '../services/goods.service.js';
+import { goodChattingService } from '../services/goods-chatting.service.js';
 
 const createGoods = async (req, res) => {
   try {
@@ -81,6 +82,9 @@ const findGoodsForMenu = async (req, res) => {
     const data = {};
     data.sellList = await goodsService.findGoodsByUserId(req.user.id);
     data.wishList = await goodsService.findGoodsByUserWish(req.user.id);
+    data.chatList = await goodChattingService.selectChattingRoom({
+      userId: req.user.id,
+    });
     res.status(200).json({
       result: '0',
       data,
