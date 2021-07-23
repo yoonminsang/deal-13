@@ -82,7 +82,7 @@ function Main({ app, setPrimaryRegion }) {
       </div>
       <div class="product-list-item__content">
         <div class="js-wish  icon icon-heart product-list-item__heart ${
-          isWish && 'active'
+          isWish ? 'active' : ''
         }"></div>
         <p class="product-list-item__title">${title}</p>
         <p class="product-list-item__info">${region_name} - ${created}</p>

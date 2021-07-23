@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --experimental-json-modules src/main.js"
+    "start": "NODE_ENV=production node --experimental-json-modules src/main.js",
+    "dev": "nodemon --experimental-json-modules src/main.js"
   },
   "repository": {
     "type": "git",
