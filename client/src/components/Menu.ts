@@ -52,7 +52,7 @@ const createGNB = (index: number): string => {
 //   return target.classList.contains('js-back');
 // };
 
-function Menu({ app }) {
+function Menu({ app, goMain }) {
   this.state = {
     tap: 0,
     chatList: [],
@@ -313,7 +313,7 @@ function Menu({ app }) {
         })
         .then(({ result, message }) => {
           if (result == 0) {
-            getMenuItems();
+            goMain();
           }
         })
         .catch((e) => {

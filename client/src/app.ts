@@ -191,7 +191,7 @@ function App() {
     setCategory,
     back,
   });
-  const menu = new Menu({ app });
+  const menu = new Menu({ app, goMain });
   const write = new Write({ app, goMain });
   const post = new Post({ app, goMain, go });
   const chatting = new Chatting({ app, go, back });
