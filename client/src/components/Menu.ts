@@ -125,7 +125,10 @@ function Menu({ app }) {
       },
     })
       .then((res) => (res.ok || res.status === 401) && res.json())
-      .then((data) => this.setState('', '', '1', data.data));
+      .then((data) => {
+        console.log(data);
+        this.setState('', '', '1', data.data);
+      });
   };
 
   const createProductItem = (product: IProduct, sale: boolean): string => {

@@ -168,7 +168,8 @@ const selectChattingRoomByUserId = async (userId) => {
       (r.buyer_id = '${userId}' AND r.buyer_entrance > -1)
       OR
       (r.seller_id = '${userId}' AND r.seller_entrance > -1)
-    GROUP BY r.id
+    AND r.goods_id = g.id
+    GROUP BY r.id, g.thumbnail
     ORDER BY last_created DESC;
     `,
   );
