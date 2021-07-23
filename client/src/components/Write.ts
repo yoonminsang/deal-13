@@ -95,8 +95,7 @@ function Write({ app, goMain }) {
   };
 
   const priceValidation = (value) => {
-    if (typeof value === 'number') return value;
-    console.log(value);
+    if (typeof value === 'number') value = value + '';
     value = value.replace(/[^0-9]/g, '');
     value = value.slice(0, 9);
     if (value.length > 0)
@@ -188,7 +187,9 @@ function Write({ app, goMain }) {
 
   const onSumbit = (title, price, content) => {
     const thumbnail = this.state.urls[this.state.thumbnail];
-    const regionId = this.state.user.region_id[this.state.primaryRegion];
+    const regionId =
+      this.state.user.region_id[this.state.primaryRegion] ||
+      this.state.user.region_id[localStorage.getItem('primaryRegion')];
     const { selectCategory: categoryId, urls } = this.state;
     if (this.state.mode === mode.write) {
       fetchSubmit(
