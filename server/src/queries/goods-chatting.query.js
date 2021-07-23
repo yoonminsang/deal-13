@@ -102,7 +102,7 @@ const selectChattingRoomDetail = async (roomId, lastIndex, userId) => {
     result[0].isSeller = userId === result[0].seller_id;
     if (result[0].isSeller && result[0].seller_entrance === -1) return null;
     if (!result[0].isSeller && result[0].buyer_entrance === -1) return null;
-    if (!lastIndex) {
+    if (lastIndex === 'undefined') {
       const [chattingList] = await db.query(`
       SELECT id, user_id, content
       FROM 

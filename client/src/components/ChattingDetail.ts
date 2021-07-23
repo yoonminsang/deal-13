@@ -173,6 +173,7 @@ function ChattingDetail({ app, back }) {
 
     fetch(
       `/api/goods-chatting/detail?roomId=${this.state.roomId}&lastIndex=${
+        this.state.chatting[this.state.chatting.length - 1] &&
         this.state.chatting[this.state.chatting.length - 1].id
       }`,
       {
