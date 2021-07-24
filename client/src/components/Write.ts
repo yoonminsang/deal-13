@@ -292,7 +292,11 @@ function Write({ app, goMain }) {
     else if (this.state.urls.length === 0) alert('사진을 올려주세요');
     else if (!this.state.thumbnail) alert('썸네일을 선택하세요');
     else {
-      onSumbit(sanitizeHtml(title, { allowedTags: [] }), price, content);
+      onSumbit(
+        sanitizeHtml(title, { allowedTags: [] }),
+        price,
+        sanitizeHtml(content, { allowedTags: [] }),
+      );
     }
   });
 
