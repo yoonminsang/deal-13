@@ -352,7 +352,6 @@ function Write({ app, goMain }) {
   // user랑 primaryRegion을 rerender를 계속하면 낭비인듯
   // 그냥 render될때만 불러오면 되는데
   this.rerender = (changeStateName) => {
-    console.log('write rerender', changeStateName, this.state);
     switch (changeStateName) {
       case stateObj.user:
       case stateObj.primaryRegion:

@@ -22,6 +22,8 @@ import goodsWishRouter from './routes/goods-wish.js';
 import goodsChattingRouter from './routes/goods-chatting.js';
 
 import helmet from 'helmet';
+import expressMysqlSession from 'express-mysql-session';
+const MySQLStore = expressMysqlSession(session);
 
 dotenv.config();
 
@@ -32,6 +34,10 @@ const corsOption = {
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
+
+import { createRequire } from 'module'; // Bring in the ability to create the 'require' method
+const require = createRequire(import.meta.url); // construct the require method
+const options = require('./config/config.json'); // use the require method
 
 passportConfig();
 
@@ -48,6 +54,7 @@ if (process.env.NODE_ENV === 'production') {
   console.log('development mode');
   app.use(morgan('dev'));
 }
+
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -57,6 +64,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     secret: process.env.COOKIE_SECRET,
+    store: new MySQLStore(options),
     cookie: {
       httpOnly: true,
       secure: false,
