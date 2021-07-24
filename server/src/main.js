@@ -23,7 +23,6 @@ import goodsChattingRouter from './routes/goods-chatting.js';
 
 import ejs from 'ejs';
 import helmet from 'helmet';
-import hpp from 'hpp';
 
 dotenv.config();
 
@@ -44,8 +43,11 @@ passportConfig();
 app.use(cors());
 if (process.env.NODE_ENV === 'production') {
   app.use(morgan('combined'));
-  app.use(helmet());
-  app.use(hpp());
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+    }),
+  );
 } else {
   app.use(morgan('dev'));
 }
