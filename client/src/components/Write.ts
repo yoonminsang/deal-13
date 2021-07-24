@@ -330,13 +330,14 @@ function Write({ app, goMain }) {
       mode: undefined,
       id: undefined,
     };
+
     if (modify) {
       getApi(dbId);
     } else {
       $title.value = '';
       $price.value = '';
       $content.value = '';
-
+      this.setState(stateObj.selectCategory, undefined);
       $imgInner.innerHTML = makeImgBtn(0);
       this.setState(stateObj.mode, mode.write);
     }
@@ -347,6 +348,7 @@ function Write({ app, goMain }) {
   // user랑 primaryRegion을 rerender를 계속하면 낭비인듯
   // 그냥 render될때만 불러오면 되는데
   this.rerender = (changeStateName) => {
+    console.log('write rerender', changeStateName, this.state);
     switch (changeStateName) {
       case stateObj.user:
       case stateObj.primaryRegion:
