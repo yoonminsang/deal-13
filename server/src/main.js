@@ -21,27 +21,23 @@ import goodsPhotoRouter from './routes/goods-photo.js';
 import goodsWishRouter from './routes/goods-wish.js';
 import goodsChattingRouter from './routes/goods-chatting.js';
 
-import ejs from 'ejs';
 import helmet from 'helmet';
 
 dotenv.config();
 
 const corsOption = {
-  origin: 'https://s3.console.aws.amazon.com:3000/',
+  origin: 'https://deal-13.s3.ap-northeast-2.amazonaws.com/',
 };
 
 const app = express();
-
-app.set('views', path.join(__dirname, '../', '../', 'client', '/dist'));
-app.set('view engine', 'ejs');
-app.engine('html', ejs.renderFile);
 
 app.set('port', process.env.PORT || 3000);
 
 passportConfig();
 
-app.use(cors());
+app.use(cors(corsOption));
 if (process.env.NODE_ENV === 'production') {
+  console.log('production mode');
   app.use(morgan('combined'));
   app.use(
     helmet({
@@ -49,6 +45,7 @@ if (process.env.NODE_ENV === 'production') {
     }),
   );
 } else {
+  console.log('development mode');
   app.use(morgan('dev'));
 }
 app.use('/', express.static(path.join(__dirname, 'public')));
@@ -79,12 +76,9 @@ app.use('/api/goods-photo', goodsPhotoRouter);
 app.use('/api/goods-wish', goodsWishRouter);
 app.use('/api/goods-chatting', goodsChattingRouter);
 
-app.use(
-  '/',
-  express.static(path.join(__dirname, '../', '../', 'client', '/dist')),
-);
+app.use('/', express.static(path.join(__dirname, '../../client/dist')));
 app.get('*', (req, res) => {
-  res.render('index.html');
+  res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
 app.use((req, res, next) => {
@@ -98,6 +92,6 @@ app.use((err, req, res, next) => {
   return res.status(err.status || 500).json(err);
 });
 
-const server = app.listen(app.get('port'), () => {
+app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
 });
