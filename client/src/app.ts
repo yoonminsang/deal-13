@@ -98,7 +98,7 @@ function App() {
     this.setState(actionObj.goLogin, { ...this.state, depth: nextDepth });
   };
   const historyPush = (): void => {
-    const nextUrl = this.state.depth.join('/') || '/';
+    const nextUrl = '/' + this.state.depth.join('/');
     history.pushState('', '', nextUrl);
   };
   const userReRender = () => {
