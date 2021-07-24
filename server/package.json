@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production pm2 start src/main.js -i 0",
+    "start": "NODE_ENV=production PORT=8080 pm2 start src/main.js -i 0",
     "dev": "nodemon src/main.js"
   },
   "repository": {
