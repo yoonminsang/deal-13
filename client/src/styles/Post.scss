@@ -1,0 +1,115 @@
+.post {
+  .blind {
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+  }
+  .icon-heart:not(.active):hover {
+    background-image: url('../public/images/heart.svg');
+  }
+  .for-status {
+    position: relative;
+    .drop-down-sale {
+      position: absolute;
+      top: 56px;
+      transition: all 0.25s;
+    }
+  }
+  .top-bar.invisible {
+    position: fixed;
+    max-width: 100%;
+    width: 25rem;
+    z-index: 1;
+    // z-index: 10;
+    border: 0;
+    .icon-left,
+    .icon-more {
+      filter: map.get($filter_colors, 'white');
+    }
+    .drop-down-modal {
+      position: absolute;
+      top: 48px;
+      right: 16px;
+      transition: all 0.25s;
+      .js-delete {
+        color: map.get($colors, 'error');
+      }
+    }
+  }
+  .for-author {
+    cursor: pointer;
+  }
+  .img-box-large {
+    width: 100%;
+    height: 320px;
+    filter: brightness(0.9);
+    border-radius: 1px;
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+
+    // test용 색
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .img-navigation {
+      position: absolute;
+      top: 280px;
+      z-index: 1;
+      left: 50%;
+      transform: translate(-50%, 0%);
+    }
+  }
+  .goods-inner {
+    .goods-margin {
+      margin: 24px 16px 32px;
+      .btn-status {
+        width: fit-content;
+        span {
+          margin-right: 5px;
+        }
+      }
+      .title {
+        font-size: 18px;
+        line-height: 24px;
+        color: map.get($colors, 'title-active');
+        margin-top: 24px;
+      }
+      .sub {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0px;
+        font-size: 12px;
+        line-height: 16px;
+        color: map.get($colors, 'grey-1');
+        margin-top: 8px;
+        > div:not(:last-child)::after {
+          margin: 0 2px;
+          content: '·';
+        }
+      }
+      .content {
+        margin-top: 16px;
+        font-size: 16px;
+        line-height: 22px;
+        color: map.get($colors, 'title-active');
+      }
+      .sub2 {
+        margin-top: 24px;
+      }
+      .info-saler {
+        margin-top: 24px;
+      }
+    }
+    .product-bar {
+      margin-top: 24px;
+      border-top: 1px solid map.get($colors, 'grey-3');
+      .btn-medium,
+      .btn-location {
+        width: 136px;
+      }
+    }
+  }
+}

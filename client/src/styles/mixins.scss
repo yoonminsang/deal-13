@@ -1,0 +1,91 @@
+@mixin text($size: 'medium') {
+  letter-spacing: 0em;
+  font-style: normal;
+  font-weight: 400;
+  @if $size == large {
+    font-size: 20px;
+    line-height: 24px;
+  } @else if $size == small {
+    font-size: 16px;
+    line-height: 20px;
+  } @else if $size == x-small {
+    font-size: 14px;
+    line-height: 16px;
+  } @else {
+    font-size: 18px;
+    line-height: 22px;
+  }
+}
+
+@mixin link($size: 'medium') {
+  @include text($size);
+  font-weight: 500;
+}
+
+@mixin button($size: 'medium') {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border-color: transparent;
+  padding: 8px 16px;
+  width: 100%;
+  @if $size == large {
+    height: 42px;
+  } @else if $size == fab {
+    height: 56px;
+    border-radius: 50%;
+  } @else if $size == small {
+    height: 40px;
+  } @else if $size == x-small {
+    height: 31px;
+  } @else {
+    height: 36px;
+  }
+}
+
+@mixin input($size: 'medium') {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  border-color: transparent;
+  width: 100%;
+  @if $size == large {
+    height: 40px;
+    top: 20px;
+    padding: 10px 16px 8px 16px;
+  } @else {
+    height: 36px;
+    padding: 8px;
+  }
+}
+
+@mixin img-box($size: 'medium') {
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  @if $size == large {
+    height: 92px;
+    width: 92px;
+    border-radius: 10px;
+  } @else if $size == small {
+    height: 40px;
+    width: 40px;
+    border-radius: 6px;
+  } @else {
+    border-radius: 8px;
+    height: 76px;
+    width: 76px;
+  }
+}
+
+/*
+  사용 예시
+  .btn-primary-1 {
+    @include text('large');
+  }
+
+*/

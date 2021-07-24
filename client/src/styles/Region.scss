@@ -1,0 +1,50 @@
+.region {
+  .text {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+    line-height: 18px;
+    color: #828282;
+  }
+  .btn-inner {
+    display: flex;
+    margin-top: 28px;
+    justify-content: space-evenly;
+  }
+  .btn-location {
+    width: 136px;
+    height: 36px;
+  }
+  .modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(34, 34, 34, 0.3);
+    transition: opacity 0.05s ease-out;
+    opacity: 1;
+    z-index: initial;
+    .popup.popup-input {
+      width: 100%;
+      margin: 0 16px;
+      transform: translateY(0vh);
+      opacity: 1;
+      transition: opacity 0.1s linear, transform 0.2s linear;
+    }
+    &.blind {
+      z-index: -1;
+      opacity: 0;
+      .popup.popup-input {
+        opacity: 0;
+        transform: translateY(-20vh);
+      }
+    }
+  }
+  // .blind {
+  //   top: -100vh;
+  // }
+}

@@ -1,0 +1,70 @@
+.chattingDetail {
+  z-index: 1;
+  .js-back {
+    z-index: 1;
+  }
+  .icon-logout {
+    filter: map.get($filter_colors, 'error');
+  }
+  .icon-left {
+    filter: none;
+  }
+  .chat-header {
+    padding: 16px;
+    display: flex;
+    border-bottom: 1px solid #d7d7d7;
+    .chat-header-text {
+      margin-left: 8px;
+    }
+    .chat-list-item__content-right {
+      margin-left: auto;
+    }
+  }
+  .chat-inner {
+    margin: 16px;
+    margin-top: 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 200px);
+    .chat-item {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      padding: 8px;
+      box-sizing: border-box;
+      border-radius: 0px 8px 8px 8px;
+      border: 1px solid map.get($colors, 'primary-1');
+      margin-top: 24px;
+      &.you {
+        background: #ffffff;
+        margin-right: auto;
+      }
+      &.me {
+        margin-left: auto;
+        background: map.get($colors, 'primary-1');
+        color: #fff;
+      }
+    }
+  }
+  .btn-chat-send {
+    background: transparent;
+  }
+  .js-dropdown {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    transition: all 0.25s;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 1;
+  }
+  .blind {
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+  }
+}

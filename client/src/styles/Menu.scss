@@ -1,0 +1,33 @@
+.menu {
+  .top-bar {
+    border: 0;
+  }
+  .gnb-container {
+    background-color: map.get($colors, 'off-white');
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    .btn-tap {
+      padding-top: 16px;
+      padding-bottom: 18px;
+    }
+  }
+  .product-list-item__heart {
+    &:hover {
+      filter: none;
+    }
+  }
+  .product-popup {
+    display: none;
+  }
+  .active {
+    .product-popup {
+      display: block;
+    }
+  }
+  .drop-down-list {
+    margin-left: -125px;
+  }
+  .drop-down-item:nth-of-type(1) {
+    color: #ff4545;
+  }
+}

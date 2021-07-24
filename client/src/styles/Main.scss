@@ -1,0 +1,48 @@
+.main {
+  .drop-down-list {
+    position: absolute;
+    left: 100px;
+    top: 48px;
+    right: 77px;
+    transition: all 0.25s;
+    opacity: 1;
+    z-index: 100;
+  }
+  .blind {
+    opacity: 0;
+    user-select: none;
+    pointer-events: none;
+  }
+  .product-list {
+    .need-login {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: calc(100vh - 70px);
+      color: map.get($colors, 'title-active');
+      font-size: 25px;
+    }
+  }
+  .btn-fab {
+    width: 56px;
+    height: 56px;
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+  }
+  .img-box-large img {
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+  }
+  .sold-out {
+    opacity: 0.6;
+  }
+  .label-state {
+    background-color: #ff4545;
+    color: #fff;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+}

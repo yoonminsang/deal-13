@@ -1,0 +1,47 @@
+{
+  "name": "deal-13",
+  "version": "1.0.0",
+  "description": "우아한테크캠프 4기 2~3주차 팀 13 - 윤민상, 고우혁",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "NODE_ENV=production pm2 start src/main.js",
+    "dev": "nodemon --experimental-json-modules src/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kowoohyuk/deal-13.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kowoohyuk/deal-13/issues"
+  },
+  "homepage": "https://github.com/kowoohyuk/deal-13#readme",
+  "dependencies": {
+    "aws-sdk": "^2.948.0",
+    "bcrypt": "^5.0.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "helmet": "^4.6.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
+    "mysql2": "^2.2.5",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "nodemon": "^2.0.12",
+    "pm2": "^5.1.0"
+  }
+}
