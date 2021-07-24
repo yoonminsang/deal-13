@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production pm2 start src/main.js",
-    "dev": "nodemon --experimental-json-modules src/main.js"
+    "start": "NODE_ENV=production pm2 start src/main.js -i 0",
+    "dev": "nodemon src/main.js"
   },
   "repository": {
     "type": "git",
@@ -26,8 +26,8 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
-    "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "express-mysql-session": "^2.1.6",
     "express-session": "^1.17.2",
     "helmet": "^4.6.0",
     "morgan": "^1.10.0",

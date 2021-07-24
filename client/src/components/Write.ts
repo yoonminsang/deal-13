@@ -1,3 +1,4 @@
+import sanitizeHtml from 'sanitize-html';
 function Write({ app, goMain }) {
   interface StateObj {
     user: string;
@@ -41,7 +42,7 @@ function Write({ app, goMain }) {
   <div class="write-inner">
     <div class="inner img-inner"></div>
     <div class="inner">
-      <input type="text" class="title input-text" placeholder="글 제목"/>
+      <input type="text" class="title input-text" placeholder="글 제목" maxLength="60"/>
       <div class="caption">(필수) 카테고리를 선택해주세요.</div>
       <div class="category-inner"></div>
     </div>
@@ -95,6 +96,7 @@ function Write({ app, goMain }) {
   };
 
   const priceValidation = (value) => {
+    if (!value) return value;
     if (typeof value === 'number') value = value + '';
     value = value.replace(/[^0-9]/g, '');
     value = value.slice(0, 9);
@@ -191,6 +193,7 @@ function Write({ app, goMain }) {
       this.state.user.region_id[this.state.primaryRegion] ||
       this.state.user.region_id[localStorage.getItem('primaryRegion')];
     const { selectCategory: categoryId, urls } = this.state;
+
     if (this.state.mode === mode.write) {
       fetchSubmit(
         'POST',
@@ -289,7 +292,11 @@ function Write({ app, goMain }) {
     else if (this.state.urls.length === 0) alert('사진을 올려주세요');
     else if (!this.state.thumbnail) alert('썸네일을 선택하세요');
     else {
-      onSumbit(title, price, content);
+      onSumbit(
+        sanitizeHtml(title, { allowedTags: [] }),
+        price,
+        sanitizeHtml(content, { allowedTags: [] }),
+      );
     }
   });
 
@@ -327,13 +334,14 @@ function Write({ app, goMain }) {
       mode: undefined,
       id: undefined,
     };
+
     if (modify) {
       getApi(dbId);
     } else {
       $title.value = '';
       $price.value = '';
       $content.value = '';
-
+      this.setState(stateObj.selectCategory, undefined);
       $imgInner.innerHTML = makeImgBtn(0);
       this.setState(stateObj.mode, mode.write);
     }
