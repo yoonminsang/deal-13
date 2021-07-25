@@ -1,7 +1,7 @@
 import passport from 'passport';
 import db from '../db/index.js';
 import Strategy from 'passport-local';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 const LocalStrategy = Strategy.Strategy;
 const passportConfig = () => {
   passport.serializeUser((user, done) => {

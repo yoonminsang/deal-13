@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production PORT=8080 pm2 start src/main.js -i 0",
+    "start": "NODE_ENV=production PORT=80 pm2 start src/main.js -i 0",
     "dev": "nodemon src/main.js"
   },
   "repository": {
@@ -22,7 +22,7 @@
   "homepage": "https://github.com/kowoohyuk/deal-13#readme",
   "dependencies": {
     "aws-sdk": "^2.948.0",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
